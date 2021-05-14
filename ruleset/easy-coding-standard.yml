@@ -1,0 +1,12 @@
+imports:
+    - { resource: '../vendor/sylius-labs/coding-standard/easy-coding-standard.yml' }
+
+services:
+    PhpCsFixer\Fixer\ClassNotation\OrderedClassElementsFixer: ~
+
+parameters:
+    paths:
+        - src
+        - tests/PHPUnit
+    exclude_files:
+        - 'tests/Application/**'

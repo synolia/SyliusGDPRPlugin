@@ -1,0 +1,16 @@
+parameters:
+    level: max
+    reportUnmatchedIgnoredErrors: false
+    checkMissingIterableValueType: false
+    bootstrapFiles:
+        - '../vendor/autoload.php'
+    excludes_analyse:
+        - '../vendor/'
+        - '../src/Migrations/'
+        - '../source/src/Kernel.php'
+        - '../dev'
+        - '../bin'
+        - '../tests'
+        - '../src/DependencyInjection'
+        - '../src/SynoliaSyliusGDPRPlugin.php'
+    ignoreErrors:
