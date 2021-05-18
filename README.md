@@ -59,12 +59,6 @@
 
 See [How to contribute](CONTRIBUTING.md).
 
-## Gdpr Enterprise Edition
-
-### Reference Entity
-
-[Everything you need to know about Reference Entity in Sylius](docs/reference_entity/REFERENCE_ENTITY.md)
-
 ## License
 
 This library is under the [EUPL-1.2 license](LICENSE).
