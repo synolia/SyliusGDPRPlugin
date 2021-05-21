@@ -43,13 +43,13 @@
         "phpunit/phpunit": "^9.5",
         "povils/phpmnd": "^2.2",
         "seld/jsonlint": "^1.7",
-        "sylius-labs/coding-standard": "^3.0",
+        "sylius-labs/coding-standard": "^v4.0",
+        "symplify/easy-coding-standard": "^8.3.48",
         "symfony/browser-kit": "^4.4 || ^5.2",
         "symfony/debug-bundle": "^4.4 || ^5.2",
         "symfony/dotenv": "^4.4 || ^5.2",
         "symfony/intl": "^4.4 || ^5.2",
         "symfony/web-profiler-bundle": "^4.4 || ^5.2",
-        "symplify/easy-coding-standard": "^8.3",
         "thecodingmachine/phpstan-strict-rules": "^0.12.0",
         "vimeo/psalm": "4.4.1"
     },
@@ -59,6 +59,9 @@
     "extra": {
         "branch-alias": {
             "dev-master": "1.9-dev"
+        },
+        "symfony": {
+            "require": "^4.3 || ^5.1"
         }
     },
     "autoload": {
@@ -73,7 +76,7 @@
         ]
     },
     "scripts": {
-        "fix-ecs": "ecs check src tests/PHPUnit --config=dev/ruleset/easy-coding-standard.yml --no-progress-bar --ansi --fix",
+        "fix-ecs": "ecs check src tests/PHPUnit --config=dev/ruleset/ecs.php --no-progress-bar --ansi --fix",
         "post-install-cmd": [
             "php bin/create_node_symlink.php"
         ],

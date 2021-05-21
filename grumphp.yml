@@ -28,10 +28,7 @@ grumphp:
         xmllint: ~
         yamllint: ~
         ecs:
-            config: 'ruleset/easy-coding-standard.yml'
-            paths:
-                - src
-                - tests/PHPUnit
+            config: 'ruleset/ecs.php'
             no-progress-bar: true
         phpmnd:
             directory: src
