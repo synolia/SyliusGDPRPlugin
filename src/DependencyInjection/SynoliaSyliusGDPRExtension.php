@@ -50,19 +50,18 @@ final class SynoliaSyliusGDPRExtension extends Extension
     private static function mergeConfig(array $base, array $replacement): array
     {
         foreach ($replacement as $key => $value) {
-            $className = self::retrieveMostPreciseClassName($key);
-            if (!\array_key_exists($className, $base) && !\is_numeric($className)) {
-                $base[$className] = $replacement[$className];
+            if (!\array_key_exists($key, $base) && !\is_numeric($key)) {
+                $base[$key] = $replacement[$key];
                 continue;
             }
-            if (\is_array($value) || (\array_key_exists($className, $base) && \is_array($base[$className]))) {
-                $base[$className] = self::mergeConfig($base[$className], $replacement[$className]);
-            } elseif (\is_numeric($className)) {
+            if (\is_array($value) || (\array_key_exists($key, $base) && \is_array($base[$key]))) {
+                $base[$key] = self::mergeConfig($base[$key], $replacement[$key]);
+            } elseif (\is_numeric($key)) {
                 if (!\in_array($value, $base, true)) {
                     $base[] = $value;
                 }
             } else {
-                $base[$className] = $value;
+                $base[$key] = $value;
             }
         }
 
@@ -109,15 +108,5 @@ final class SynoliaSyliusGDPRExtension extends Extension
         }
 
         return $mappings;
-    }
-
-    private static function retrieveMostPreciseClassName(string $className): string
-    {
-        $doctrineClassName = ClassUtils::getRealClass($className);
-        if (false === $doctrineClassName) {
-            return $className;
-        }
-
-        return $doctrineClassName;
     }
 }
