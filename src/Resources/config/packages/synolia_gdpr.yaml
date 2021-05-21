@@ -1,0 +1,5 @@
+synolia_sylius_gdpr:
+    anonymization:
+        mappings:
+            path:
+                - '%kernel.project_dir%/../../src/Resources/mappings/'

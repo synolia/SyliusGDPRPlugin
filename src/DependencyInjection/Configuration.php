@@ -11,8 +11,21 @@ final class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('synolia_sylius_gdpr_plugin');
-        $rootNode = $treeBuilder->getRootNode();
+        $treeBuilder = new TreeBuilder('synolia_sylius_gdpr');
+        $treeBuilder->getRootNode()
+            ->children()
+            ->arrayNode('anonymization')
+            ->children()
+            ->arrayNode('mappings')
+            ->children()
+            ->arrayNode('path')
+            ->prototype('scalar')->end()
+            ->end()
+            ->end()
+            ->end()
+            ->end()
+            ->end()
+        ;
 
         return $treeBuilder;
     }
