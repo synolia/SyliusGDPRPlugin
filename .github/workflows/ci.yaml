@@ -66,10 +66,6 @@ jobs:
         run: if [ -f ruleset/phpstan.neon ]; then vendor/bin/phpstan analyse -c ruleset/phpstan.neon src/ ; else echo PHPStan ruleset file does not exist, skipping step ; fi
         if: always() && steps.end-of-setup.outcome == 'success'
 
-      - name: PHPSpec - Run
-        run: if [ -f phpspec.yml.dist ]; then vendor/bin/phpspec run ; else echo PHPSpec config file does not exist, skipping step ; fi
-        if: always() && steps.end-of-setup.outcome == 'success'
-
       - name: PHPMD - Run
         run: if [ -f ruleset/.php_md.xml ]; then vendor/bin/phpmd src ansi ruleset/.php_md.xml ; else echo PHPMD config file does not exist, skipping step ; fi
         if: always() && steps.end-of-setup.outcome == 'success'
@@ -90,8 +86,13 @@ jobs:
       matrix:
         php: [7.3, 7.4]
         sylius: [1.8.*, 1.9.*]
-        symfony: [4.4.*, 5.1.*]
+        symfony: [4.4.*, 5.2.*]
         node: [10.x]
+        exclude:
+          -   sylius: 1.8.*
+              symfony: 5.2.*
+          -   sylius: 1.9.*
+              symfony: 4.4.*
 
     env:
       APP_ENV: test
