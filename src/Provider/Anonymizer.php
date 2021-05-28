@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Synolia\SyliusGDPRPlugin\Provider;
 
+use Doctrine\Common\Util\ClassUtils;
 use Faker\Factory;
 use Faker\Generator;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -42,7 +43,7 @@ final class Anonymizer implements AnonymizerInterface
         if (!\is_object($result)) {
             throw new \LogicException('This is not an object.');
         }
-        $className = \get_class($result);
+        $className = ClassUtils::getRealClass(get_class($result));;
         $attributeMetadataCollection = $this->loaderChain->loadClassMetadata($className);
         $attributeMetadataCollection = $attributeMetadataCollection->get();
         /** @var AttributeMetaData $attributeMetaData */
