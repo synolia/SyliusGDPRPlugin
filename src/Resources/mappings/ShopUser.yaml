@@ -1,5 +1,5 @@
 Sylius\Component\Core\Model\ShopUser:
-    attributes:
+    properties:
         username:
             faker: email
             unique: true
@@ -24,8 +24,6 @@ Sylius\Component\Core\Model\ShopUser:
         locked:
             faker: boolean
             args: [100]
-        expiresAt:
-            faker: dateTime
         credentialsExpireAt:
             faker: dateTime
         oauthAccounts:

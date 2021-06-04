@@ -1,0 +1,13 @@
+Sylius\Component\Core\Model\Order:
+    properties:
+        shippingAddress: ~
+        billingAddress: ~
+        payments: ~
+        currencyCode:
+            faker: currencyCode
+        localeCode:
+            faker: locale
+        customerIp:
+            faker: ipv6
+        notes:
+            faker: text
