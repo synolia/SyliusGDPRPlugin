@@ -2,13 +2,3 @@ Sylius\Component\Core\Model\Payment:
     properties:
         details:
             faker: text
-        company:
-            faker: company
-        countryCode:
-            faker: countryCode
-        street:
-            faker: streetAddress
-        city:
-            faker: city
-        postCode:
-            faker: postcode

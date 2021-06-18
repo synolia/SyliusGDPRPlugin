@@ -11,42 +11,45 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Synolia\SyliusGDPRPlugin\Processor\AnonymizerProcessor;
 use Synolia\SyliusGDPRPlugin\Provider\AnonymizerInterface;
 
 final class AnonymizeProcessCommand extends Command
 {
     private const MODULO_FLUSH = 50;
+
     private const MAX_RETRIES = 10000;
+
     protected static $defaultName = 'synolia:gdpr:anonymize';
 
-    /**
-     * @var AnonymizerInterface
-     */
+    /** @var AnonymizerInterface */
     private $anonymizer;
-    /**
-     * @var EntityManagerInterface
-     */
+
+    /** @var AnonymizerProcessor */
+    private $anonymizerProcessor;
+
+    /** @var EntityManagerInterface */
     private $entityManager;
-    /**
-     * @var SymfonyStyle
-     */
+
+    /** @var SymfonyStyle */
     private $io;
-    /**
-     * @var bool
-     */
+
+    /** @var bool */
     private $reset;
-    /**
-     * @var int
-     */
+
+    /** @var int */
     private $maxRetries;
 
     public function __construct(
         AnonymizerInterface $anonymizer,
+        AnonymizerProcessor $anonymizerProcessor,
         EntityManagerInterface $entityManager,
         string $name = null
     ) {
         parent::__construct($name);
+
         $this->anonymizer = $anonymizer;
+        $this->anonymizerProcessor = $anonymizerProcessor;
         $this->entityManager = $entityManager;
     }
 
@@ -56,7 +59,6 @@ final class AnonymizeProcessCommand extends Command
             ->setDescription('Change proprieties data entity which have the annotation anonymize.')
             ->addOption('entity', 'E', InputOption::VALUE_REQUIRED, 'Entity full qualified class name')
             ->addOption('id', 'i', InputOption::VALUE_REQUIRED, 'Object ID')
-            ->addOption('all', null, InputOption::VALUE_NONE, 'All entities')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Force command')
             ->addOption('reset', null, InputOption::VALUE_OPTIONAL, 'Reset unique', false)
             ->addOption('max-retries', null, InputOption::VALUE_OPTIONAL, 'Maximum unique restries', self::MAX_RETRIES)
@@ -68,27 +70,11 @@ final class AnonymizeProcessCommand extends Command
         $this->io = new SymfonyStyle($input, $output);
 
         $className = $input->getOption('entity');
-        $all = (bool) $input->getOption('all');
         $force = (bool) $input->getOption('force');
         $this->reset = (bool) $input->getOption('reset');
         $this->maxRetries = \is_string($input->getOption('max-retries')) ? (int) $input->getOption('max-retries') : self::MAX_RETRIES;
 
         try {
-            if (true === $all) {
-                if (false === $force) {
-                    if (true !== $this->io->confirm('Are you sure to anonymize every entities ? Data will be changed without back-up.', false)) {
-                        $this->io->error('No data has been changed.');
-
-                        return 0;
-                    }
-                }
-
-                $this->anonymizeAllEntities();
-                $this->io->success('Your data has been changed with success !');
-
-                return 0;
-            }
-
             if (null !== $className) {
                 $id = $input->getOption('id');
                 if (\is_array($id) || \is_array($className)) {
@@ -113,18 +99,7 @@ final class AnonymizeProcessCommand extends Command
         }
     }
 
-    private function anonymizeAllEntities(): void
-    {
-        $entities = $this->entityManager->getMetadataFactory()->getAllMetadata();
-        if (empty($entities)) {
-            throw new \LogicException('No entities found.');
-        }
-        foreach ($entities as $entity) {
-            $this->processWithClassMetadata($entity);
-        }
-    }
-
-    private function anonymizeEntityForClassName(string $className, $force, ?string $id = null): void
+    private function anonymizeEntityForClassName(string $className, ?string $id = null, $force): void
     {
         try {
             $entity = $this->entityManager->getMetadataFactory()->getMetadataFor($className);
@@ -159,23 +134,6 @@ final class AnonymizeProcessCommand extends Command
         if (null === $results) {
             $results = $this->entityManager->getRepository($entity->getName())->findAll();
         }
-        $this->anonymizeEntities($results);
-    }
-
-    private function anonymizeEntities(array $results): void
-    {
-        foreach ($results as $index => $result) {
-            $this->anonymizeEntity($result);
-
-            if (0 === $index % self::MODULO_FLUSH) {
-                $this->entityManager->flush();
-            }
-        }
-        $this->entityManager->flush();
-    }
-
-    private function anonymizeEntity($result): void
-    {
-        $this->anonymizer->anonymize($result, $this->reset, $this->maxRetries);
+        $this->anonymizerProcessor->anonymizeEntities($results);
     }
 }

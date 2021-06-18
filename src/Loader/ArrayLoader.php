@@ -43,6 +43,11 @@ final class ArrayLoader implements LoaderInterface
         AttributeMetadataCollection $attributeMetaDataCollection
     ): AttributeMetadataCollection {
         foreach ($property[$className]['properties'] as $property => $options) {
+            if (null === $options) {
+                $attributeMetaDataCollection->add($property);
+
+                continue;
+            }
             $fakerArguments = $options['args'] ?? [];
             $isUnique = $options['unique'] ?? false;
             $attributeMetaData = new AttributeMetaData($options['faker'], $fakerArguments, $isUnique);

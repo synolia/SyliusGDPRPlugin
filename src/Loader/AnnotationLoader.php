@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Synolia\SyliusGDPRPlugin\Loader;
 
 use Doctrine\Common\Annotations\Reader;
+use Doctrine\Common\Util\ClassUtils;
 use Sylius\Component\Core\Model\ShopUser;
 use Synolia\SyliusGDPRPlugin\Annotation\Anonymize;
 use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetaData;
@@ -27,7 +28,7 @@ final class AnnotationLoader implements LoaderInterface
      */
     public function loadClassMetadata(string $className): AttributeMetadataCollection
     {
-        $reflectionClass = new \ReflectionClass($className);
+        $reflectionClass = ClassUtils::newReflectionClass($className);
         $properties = $reflectionClass->getProperties();
         $attributeMetaDataCollection = new AttributeMetadataCollection();
         foreach ($properties as $property) {
@@ -42,7 +43,7 @@ final class AnnotationLoader implements LoaderInterface
             }
 
             if (null === $annotation->faker) {
-                throw new \LogicException('Faker annotation can\'t be empty');
+                continue;
             }
 
             $attributeMetaData = new AttributeMetaData($annotation->faker, $annotation->args, $annotation->unique);

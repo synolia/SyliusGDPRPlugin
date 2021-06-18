@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Synolia\SyliusGDPRPlugin\Validator;
 
 use Faker\Factory;
+use http\Exception\InvalidArgumentException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class FakerOptionsValidator
@@ -26,6 +27,9 @@ final class FakerOptionsValidator
 
     public function __construct(array $options = [])
     {
+        if ('' === $options['faker'] || null === $options['faker']) {
+            throw new \LogicException('Faker option can\'t be null or \'\'.');
+        }
         $resolver = new OptionsResolver();
         $resolver->setRequired('faker');
         $resolver->setDefaults([

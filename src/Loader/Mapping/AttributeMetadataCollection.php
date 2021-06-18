@@ -22,7 +22,7 @@ final class AttributeMetadataCollection
         $this->elements = $elements;
     }
 
-    public function add(string $property, AttributeMetaDataInterface $attributeMetaData): self
+    public function add(string $property, ?AttributeMetaDataInterface $attributeMetaData = null): self
     {
         $this->elements[$property] = $attributeMetaData;
 
