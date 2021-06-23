@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Synolia\SyliusGDPRPlugin\Command;
 
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\Mapping\ClassMetadata;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -124,7 +124,7 @@ final class AnonymizeProcessCommand extends Command
         }
     }
 
-    private function anonymizeEntityForClassName(string $className, ?string $id = null, $force): void
+    private function anonymizeEntityForClassName(string $className, $force, ?string $id = null): void
     {
         try {
             $entity = $this->entityManager->getMetadataFactory()->getMetadataFor($className);
