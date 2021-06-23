@@ -16,3 +16,5 @@ parameters:
         - '../src/SynoliaSyliusGDPRPlugin.php'
     ignoreErrors:
         - '#Parameter \#1 \$className of static method Doctrine\\Common\\Util\\ClassUtils::newReflectionClass\(\) expects class-string, string given.#'
+        - '#Variable method call on mixed.#'
+        - '#Variable method call on object.#'

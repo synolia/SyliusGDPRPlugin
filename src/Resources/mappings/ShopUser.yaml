@@ -6,9 +6,6 @@ Sylius\Component\Core\Model\ShopUser:
         usernameCanonical:
             faker: email
             unique: true
-        salt:
-            faker: text
-            args: [60]
         password:
             faker: sha256
         lastLogin:

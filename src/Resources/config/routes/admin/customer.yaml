@@ -1,0 +1,4 @@
+synolia_sylius_gdpr_admin_anonymize_customer:
+    path: /customers/{id}/anonymize
+    methods: POST|GET
+    controller: Synolia\SyliusGDPRPlugin\Controller\AnonymizationController
