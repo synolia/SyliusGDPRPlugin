@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Synolia\SyliusGDPRPlugin\Validator;
 
 use Doctrine\Common\Util\ClassUtils;
-use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\HttpFoundation\Response;
 
 final class ArrayMappingValidator
 {
@@ -19,7 +19,7 @@ final class ArrayMappingValidator
         $this->checkClassName($className);
         $this->checkPropertyKey($mapping);
         $this->checkProperty($mapping, $className);
-        foreach ($mapping['properties'] as $property => $propertyOptions) {
+        foreach ($mapping['properties'] as $propertyOptions) {
             if (null === $propertyOptions) {
                 continue;
             }
@@ -49,7 +49,11 @@ final class ArrayMappingValidator
             try {
                 $class->getProperty((string) $propertyMapping);
             } catch (\Exception $exception) {
-                throw new \LogicException('The property ' . $propertyMapping . ' does not exist in entity ' . $className . '.');
+                throw new \LogicException(
+                    'The property ' . $propertyMapping . ' does not exist in entity ' . $className . '.',
+                    Response::HTTP_NOT_FOUND,
+                    $exception
+                );
             }
 
             continue;

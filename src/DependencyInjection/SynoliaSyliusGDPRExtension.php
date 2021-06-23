@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Synolia\SyliusGDPRPlugin\DependencyInjection;
 
-use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -12,7 +11,6 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
-use Synolia\SyliusGDPRPlugin\DependencyInjection\Configuration;
 use Synolia\SyliusGDPRPlugin\Loader\LoaderInterface;
 use Synolia\SyliusGDPRPlugin\Validator\ArrayMappingValidator;
 
@@ -52,6 +50,7 @@ final class SynoliaSyliusGDPRExtension extends Extension
         foreach ($replacement as $key => $value) {
             if (!\array_key_exists($key, $base) && !\is_numeric($key)) {
                 $base[$key] = $replacement[$key];
+
                 continue;
             }
             if (\is_array($value) || (\array_key_exists($key, $base) && \is_array($base[$key]))) {

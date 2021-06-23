@@ -12,18 +12,12 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Synolia\SyliusGDPRPlugin\Processor\AnonymizerProcessor;
-use Synolia\SyliusGDPRPlugin\Provider\AnonymizerInterface;
 
 final class AnonymizeProcessCommand extends Command
 {
-    private const MODULO_FLUSH = 50;
-
     private const MAX_RETRIES = 10000;
 
     protected static $defaultName = 'synolia:gdpr:anonymize';
-
-    /** @var AnonymizerInterface */
-    private $anonymizer;
 
     /** @var AnonymizerProcessor */
     private $anonymizerProcessor;
@@ -41,14 +35,12 @@ final class AnonymizeProcessCommand extends Command
     private $maxRetries;
 
     public function __construct(
-        AnonymizerInterface $anonymizer,
         AnonymizerProcessor $anonymizerProcessor,
         EntityManagerInterface $entityManager,
         string $name = null
     ) {
         parent::__construct($name);
 
-        $this->anonymizer = $anonymizer;
         $this->anonymizerProcessor = $anonymizerProcessor;
         $this->entityManager = $entityManager;
     }
@@ -61,7 +53,7 @@ final class AnonymizeProcessCommand extends Command
             ->addOption('id', 'i', InputOption::VALUE_REQUIRED, 'Object ID')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Force command')
             ->addOption('reset', null, InputOption::VALUE_OPTIONAL, 'Reset unique', false)
-            ->addOption('max-retries', null, InputOption::VALUE_OPTIONAL, 'Maximum unique restries', self::MAX_RETRIES)
+            ->addOption('max-retries', null, InputOption::VALUE_OPTIONAL, 'Maximum unique retries', (string) self::MAX_RETRIES)
         ;
     }
 
@@ -104,7 +96,7 @@ final class AnonymizeProcessCommand extends Command
         try {
             $entity = $this->entityManager->getMetadataFactory()->getMetadataFor($className);
         } catch (\Exception $exception) {
-            throw new \LogicException('Entity does not exist');
+            throw new \LogicException('Entity does not exist', 1, $exception);
         }
         if (false === $force) {
             $response = $this->io->confirm(
@@ -134,6 +126,7 @@ final class AnonymizeProcessCommand extends Command
         if (null === $results) {
             $results = $this->entityManager->getRepository($entity->getName())->findAll();
         }
-        $this->anonymizerProcessor->anonymizeEntities($results);
+
+        $this->anonymizerProcessor->anonymizeEntities($results, $this->reset, $this->maxRetries);
     }
 }

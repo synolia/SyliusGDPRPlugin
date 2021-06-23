@@ -6,16 +6,13 @@ namespace Synolia\SyliusGDPRPlugin\Loader;
 
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Util\ClassUtils;
-use Sylius\Component\Core\Model\ShopUser;
 use Synolia\SyliusGDPRPlugin\Annotation\Anonymize;
 use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetaData;
 use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetadataCollection;
 
 final class AnnotationLoader implements LoaderInterface
 {
-    /**
-     * @var Reader
-     */
+    /** @var Reader */
     private $annotationReader;
 
     public function __construct(Reader $annotationReader)
@@ -23,16 +20,13 @@ final class AnnotationLoader implements LoaderInterface
         $this->annotationReader = $annotationReader;
     }
 
-    /**
-     * @throws \ReflectionException
-     */
+    /** @throws \ReflectionException */
     public function loadClassMetadata(string $className): AttributeMetadataCollection
     {
         $reflectionClass = ClassUtils::newReflectionClass($className);
         $properties = $reflectionClass->getProperties();
         $attributeMetaDataCollection = new AttributeMetadataCollection();
         foreach ($properties as $property) {
-            /** @var Anonymize $annotation */
             $annotation = $this->annotationReader->getPropertyAnnotation(
                 $property,
                 Anonymize::class

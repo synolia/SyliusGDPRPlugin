@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Provider;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -46,7 +48,7 @@ final class AnonymizerTest extends KernelTestCase
     public function testPassAnnotatedObjectAnonymizeOnlyAnnotatedProperties(): void
     {
         $foo = new Foo();
-        $foo->email = "contact@synolia.com";
+        $foo->email = 'contact@synolia.com';
         $foo->bar = 'coucou';
 
         $this->anonymizer->anonymize($foo, false, 10000);

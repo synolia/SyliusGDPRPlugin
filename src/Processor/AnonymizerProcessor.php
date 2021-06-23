@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Synolia\SyliusGDPRPlugin\Processor;
 
-use Synolia\SyliusGDPRPlugin\Provider\AnonymizerInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Synolia\SyliusGDPRPlugin\Provider\AnonymizerInterface;
 
 class AnonymizerProcessor
 {
     private const MODULO_FLUSH = 50;
-
-    private const MAX_RETRIES = 10000;
 
     /** @var AnonymizerInterface */
     private $anonymizer;
@@ -19,27 +17,19 @@ class AnonymizerProcessor
     /** @var EntityManagerInterface */
     private $entityManager;
 
-    /** @var bool */
-    private $reset;
-
-    /** @var int */
-    private $maxRetries;
-
     public function __construct(AnonymizerInterface $anonymizer, EntityManagerInterface $entityManager)
     {
         $this->anonymizer = $anonymizer;
         $this->entityManager = $entityManager;
-        $this->reset = false;
-        $this->maxRetries = self::MAX_RETRIES;
     }
 
-    public function anonymizeEntities(array $entities): void
+    public function anonymizeEntities(array $entities, bool $reset = false, int $maxRetries = 50): void
     {
         foreach ($entities as $index => $entity) {
             if (null === $entity) {
                 continue;
             }
-            $this->anonymizeEntity($entity);
+            $this->anonymizeEntity($entity, $reset, $maxRetries);
 
             if (0 === $index % self::MODULO_FLUSH) {
                 $this->entityManager->flush();
@@ -48,8 +38,8 @@ class AnonymizerProcessor
         $this->entityManager->flush();
     }
 
-    private function anonymizeEntity(Object $entity): void
+    private function anonymizeEntity(Object $entity, bool $reset = false, int $maxRetries = 50): void
     {
-        $this->anonymizer->anonymize($entity, $this->reset, $this->maxRetries);
+        $this->anonymizer->anonymize($entity, $reset, $maxRetries);
     }
 }

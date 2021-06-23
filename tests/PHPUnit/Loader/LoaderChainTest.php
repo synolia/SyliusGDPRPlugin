@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Loader;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -36,6 +38,7 @@ final class LoaderChainTest extends KernelTestCase
         $this->assertInstanceOf(AttributeMetadataCollection::class, $attributeMetaDataCollection);
         $this->assertSame('email', $attributeMetaDataCollection->get()['bar']->getFaker());
     }
+
     public function testPassArrayLoadClassMetaData(): void
     {
         $this->expectException(TypeError::class);

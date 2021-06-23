@@ -76,7 +76,7 @@
         ]
     },
     "scripts": {
-        "fix-ecs": "ecs check src tests/PHPUnit --config=dev/ruleset/ecs.php --no-progress-bar --ansi --fix",
+        "fix-ecs": "ecs check src tests/PHPUnit --config=ruleset/ecs.php --no-progress-bar --ansi --fix",
         "post-install-cmd": [
             "php bin/create_node_symlink.php"
         ],

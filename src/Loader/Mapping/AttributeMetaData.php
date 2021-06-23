@@ -6,19 +6,13 @@ namespace Synolia\SyliusGDPRPlugin\Loader\Mapping;
 
 final class AttributeMetaData implements AttributeMetaDataInterface
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $faker;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $args = [];
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $unique = false;
 
     public function __construct(string $faker = '', array $args = [], bool $unique = false)

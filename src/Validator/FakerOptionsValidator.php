@@ -5,24 +5,17 @@ declare(strict_types=1);
 namespace Synolia\SyliusGDPRPlugin\Validator;
 
 use Faker\Factory;
-use http\Exception\InvalidArgumentException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class FakerOptionsValidator
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     public $faker;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     public $args = [];
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     public $unique = false;
 
     public function __construct(array $options = [])
@@ -38,7 +31,7 @@ final class FakerOptionsValidator
         ]);
         $resolver->addAllowedTypes('unique', 'boolean');
         $resolver->addAllowedTypes('args', 'array');
-        $resolver->addAllowedValues('faker', function ($value) {
+        $resolver->addAllowedValues('faker', function ($value): bool {
             Factory::create()->getFormatter($value);
 
             return true;

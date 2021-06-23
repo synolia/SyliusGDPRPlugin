@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Validator;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
