@@ -1,0 +1,37 @@
+<?php
+
+namespace Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Loader;
+
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetadataCollection;
+use Synolia\SyliusGDPRPlugin\Loader\ArrayLoader;
+
+final class ArrayLoaderTest extends KernelTestCase
+{
+    /** @var ArrayLoader */
+    private $arrayLoader;
+
+    protected function setUp(): void
+    {
+        self::bootKernel();
+        $this->arrayLoader = self::$container->get(ArrayLoader::class);
+    }
+
+    public function testParseConfigForPathReturnEmail(): void
+    {
+        $attributeMetaDataCollection = $this->arrayLoader->loadClassMetadata(
+            'Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\YamlFoo'
+        );
+        $this->assertInstanceOf(AttributeMetadataCollection::class, $attributeMetaDataCollection);
+        $this->assertSame('email', $attributeMetaDataCollection->get()['bar']->getFaker());
+    }
+
+    public function testParseConfigForPathReturnEmptyElementsAttributeMetaDataCollection(): void
+    {
+        $attributeMetaDataCollection = $this->arrayLoader->loadClassMetadata(
+            'Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\NotEvenReal'
+        );
+        $this->assertInstanceOf(AttributeMetadataCollection::class, $attributeMetaDataCollection);
+    }
+}

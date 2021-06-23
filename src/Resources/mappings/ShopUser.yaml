@@ -1,0 +1,4 @@
+Sylius\Component\Core\Model\ShopUser:
+    attributes:
+        username:
+            faker: email
