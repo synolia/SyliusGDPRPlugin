@@ -4,109 +4,65 @@
     </a>
 </p>
 
-<h1 align="center">Plugin Skeleton</h1>
+## Features
 
-<p align="center">Skeleton for starting Sylius plugins.</p>
+## Requirements
 
-## Documentation
+| | Version |
+| :--- | :--- |
+| PHP  | 7.3+ |
+| Sylius | 1.8+ |
 
-For a comprehensive guide on Sylius Plugins development please go to Sylius documentation,
-there you will find the <a href="https://docs.sylius.com/en/latest/plugin-development-guide/index.html">Plugin Development Guide</a>, that is full of examples.
+## Installation
 
-## Quickstart Installation
+1. Add the bundle and dependencies in your composer.json :
 
-1. Run `composer create-project sylius/plugin-skeleton ProjectName`.
-
-2. From the plugin skeleton root directory, run the following commands:
-
-    ```bash
-    $ (cd tests/Application && yarn install)
-    $ (cd tests/Application && yarn build)
-    $ (cd tests/Application && APP_ENV=test bin/console assets:install public)
-    
-    $ (cd tests/Application && APP_ENV=test bin/console doctrine:database:create)
-    $ (cd tests/Application && APP_ENV=test bin/console doctrine:schema:create)
+    ```shell
+    composer require synolia/sylius-gdpr-plugin --no-scripts
     ```
 
-To be able to setup a plugin's database, remember to configure you database credentials in `tests/Application/.env` and `tests/Application/.env.test`.
+2. Enable the plugin in your `config/bundles.php` file by add
 
-## Usage
-
-### Running plugin tests
-
-  - PHPUnit
-
-    ```bash
-    vendor/bin/phpunit
+    ```php
+    Synolia\SyliusGDPRPlugin\SynoliaSyliusGDPRPlugin::class => ['all' => true],
     ```
 
-  - PHPSpec
+3. Import required config in your `config/packages/_sylius.yaml` file:
 
-    ```bash
-    vendor/bin/phpspec run
+    ```yaml
+    imports:
+        - { resource: "@SynoliaSyliusGDPRPlugin/Resources/config/config.yaml" }
     ```
 
-  - Behat (non-JS scenarios)
+4. Import routing in your `config/routes.yaml` file:
 
-    ```bash
-    vendor/bin/behat --strict --tags="~@javascript"
+    ```yaml
+    synolia_gdpr:
+        resource: "@SynoliaSyliusGDPRPlugin/Resources/config/routes.yaml"
+        prefix: /admin
     ```
 
-  - Behat (JS scenarios)
- 
-    1. [Install Symfony CLI command](https://symfony.com/download).
- 
-    2. Start Headless Chrome:
-    
-      ```bash
-      google-chrome-stable --enable-automation --disable-background-networking --no-default-browser-check --no-first-run --disable-popup-blocking --disable-default-apps --allow-insecure-localhost --disable-translate --disable-extensions --no-sandbox --enable-features=Metal --headless --remote-debugging-port=9222 --window-size=2880,1800 --proxy-server='direct://' --proxy-bypass-list='*' http://127.0.0.1
-      ```
-    
-    3. Install SSL certificates (only once needed) and run test application's webserver on `127.0.0.1:8080`:
-    
-      ```bash
-      symfony server:ca:install
-      APP_ENV=test symfony server:start --port=8080 --dir=tests/Application/public --daemon
-      ```
-    
-    4. Run Behat:
-    
-      ```bash
-      vendor/bin/behat --strict --tags="@javascript"
-      ```
-    
-  - Static Analysis
-  
-    - Psalm
-    
-      ```bash
-      vendor/bin/psalm
-      ```
-      
-    - PHPStan
-    
-      ```bash
-      vendor/bin/phpstan analyse -c phpstan.neon -l max src/  
-      ```
+5. Copy plugin migrations to your migrations directory (e.g. `src/Migrations`) and apply them to your database:
 
-  - Coding Standard
-  
-    ```bash
-    vendor/bin/ecs check src
+    ```shell
+    cp -R vendor/synolia/sylius-gdpr-plugin/src/Migrations/* src/Migrations
+    bin/console doctrine:migrations:migrate
     ```
 
-### Opening Sylius with your plugin
+6. Clear cache
 
-- Using `test` environment:
-
-    ```bash
-    (cd tests/Application && APP_ENV=test bin/console sylius:fixtures:load)
-    (cd tests/Application && APP_ENV=test bin/console server:run -d public)
+    ```shell
+    bin/console cache:clear
     ```
-    
-- Using `dev` environment:
 
-    ```bash
-    (cd tests/Application && APP_ENV=dev bin/console sylius:fixtures:load)
-    (cd tests/Application && APP_ENV=dev bin/console server:run -d public)
-    ```
+## Development
+
+See [How to contribute](CONTRIBUTING.md).
+
+## License
+
+This library is under the [EUPL-1.2 license](LICENSE).
+
+## Credits
+
+Developed by [Synolia](https://synolia.com/).

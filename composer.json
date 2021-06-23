@@ -8,7 +8,7 @@
         "gdpr",
         "synolia"
     ],
-    "license": "MIT",
+    "license": "EUPL-1.2",
     "require": {
         "php": "^7.3",
         "sylius/sylius": "~1.8.0 || ~1.9.0"
