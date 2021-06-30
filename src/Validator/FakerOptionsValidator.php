@@ -9,23 +9,20 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class FakerOptionsValidator
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     public $faker;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     public $args = [];
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     public $unique = false;
 
     public function __construct(array $options = [])
     {
+        if ('' === $options['faker'] || null === $options['faker']) {
+            throw new \LogicException('Faker option can\'t be null or \'\'.');
+        }
         $resolver = new OptionsResolver();
         $resolver->setRequired('faker');
         $resolver->setDefaults([
@@ -34,7 +31,7 @@ final class FakerOptionsValidator
         ]);
         $resolver->addAllowedTypes('unique', 'boolean');
         $resolver->addAllowedTypes('args', 'array');
-        $resolver->addAllowedValues('faker', function ($value) {
+        $resolver->addAllowedValues('faker', function ($value): bool {
             Factory::create()->getFormatter($value);
 
             return true;

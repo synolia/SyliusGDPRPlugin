@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Synolia\SyliusGDPRPlugin\Validator;
 
+use Doctrine\Common\Util\ClassUtils;
+use Symfony\Component\HttpFoundation\Response;
+
 final class ArrayMappingValidator
 {
     /**
@@ -17,6 +20,9 @@ final class ArrayMappingValidator
         $this->checkPropertyKey($mapping);
         $this->checkProperty($mapping, $className);
         foreach ($mapping['properties'] as $propertyOptions) {
+            if (null === $propertyOptions) {
+                continue;
+            }
             $this->checkPropertyOptions($propertyOptions);
         }
     }
@@ -37,23 +43,29 @@ final class ArrayMappingValidator
 
     private function checkProperty(array $mapping, string $className): void
     {
-        $class = new \ReflectionClass($className);
+        $class = ClassUtils::newReflectionClass($className);
         $propertiesMapping = \array_keys($mapping['properties']);
         foreach ($propertiesMapping as $propertyMapping) {
             try {
                 $class->getProperty((string) $propertyMapping);
             } catch (\Exception $exception) {
-                throw new \LogicException('The property ' . $propertyMapping . ' does not exist in entity ' . $className . '.');
+                throw new \LogicException(
+                    'The property ' . $propertyMapping . ' does not exist in entity ' . $className . '.',
+                    Response::HTTP_NOT_FOUND,
+                    $exception
+                );
             }
+
             continue;
         }
     }
 
     private function checkPropertyOptions(array $options): void
     {
-        if (\count($options) > self::OPTIONS_LENGTH || 0 === \count($options)) {
+        if (self::OPTIONS_LENGTH < \count($options) || 0 === \count($options)) {
             throw new \LogicException('Anonymization expected 1 to 3 properties ' . \count($options) . ' given.');
         }
+
         new FakerOptionsValidator($options);
     }
 }

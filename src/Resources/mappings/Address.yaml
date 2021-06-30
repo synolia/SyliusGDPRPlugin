@@ -18,5 +18,5 @@ Sylius\Component\Core\Model\Address:
             faker: streetAddress
         city:
             faker: city
-        postCode:
+        postcode:
             faker: postcode

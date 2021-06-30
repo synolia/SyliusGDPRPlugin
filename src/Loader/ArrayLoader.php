@@ -9,9 +9,7 @@ use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetadataCollection;
 
 final class ArrayLoader implements LoaderInterface
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     private $mappings;
 
     public function __construct(array $mappings = [])
@@ -38,11 +36,16 @@ final class ArrayLoader implements LoaderInterface
     }
 
     private function assignAttributeMetaDataCollection(
-        array $property,
+        array $mapping,
         string $className,
         AttributeMetadataCollection $attributeMetaDataCollection
     ): AttributeMetadataCollection {
-        foreach ($property[$className]['properties'] as $property => $options) {
+        foreach ($mapping[$className]['properties'] as $property => $options) {
+            if (null === $options) {
+                $attributeMetaDataCollection->add($property);
+
+                continue;
+            }
             $fakerArguments = $options['args'] ?? [];
             $isUnique = $options['unique'] ?? false;
             $attributeMetaData = new AttributeMetaData($options['faker'], $fakerArguments, $isUnique);

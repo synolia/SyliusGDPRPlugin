@@ -6,9 +6,7 @@ namespace Synolia\SyliusGDPRPlugin\Loader\Mapping;
 
 final class AttributeMetadataCollection
 {
-    /**
-     * @var array<string, AttributeMetaDataInterface>
-     */
+    /** @var array<string, ?AttributeMetaDataInterface> */
     private $elements;
 
     public function __construct(array $elements = [])
@@ -22,7 +20,7 @@ final class AttributeMetadataCollection
         $this->elements = $elements;
     }
 
-    public function add(string $property, AttributeMetaDataInterface $attributeMetaData): self
+    public function add(string $property, ?AttributeMetaDataInterface $attributeMetaData = null): self
     {
         $this->elements[$property] = $attributeMetaData;
 
@@ -30,7 +28,7 @@ final class AttributeMetadataCollection
     }
 
     /**
-     * @return array<string, AttributeMetaDataInterface>
+     * @return array<string, ?AttributeMetaDataInterface>
      */
     public function get(): array
     {

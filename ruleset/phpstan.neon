@@ -2,6 +2,7 @@ parameters:
     level: max
     reportUnmatchedIgnoredErrors: false
     checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
     bootstrapFiles:
         - '../vendor/autoload.php'
     excludes_analyse:
@@ -14,3 +15,4 @@ parameters:
         - '../src/DependencyInjection'
         - '../src/SynoliaSyliusGDPRPlugin.php'
     ignoreErrors:
+        - '#Parameter \#1 \$className of static method Doctrine\\Common\\Util\\ClassUtils::newReflectionClass\(\) expects class-string, string given.#'
