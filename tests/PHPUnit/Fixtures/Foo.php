@@ -14,8 +14,6 @@ class Foo
      */
     public $email;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $bar;
 }

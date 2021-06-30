@@ -5,16 +5,14 @@ declare(strict_types=1);
 namespace Synolia\SyliusGDPRPlugin\Loader;
 
 use Doctrine\Common\Annotations\Reader;
-use Sylius\Component\Core\Model\ShopUser;
+use Doctrine\Common\Util\ClassUtils;
 use Synolia\SyliusGDPRPlugin\Annotation\Anonymize;
 use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetaData;
 use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetadataCollection;
 
 final class AnnotationLoader implements LoaderInterface
 {
-    /**
-     * @var Reader
-     */
+    /** @var Reader */
     private $annotationReader;
 
     public function __construct(Reader $annotationReader)
@@ -22,16 +20,13 @@ final class AnnotationLoader implements LoaderInterface
         $this->annotationReader = $annotationReader;
     }
 
-    /**
-     * @throws \ReflectionException
-     */
+    /** @throws \ReflectionException */
     public function loadClassMetadata(string $className): AttributeMetadataCollection
     {
-        $reflectionClass = new \ReflectionClass($className);
+        $reflectionClass = ClassUtils::newReflectionClass($className);
         $properties = $reflectionClass->getProperties();
         $attributeMetaDataCollection = new AttributeMetadataCollection();
         foreach ($properties as $property) {
-            /** @var Anonymize $annotation */
             $annotation = $this->annotationReader->getPropertyAnnotation(
                 $property,
                 Anonymize::class
@@ -42,7 +37,7 @@ final class AnnotationLoader implements LoaderInterface
             }
 
             if (null === $annotation->faker) {
-                throw new \LogicException('Faker annotation can\'t be empty');
+                continue;
             }
 
             $attributeMetaData = new AttributeMetaData($annotation->faker, $annotation->args, $annotation->unique);

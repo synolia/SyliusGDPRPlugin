@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Synolia\SyliusGDPRPlugin\DependencyInjection;
 
-use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -12,7 +11,6 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
-use Synolia\SyliusGDPRPlugin\DependencyInjection\Configuration;
 use Synolia\SyliusGDPRPlugin\Loader\LoaderInterface;
 use Synolia\SyliusGDPRPlugin\Validator\ArrayMappingValidator;
 
@@ -50,19 +48,19 @@ final class SynoliaSyliusGDPRExtension extends Extension
     private static function mergeConfig(array $base, array $replacement): array
     {
         foreach ($replacement as $key => $value) {
-            $className = self::retrieveMostPreciseClassName($key);
-            if (!\array_key_exists($className, $base) && !\is_numeric($className)) {
-                $base[$className] = $replacement[$className];
+            if (!\array_key_exists($key, $base) && !\is_numeric($key)) {
+                $base[$key] = $replacement[$key];
+
                 continue;
             }
-            if (\is_array($value) || (\array_key_exists($className, $base) && \is_array($base[$className]))) {
-                $base[$className] = self::mergeConfig($base[$className], $replacement[$className]);
-            } elseif (\is_numeric($className)) {
+            if (\is_array($value) || (\array_key_exists($key, $base) && \is_array($base[$key]))) {
+                $base[$key] = self::mergeConfig($base[$key], $replacement[$key]);
+            } elseif (\is_numeric($key)) {
                 if (!\in_array($value, $base, true)) {
                     $base[] = $value;
                 }
             } else {
-                $base[$className] = $value;
+                $base[$key] = $value;
             }
         }
 
@@ -109,15 +107,5 @@ final class SynoliaSyliusGDPRExtension extends Extension
         }
 
         return $mappings;
-    }
-
-    private static function retrieveMostPreciseClassName(string $className): string
-    {
-        $doctrineClassName = ClassUtils::getRealClass($className);
-        if (false === $doctrineClassName) {
-            return $className;
-        }
-
-        return $doctrineClassName;
     }
 }

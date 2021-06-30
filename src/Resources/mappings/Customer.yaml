@@ -1,0 +1,25 @@
+Sylius\Component\Core\Model\Customer:
+    properties:
+        orders: ~
+        defaultAddress: ~
+        addresses: ~
+        user: ~
+        email:
+            faker: email
+            unique: true
+        emailCanonical:
+            faker: email
+            unique: true
+        firstName:
+            faker: firstName
+        lastName:
+            faker: lastName
+        birthday:
+            faker: dateTime
+        gender:
+            faker: title
+        phoneNumber:
+            faker: phoneNumber
+        subscribedToNewsletter:
+            faker: boolean
+            args: [0]

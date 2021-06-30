@@ -8,9 +8,7 @@ use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetadataCollection;
 
 final class LoaderChain implements LoaderInterface
 {
-    /**
-     * @var LoaderInterface[]
-     */
+    /** @var LoaderInterface[] */
     private $loaders;
 
     public function addLoader(LoaderInterface $loader): void

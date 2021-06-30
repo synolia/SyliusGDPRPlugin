@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Loader;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\HttpKernel\KernelInterface;
-use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetadataCollection;
 use Synolia\SyliusGDPRPlugin\Loader\ArrayLoader;
+use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetadataCollection;
 
 final class ArrayLoaderTest extends KernelTestCase
 {

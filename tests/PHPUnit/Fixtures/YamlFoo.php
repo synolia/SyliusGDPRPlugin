@@ -1,16 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures;
 
 class YamlFoo
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     public $foo;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $bar;
 }

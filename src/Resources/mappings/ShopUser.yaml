@@ -1,4 +1,34 @@
 Sylius\Component\Core\Model\ShopUser:
-    attributes:
+    properties:
         username:
             faker: email
+            unique: true
+        usernameCanonical:
+            faker: email
+            unique: true
+        salt:
+            faker: text
+            args: [60]
+        password:
+            faker: sha256
+        lastLogin:
+            faker: dateTime
+        emailVerificationToken:
+            faker: uuid
+        passwordResetToken:
+            faker: uuid
+        passwordRequestedAt:
+            faker: dateTime
+        verifiedAt:
+            faker: dateTime
+        locked:
+            faker: boolean
+            args: [100]
+        credentialsExpireAt:
+            faker: dateTime
+        email:
+            faker: email
+            unique: true
+        emailCanonical:
+            faker: email
+            unique: true

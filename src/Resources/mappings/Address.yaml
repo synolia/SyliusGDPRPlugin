@@ -1,0 +1,22 @@
+Sylius\Component\Core\Model\Address:
+    properties:
+        firstName:
+            faker: firstName
+        lastName:
+            faker: lastName
+        phoneNumber:
+            faker: phoneNumber
+        company:
+            faker: company
+        countryCode:
+            faker: countryCode
+        provinceCode:
+            faker: stateAbbr
+        provinceName:
+            faker: state
+        street:
+            faker: streetAddress
+        city:
+            faker: city
+        postcode:
+            faker: postcode
