@@ -1,6 +1,11 @@
 <div class="content">
+    <h2>{{ 'sylius.ui.admin.synolia_gdpr.customer.gdpr_title'|trans }}</h2>
     <a
         href="{{ path('synolia_sylius_gdpr_admin_anonymize_customer', {'id': customer.id}) }}"
         class="ui labeled icon button black"
     ><i class="icon user secret"></i>{{ 'sylius.ui.admin.synolia_gdpr.customer.anonymize'|trans }}</a>
+    <a
+        href="{{ path('synolia_sylius_gdpr_admin_export_customer_datas', {'id': customer.id}) }}"
+        class="ui labeled icon button blue"
+    ><i class="file icon"></i>{{ 'sylius.ui.admin.synolia_gdpr.customer.export_data'|trans }}</a>
 </div>

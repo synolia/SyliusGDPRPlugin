@@ -4,3 +4,5 @@ sylius:
             synolia_gdpr:
                 customer:
                     anonymize: Anonymize
+                    export_data: Export datas
+                    gdpr_title: GDPR
