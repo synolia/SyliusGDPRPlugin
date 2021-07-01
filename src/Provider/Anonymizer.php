@@ -22,8 +22,18 @@ use Synolia\SyliusGDPRPlugin\Loader\LoaderChain;
 use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetaData;
 use Synolia\SyliusGDPRPlugin\Validator\FakerOptionsValidator;
 
+/**
+ * @SuppressWarnings(PHPMD.NPathComplexity)
+ */
 final class Anonymizer implements AnonymizerInterface
 {
+    private const TYPE_VALUES = [
+        'bool',
+        'string',
+        'int',
+        'float',
+    ];
+
     /** @var Generator */
     private $faker;
 
@@ -93,12 +103,7 @@ final class Anonymizer implements AnonymizerInterface
             $value = $attributeMetaData->getValue();
             if (FakerOptionsValidator::DEFAULT_VALUE !== $value) {
                 if (is_array($value)) {
-                    $this->setValue(
-                        $entity,
-                        $propertyName,
-                        $type,
-                        $value
-                    );
+                    $this->setValue($entity, $propertyName, $type, $value);
 
                     continue;
                 }
@@ -115,12 +120,44 @@ final class Anonymizer implements AnonymizerInterface
 
             if (true === $attributeMetaData->isUnique()) {
                 $value = $this->faker->unique($reset, $maxRetries)->format($attributeMetaData->getFaker(), $attributeMetaData->getArgs());
-                $this->setValue($entity, $propertyName, $type, $value);
+                if (is_object($value)) {
+                    if (in_array($type, self::TYPE_VALUES, true)) {
+                        $this->propertyAccess->setValue(
+                            $entity,
+                            $propertyName,
+                            $value
+                        );
+
+                        continue;
+                    }
+
+                    throw new GDPRValueException('Value or type don\'t match with object');
+                }
+                $this->setValue(
+                    $entity,
+                    $propertyName,
+                    $type,
+                    sprintf('%s%s', (string) $attributeMetaData->getPrefix(), (string) $value)
+                );
 
                 continue;
             }
 
             $value = $this->faker->format($attributeMetaData->getFaker(), $attributeMetaData->getArgs());
+            if (is_object($value)) {
+                if (in_array($type, self::TYPE_VALUES, true)) {
+                    $this->propertyAccess->setValue(
+                        $entity,
+                        $propertyName,
+                        $value
+                    );
+
+                    continue;
+                }
+
+                throw new GDPRValueException('Value or type don\'t match with object');
+            }
+
             $this->setValue(
                 $entity,
                 $propertyName,
@@ -132,9 +169,7 @@ final class Anonymizer implements AnonymizerInterface
         $this->eventDispatcher->dispatch(new AfterAnonymize($entity, ['entity' => $clonedEntity]));
     }
 
-    /**
-     * @param array|string $value
-     */
+    /** @param array|string|bool $value */
     private function setValue(object $entity, string $propertyName, string $type, $value): void
     {
         if (is_array($value)) {
@@ -166,6 +201,14 @@ final class Anonymizer implements AnonymizerInterface
                 $entity,
                 $propertyName,
                 (float) $value
+            );
+        }
+
+        if ('bool' === $type) {
+            $this->propertyAccess->setValue(
+                $entity,
+                $propertyName,
+                (bool) $value
             );
         }
 

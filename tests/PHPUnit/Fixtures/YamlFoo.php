@@ -14,5 +14,7 @@ class YamlFoo
 
     public $prefixValue;
 
+    public $nullValue;
+
     public $bar;
 }

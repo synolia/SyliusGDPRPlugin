@@ -6,3 +6,5 @@ Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\YamlFoo:
             value: 'anonymize@synolia.com'
         value:
             value: 'test-yaml-value'
+        nullValue:
+            value: null

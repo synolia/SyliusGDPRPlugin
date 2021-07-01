@@ -5,9 +5,10 @@ Sylius\Component\Core\Model\Order:
         payments: ~
         currencyCode:
             faker: currencyCode
+            prefix: 'anonymized-'
         localeCode:
             faker: locale
         customerIp:
-            faker: ipv6
+            value: null
         notes:
             faker: text

@@ -84,5 +84,6 @@ final class AnonymizerTest extends KernelTestCase
         $this->assertSame('test-yaml-prefix-value', $foo->prefixValue);
         $this->assertSame('anonymize@synolia.com', $foo->email);
         $this->assertStringContainsString('@', $foo->email);
+        $this->assertNull($foo->nullValue);
     }
 }

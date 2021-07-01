@@ -2,21 +2,31 @@ Sylius\Component\Core\Model\Address:
     properties:
         firstName:
             faker: firstName
+            prefix: 'anonymized-'
         lastName:
             faker: lastName
+            prefix: 'anonymized-'
         phoneNumber:
             faker: phoneNumber
+            prefix: 'anonymized-'
         company:
             faker: company
+            prefix: 'anonymized-'
         countryCode:
             faker: countryCode
+            prefix: 'anonymized-'
         provinceCode:
             faker: stateAbbr
+            prefix: 'anonymized-'
         provinceName:
             faker: state
+            prefix: 'anonymized-'
         street:
             faker: streetAddress
+            prefix: 'anonymized-'
         city:
             faker: city
+            prefix: 'anonymized-'
         postcode:
             faker: postcode
+            prefix: 'anonymized-'
