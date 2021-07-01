@@ -26,6 +26,7 @@ final class ArrayLoaderTest extends KernelTestCase
         );
         $this->assertInstanceOf(AttributeMetadataCollection::class, $attributeMetaDataCollection);
         $this->assertSame('email', $attributeMetaDataCollection->get()['bar']->getFaker());
+        $this->assertSame([], $attributeMetaDataCollection->get()['bar']->getArgs());
     }
 
     public function testParseConfigForPathReturnEmptyElementsAttributeMetaDataCollection(): void

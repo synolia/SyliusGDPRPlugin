@@ -2,3 +2,7 @@ Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\YamlFoo:
     properties:
         bar:
             faker: email
+        email:
+            value: 'anonymize@synolia.com'
+        value:
+            value: 'test-yaml-value'

@@ -36,16 +36,8 @@ final class AnnotationLoader implements LoaderInterface
                 continue;
             }
 
-            if (null === $annotation->faker) {
-                continue;
-            }
+            $attributeMetaData = new AttributeMetaData($annotation->faker, $annotation->args, $annotation->unique, $annotation->prefix, $annotation->value);
 
-            $attributeMetaData = new AttributeMetaData($annotation->faker, $annotation->args, $annotation->unique);
-
-            $attributeMetaData->setFaker($annotation->faker)
-                ->setArgs($annotation->args)
-                ->setUnique($annotation->unique)
-            ;
             $attributeMetaDataCollection->add($property->name, $attributeMetaData);
         }
 

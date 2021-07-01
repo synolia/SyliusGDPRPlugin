@@ -22,15 +22,19 @@ final class Anonymize implements Annotation
     /** @var bool */
     public $unique = false;
 
+    /** @var string|int|null */
+    public $prefix = '';
+
+    /** @var string|int|array|bool|null */
+    public $value;
+
     public function __construct(array $options = [])
     {
-        if (isset($options['value'])) {
-            $options['faker'] = $options['value'];
-            unset($options['value']);
-        }
         $anonymize = new FakerOptionsValidator($options);
         $this->faker = $anonymize->faker;
         $this->args = $anonymize->args;
         $this->unique = $anonymize->unique;
+        $this->prefix = $anonymize->prefix;
+        $this->value = $anonymize->value;
     }
 }

@@ -1,4 +1,13 @@
 Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\YamlFoo:
     properties:
-        foo:
+        bar:
+            faker: text
+            args: [200]
+        value:
+            value: 'test-yaml-value'
+        prefix:
             faker: email
+            prefix: 'test-yaml-prefix-'
+        prefixValue:
+            value: value
+            prefix: 'test-yaml-prefix-'

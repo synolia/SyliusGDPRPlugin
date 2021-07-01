@@ -58,7 +58,7 @@ final class SynoliaSyliusGDPRExtension extends Extension
                     $base[] = $value;
                 }
             } else {
-                $base[$key] = $value;
+                $base = $replacement;
             }
         }
 

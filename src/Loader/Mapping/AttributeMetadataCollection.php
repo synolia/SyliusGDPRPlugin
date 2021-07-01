@@ -27,9 +27,7 @@ final class AttributeMetadataCollection
         return $this;
     }
 
-    /**
-     * @return array<string, ?AttributeMetaDataInterface>
-     */
+    /** @return array<string, ?AttributeMetaDataInterface> */
     public function get(): array
     {
         return $this->elements;

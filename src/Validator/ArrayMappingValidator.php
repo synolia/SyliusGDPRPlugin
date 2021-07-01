@@ -6,13 +6,12 @@ namespace Synolia\SyliusGDPRPlugin\Validator;
 
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\HttpFoundation\Response;
+use Synolia\SyliusGDPRPlugin\Exception\GDPRPropertyException;
 
 final class ArrayMappingValidator
 {
-    /**
-     * @var int
-     */
-    private const OPTIONS_LENGTH = 3;
+    /** @var int */
+    private const OPTIONS_LENGTH = 5;
 
     public function checkParse(array $mapping, string $className): void
     {
@@ -49,7 +48,7 @@ final class ArrayMappingValidator
             try {
                 $class->getProperty((string) $propertyMapping);
             } catch (\Exception $exception) {
-                throw new \LogicException(
+                throw new GDPRPropertyException(
                     'The property ' . $propertyMapping . ' does not exist in entity ' . $className . '.',
                     Response::HTTP_NOT_FOUND,
                     $exception
@@ -63,7 +62,7 @@ final class ArrayMappingValidator
     private function checkPropertyOptions(array $options): void
     {
         if (self::OPTIONS_LENGTH < \count($options) || 0 === \count($options)) {
-            throw new \LogicException('Anonymization expected 1 to 3 properties ' . \count($options) . ' given.');
+            throw new \LogicException('Anonymization expected 1 to 5 properties ' . \count($options) . ' given.');
         }
 
         new FakerOptionsValidator($options);
