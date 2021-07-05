@@ -26,8 +26,6 @@ final class SynoliaSyliusGDPRExtension extends Extension
         $container->registerForAutoconfiguration(LoaderInterface::class)
             ->addTag('anonymization_loader');
 
-        $this->arrayMappingValidator = new ArrayMappingValidator();
-
         $mapping = $this->retrieveMappings($configs);
         $container->setParameter('synolia_anonymization_mapping', $mapping);
     }
@@ -69,7 +67,16 @@ final class SynoliaSyliusGDPRExtension extends Extension
 
     private function retrieveMappings(array $configs): array
     {
-        $mappings = [];
+        $defaultConfig = [
+            'anonymization' => [
+                'mappings' => [
+                    'paths' => [
+                        __DIR__ . '/../Resources/config/mappings/',
+                    ],
+                ],
+            ],
+        ];
+        $mappings = $this->retrieveMapping($defaultConfig);
         foreach ($configs as $config) {
             $mappings = array_merge($mappings, $this->retrieveMapping($config));
         }
@@ -77,13 +84,13 @@ final class SynoliaSyliusGDPRExtension extends Extension
         return $mappings;
     }
 
-    private function retrieveMapping(array $configs): array
+    private function retrieveMapping(array $config): array
     {
         $mappings = [];
-        if (!isset($configs['anonymization']['mappings']['path'])) {
+        if (!isset($config['anonymization']['mappings']['paths'])) {
             return $mappings;
         }
-        foreach ($configs['anonymization']['mappings']['path'] as $filePath) {
+        foreach ($config['anonymization']['mappings']['paths'] as $filePath) {
             if (!\file_exists($filePath) || !\is_dir($filePath)) {
                 throw new \LogicException('The directory ' . $filePath . ' does not exist.');
             }
@@ -103,7 +110,7 @@ final class SynoliaSyliusGDPRExtension extends Extension
         }
 
         foreach ($mappings as $className => $content) {
-            $this->arrayMappingValidator->checkParse($content, $className);
+            (new ArrayMappingValidator())->checkParse($content, $className);
         }
 
         return $mappings;

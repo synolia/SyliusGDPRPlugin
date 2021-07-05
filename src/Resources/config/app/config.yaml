@@ -1,3 +1,2 @@
 imports:
     - { resource: "@SynoliaSyliusGDPRPlugin/Resources/config/packages/sylius_customer_show.yaml" }
-    - { resource: "@SynoliaSyliusGDPRPlugin/Resources/config/packages/synolia_gdpr.yaml" }
