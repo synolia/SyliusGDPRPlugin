@@ -1,0 +1,5 @@
+Sylius\Component\Core\Model\PaymentMethod:
+    attributes:
+        code:
+            groups:
+                - !php/const Synolia\SyliusGDPRPlugin\Enum\GDPRSerializationKeyEnum::CUSTOMER_DATA

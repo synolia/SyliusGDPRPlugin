@@ -1,0 +1,7 @@
+Sylius\Component\Core\Model\Promotion:
+    attributes:
+        code: &defaultGroup
+            groups:
+                - !php/const Synolia\SyliusGDPRPlugin\Enum\GDPRSerializationKeyEnum::CUSTOMER_DATA
+        name: *defaultGroup
+        description: *defaultGroup
