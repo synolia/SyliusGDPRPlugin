@@ -1,0 +1,6 @@
+sylius:
+    ui:
+        admin:
+            synolia_gdpr:
+                customer:
+                    anonymize: Anonymize
