@@ -16,8 +16,6 @@ Sylius\Component\Core\Model\Customer:
             faker: lastName
         birthday:
             faker: dateTime
-        gender:
-            faker: title
         phoneNumber:
             faker: phoneNumber
         subscribedToNewsletter:

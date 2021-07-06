@@ -4,3 +4,5 @@ sylius:
             synolia_gdpr:
                 customer:
                     anonymize: Anonymizer
+                    export_data: Récupération des informations
+                    gdpr_title: RGPD

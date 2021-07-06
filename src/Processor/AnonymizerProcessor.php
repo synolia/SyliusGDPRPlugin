@@ -7,7 +7,7 @@ namespace Synolia\SyliusGDPRPlugin\Processor;
 use Doctrine\ORM\EntityManagerInterface;
 use Synolia\SyliusGDPRPlugin\Provider\AnonymizerInterface;
 
-class AnonymizerProcessor
+final class AnonymizerProcessor
 {
     private const MODULO_FLUSH = 50;
 
@@ -17,8 +17,10 @@ class AnonymizerProcessor
     /** @var EntityManagerInterface */
     private $entityManager;
 
-    public function __construct(AnonymizerInterface $anonymizer, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        AnonymizerInterface $anonymizer,
+        EntityManagerInterface $entityManager
+    ) {
         $this->anonymizer = $anonymizer;
         $this->entityManager = $entityManager;
     }
@@ -35,6 +37,7 @@ class AnonymizerProcessor
                 $this->entityManager->flush();
             }
         }
+
         $this->entityManager->flush();
     }
 
