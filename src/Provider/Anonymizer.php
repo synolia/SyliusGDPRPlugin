@@ -66,7 +66,7 @@ final class Anonymizer implements AnonymizerInterface
 
         $clonedEntity = clone $entity;
 
-        $className = ClassUtils::getRealClass(get_class($entity));
+        $className = ClassUtils::getClass($entity);
         $attributeMetadataCollection = $this->loaderChain->loadClassMetadata($className);
         $attributeMetadataCollection = $attributeMetadataCollection->get();
 
@@ -90,7 +90,7 @@ final class Anonymizer implements AnonymizerInterface
             if (!$attributeMetaData instanceof AttributeMetaData) {
                 $this->logger->error(sprintf('The attribute %s has no Attribute meta data and is not an object.', $propertyName));
 
-                return;
+                continue;
             }
 
             $this->anonymizeProcess($entity, $reset, $maxRetries, $className, $propertyName, $attributeMetaData);
@@ -133,7 +133,7 @@ final class Anonymizer implements AnonymizerInterface
         if (true === $attributeMetaData->isUnique()) {
             $value = $this->faker->unique($reset, $maxRetries)->format($attributeMetaData->getFaker(), $attributeMetaData->getArgs());
             if (is_object($value)) {
-                if (in_array($type, self::TYPE_VALUES, true)) {
+                if (!in_array($type, self::TYPE_VALUES, true)) {
                     $this->propertyAccess->setValue(
                         $entity,
                         $propertyName,
@@ -168,7 +168,7 @@ final class Anonymizer implements AnonymizerInterface
 
         $value = $this->faker->format($attributeMetaData->getFaker(), $attributeMetaData->getArgs());
         if (is_object($value)) {
-            if (in_array($type, self::TYPE_VALUES, true)) {
+            if (!in_array($type, self::TYPE_VALUES, true)) {
                 $this->propertyAccess->setValue(
                     $entity,
                     $propertyName,
