@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
     paths-ignore:
       - README.md
   pull_request:
@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [7.3, 7.4]
+        php: [7.3, 7.4, 8.0]
         symfony: [4.4.*, 5.2.*]
 
     steps:
@@ -30,10 +30,6 @@ jobs:
           tools: symfony
           coverage: none
 
-      - name: Composer - Update to composer 2
-        id: composer-2
-        run: composer self-update --2
-
       - name: Composer - Get Cache Directory
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
@@ -45,6 +41,7 @@ jobs:
           key: php-${{ matrix.php }}-symfony-${{ matrix.symfony }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: |
             php-${{ matrix.php }}-symfony-${{ matrix.symfony }}-composer-
+
       - name: Composer - Validate composer.json and composer.lock
         run: composer validate --strict
 
@@ -59,11 +56,11 @@ jobs:
         id: end-of-setup
 
       - name: ECS - Run
-        run: if [ -f ruleset/ecs.php ]; then vendor/bin/ecs check src/ --no-progress-bar -c ruleset/ecs.php ; else echo Ecs ruleset file does not exist, skipping step ; fi
+        run: if [ -f ruleset/ecs.php ]; then vendor/bin/ecs check --no-progress-bar -c ruleset/ecs.php ; else echo Ecs rulesets file does not exist, skipping step ; fi
         if: always() && steps.end-of-setup.outcome == 'success'
 
       - name: PHPStan - Run
-        run: if [ -f ruleset/phpstan.neon ]; then vendor/bin/phpstan analyse -c ruleset/phpstan.neon src/ ; else echo PHPStan ruleset file does not exist, skipping step ; fi
+        run: if [ -f ruleset/phpstan.neon ]; then vendor/bin/phpstan analyse -c ruleset/phpstan.neon src/ ; else echo PHPStan rulesets file does not exist, skipping step ; fi
         if: always() && steps.end-of-setup.outcome == 'success'
 
       - name: PHPMD - Run
@@ -79,20 +76,24 @@ jobs:
         if: always() && steps.end-of-setup.outcome == 'success'
 
   sylius:
-    name: PHPUnit (PHP ${{ matrix.php }} Sylius ${{ matrix.sylius }})
+    name: "Sylius ${{ matrix.sylius }}, PHP ${{ matrix.php }}, Symfony ${{ matrix.symfony }}"
     runs-on: ubuntu-18.04
     strategy:
       fail-fast: false
       matrix:
-        php: [7.3, 7.4]
-        sylius: [1.8.*, 1.9.*]
-        symfony: [4.4.*, 5.2.*]
+        php: [7.3, 7.4, 8.0]
+        sylius: [1.9.0, 1.10.0]
+        symfony: [4.4, 5.2]
         node: [10.x]
         exclude:
-          -   sylius: 1.8.*
-              symfony: 5.2.*
-          -   sylius: 1.9.*
-              symfony: 4.4.*
+          -   sylius: 1.9.0
+              symfony: 4.4
+          -   sylius: 1.9.0
+              php: 8.0
+          -   sylius: 1.10.0
+              php: 7.3
+          -   sylius: 1.10.0
+              symfony: 4.4
 
     env:
       APP_ENV: test
@@ -114,12 +115,6 @@ jobs:
           node-version: "${{ matrix.node }}"
 
       - uses: actions/checkout@v2
-        with:
-          path: plugin
-
-      - name: Composer - Update to composer 2
-        id: composer-2
-        run: composer self-update --2
 
       - name: Composer - Get Cache Directory
         id: composer-cache
@@ -140,45 +135,6 @@ jobs:
       - name: Composer - Github Auth
         run: composer config -g github-oauth.github.com ${{ github.token }}
 
-      - name: Composer - Install Sylius-Standard
-        run: composer create-project --no-progress sylius/sylius-standard sylius "${{ matrix.sylius }}"
-
-      - name: Composer - Add path repository
-        working-directory: ./sylius
-        run: |
-          composer config repositories.plugin '{"type": "path", "url": "../plugin/"}'
-      - name: Composer - Config
-        working-directory: ./sylius
-        run: |
-          composer config extra.symfony.allow-contrib true
-          composer config minimum-stability "dev"
-          composer config prefer-stable true
-      - name: Composer - Restrict Symfony version
-        working-directory: ./sylius
-        run: composer config extra.symfony.require "${{ matrix.symfony }}"
-
-      - name: Composer - Install plugin
-        working-directory: ./sylius
-        run: composer req "${{ env.package-name }}:*" --prefer-source --no-scripts
-
-      - name: Sylius - Update dependencies # need to update sylius version
-        working-directory: ./sylius
-        run: |
-          composer update --no-progress --no-scripts --prefer-dist
-          composer update --no-suggest -n -o
-      - name: Sylius - Run Symfony flex
-        working-directory: ./sylius
-        run: composer sync-recipes
-
-      - name: Sylius - Set database config
-        working-directory: ./sylius
-        run: |
-          echo 'DATABASE_URL=mysql://root:@127.0.0.1:3306/gdpr_plugin_%kernel.environment%?serverVersion=mariadb-10.4.11' >> .env
-
-      - name: Sylius - Install
-        working-directory: ./sylius
-        run: php bin/console sylius:install -n
-
       - name: Yarn - Get cache directory
         id: yarn-cache
         run: echo "::set-output name=dir::$(yarn cache dir)"
@@ -190,53 +146,12 @@ jobs:
           key: node-${{ matrix.node }}-yarn-${{ hashFiles('**/package.json **/yarn.lock') }}
           restore-keys: |
             node-${{ matrix.node }}-yarn-
-      - name: Sylius - Assets
-        working-directory: ./sylius
-        run: yarn install && yarn build
 
-      - name: Sylius - Cache clear
-        working-directory: ./sylius
-        run: |
-          php bin/console c:c
-      - name: PHPUnit - Configure
-        working-directory: ./sylius
-        run: |
-          cp vendor/${{ env.package-name }}/phpunit.xml.dist phpunit.xml
-          sed -i "s#tests/Application/config/bootstrap.php#config/bootstrap.php#g" phpunit.xml
-          sed -i "s#<directory>tests</directory>#<directory>./vendor/${{ env.package-name }}/tests/PHPUnit</directory>#g" phpunit.xml
-          sed -i "s#/tests/Application/Kernel.php#src/Kernel.php#g" phpunit.xml
-      - name: Output PHP version for Symfony CLI
-        working-directory: ./sylius
-        run: php -v | head -n 1 | awk '{ print $2 }' > .php-version
+      - name: Install Sylius-Standard and Plugin
+        run: make install -e SYLIUS_VERSION=${{ matrix.sylius }} SYMFONY_VERSION=${{ matrix.symfony }}
 
-      - name: Install certificates
-        working-directory: ./sylius
-        run: symfony server:ca:install
-
-      - name: Run Chrome headless
-        working-directory: ./sylius
-        run: google-chrome-stable --enable-automation --disable-background-networking --no-default-browser-check --no-first-run --disable-popup-blocking --disable-default-apps --allow-insecure-localhost --disable-translate --disable-extensions --no-sandbox --enable-features=Metal --headless --remote-debugging-port=9222 --window-size=2880,1800 --proxy-server='direct://' --proxy-bypass-list='*' https://127.0.0.1 > /dev/null 2>&1 &
-
-      - name: Run webserver
-        working-directory: ./sylius
-        run: symfony server:start --port=8080 --dir=public --daemon
-        id: end-of-setup-sylius
-
-      - name: Doctrine Schema Validate - Run
-        working-directory: ./sylius
-        run: php bin/console doctrine:schema:validate --skip-sync
-        if: always() && steps.end-of-setup-sylius.outcome == 'success'
-
-      - name: PHPunit - Run
-        working-directory: ./sylius
-        run: vendor/bin/phpunit
-        if: always() && steps.end-of-setup-sylius.outcome == 'success'
-
-      - uses: actions/upload-artifact@v2.1.4
-        if: failure()
-        with:
-          name: logs
-          path: ./sylius/etc/build
+      - name: Run PHPUnit
+        run: make phpunit
 
     services:
       mariadb:

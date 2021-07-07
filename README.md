@@ -1,3 +1,8 @@
+[![License](https://img.shields.io/packagist/l/synolia/sylius-gdpr-plugin.svg)](https://github.com/synolia/SyliusGDPRPlugin/blob/master/LICENSE)
+[![CI](https://github.com/synolia/SyliusGDPRPlugin/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/synolia/SyliusGDPRPlugin/actions/workflows/ci.yaml)
+[![Version](https://img.shields.io/packagist/v/synolia/sylius-gdpr-plugin.svg)](https://packagist.org/packages/synolia/sylius-gdpr-plugin)
+[![Total Downloads](https://poser.pugx.org/synolia/sylius-gdpr-plugin/downloads)](https://packagist.org/packages/synolia/sylius-gdpr-plugin)
+
 <p align="center">
     <a href="https://sylius.com" target="_blank">
         <img src="https://demo.sylius.com/assets/shop/img/logo.png" />
@@ -10,8 +15,8 @@
 
 | | Version |
 | :--- | :--- |
-| PHP  | 7.3+ |
-| Sylius | 1.8+ |
+| PHP  | 7.3, 7.4, 8.0 |
+| Sylius | 1.9, 1.10 |
 
 ## Installation
 
@@ -31,15 +36,15 @@
 
     ```yaml
     imports:
-        - { resource: "@SynoliaSyliusGDPRPlugin/Resources/config/config.yaml" }
+        - { resource: "@SynoliaSyliusGDPRPlugin/Resources/config/app/config.yaml" }
     ```
 
 4. Import routing in your `config/routes.yaml` file:
 
     ```yaml
     synolia_gdpr:
-        resource: "@SynoliaSyliusGDPRPlugin/Resources/config/routes.yaml"
-        prefix: /admin
+        resource: "@SynoliaSyliusGDPRPlugin/Resources/config/routes/admin/customer.yaml"
+        prefix: '/%sylius_admin.path_name%'
     ```
 
 5. Copy plugin migrations to your migrations directory (e.g. `src/Migrations`) and apply them to your database:
