@@ -31,9 +31,9 @@ final class ArrayLoaderTest extends KernelTestCase
 
     public function testParseConfigForPathReturnEmptyElementsAttributeMetaDataCollection(): void
     {
-        $attributeMetaDataCollection = $this->arrayLoader->loadClassMetadata(
+        $this->expectException(\ReflectionException::class);
+        $this->arrayLoader->loadClassMetadata(
             'Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\NotEvenReal'
         );
-        $this->assertInstanceOf(AttributeMetadataCollection::class, $attributeMetaDataCollection);
     }
 }
