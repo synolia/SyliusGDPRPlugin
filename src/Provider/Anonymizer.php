@@ -22,9 +22,6 @@ use Synolia\SyliusGDPRPlugin\Loader\LoaderChain;
 use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetaData;
 use Synolia\SyliusGDPRPlugin\Validator\FakerOptionsValidator;
 
-/**
- * @SuppressWarnings(PHPMD.NPathComplexity)
- */
 final class Anonymizer implements AnonymizerInterface
 {
     private const TYPE_VALUES = [
@@ -73,7 +70,6 @@ final class Anonymizer implements AnonymizerInterface
         $attributeMetadataCollection = $this->loaderChain->loadClassMetadata($className);
         $attributeMetadataCollection = $attributeMetadataCollection->get();
 
-        $propertyExtractor = (new PropertyInfoExtractor([], [new PhpDocExtractor(), new ReflectionExtractor()]));
         foreach ($attributeMetadataCollection as $propertyName => $attributeMetaData) {
             if ($this->isIterative($entity, $className, $propertyName)) {
                 $getter = 'get' . ucfirst($propertyName);
@@ -94,54 +90,70 @@ final class Anonymizer implements AnonymizerInterface
             if (!$attributeMetaData instanceof AttributeMetaData) {
                 $this->logger->error(sprintf('The attribute %s has no Attribute meta data and is not an object.', $propertyName));
 
-                continue;
+                return;
             }
 
-            /** @var array<int, Type>|null $types */
-            $types = $propertyExtractor->getTypes($className, $propertyName);
-            $type = null !== $types ? $types[0]->getBuiltinType() : 'string';
-            $value = $attributeMetaData->getValue();
-            if (FakerOptionsValidator::DEFAULT_VALUE !== $value) {
-                if (is_array($value)) {
-                    $this->setValue($entity, $propertyName, $type, $value);
+            $this->anonymizeProcess($entity, $reset, $maxRetries, $className, $propertyName, $attributeMetaData);
+        }
 
-                    continue;
+        $this->eventDispatcher->dispatch(new AfterAnonymize($entity, ['entity' => $clonedEntity]));
+    }
+
+    private function anonymizeProcess(
+        Object $entity,
+        int $reset,
+        int $maxRetries,
+        string $className,
+        string $propertyName,
+        AttributeMetaData $attributeMetaData
+    ): void {
+        $propertyExtractor = (new PropertyInfoExtractor([], [new PhpDocExtractor(), new ReflectionExtractor()]));
+
+        /** @var array<int, Type>|null $types */
+        $types = $propertyExtractor->getTypes($className, $propertyName);
+        $type = null !== $types ? $types[0]->getBuiltinType() : 'string';
+        $value = $attributeMetaData->getValue();
+        if (FakerOptionsValidator::DEFAULT_VALUE !== $value) {
+            if (is_array($value)) {
+                $this->setValue($entity, $propertyName, $type, $value);
+
+                return;
+            }
+
+            $this->setValue(
+                $entity,
+                $propertyName,
+                $type,
+                sprintf('%s%s', (string) $attributeMetaData->getPrefix(), (string) $value)
+            );
+
+            return;
+        }
+
+        if (true === $attributeMetaData->isUnique()) {
+            $value = $this->faker->unique($reset, $maxRetries)->format($attributeMetaData->getFaker(), $attributeMetaData->getArgs());
+            if (is_object($value)) {
+                if (in_array($type, self::TYPE_VALUES, true)) {
+                    $this->propertyAccess->setValue(
+                        $entity,
+                        $propertyName,
+                        $value
+                    );
+
+                    return;
                 }
 
-                $this->setValue(
-                    $entity,
-                    $propertyName,
-                    $type,
-                    sprintf('%s%s', (string) $attributeMetaData->getPrefix(), (string) $value)
-                );
-
-                continue;
+                throw new GDPRValueException('Value or type don\'t match with object');
             }
+            $this->setValue(
+                $entity,
+                $propertyName,
+                $type,
+                sprintf('%s%s', (string) $attributeMetaData->getPrefix(), (string) $value)
+            );
 
-            if (true === $attributeMetaData->isUnique()) {
-                $value = $this->faker->unique($reset, $maxRetries)->format($attributeMetaData->getFaker(), $attributeMetaData->getArgs());
-                if (is_object($value)) {
-                    if (in_array($type, self::TYPE_VALUES, true)) {
-                        $this->propertyAccess->setValue(
-                            $entity,
-                            $propertyName,
-                            $value
-                        );
-
-                        continue;
-                    }
-
-                    throw new GDPRValueException('Value or type don\'t match with object');
-                }
-                $this->setValue(
-                    $entity,
-                    $propertyName,
-                    $type,
-                    sprintf('%s%s', (string) $attributeMetaData->getPrefix(), (string) $value)
-                );
-
-                continue;
-            }
+            return;
+        }
 
             $value = $this->faker->format($attributeMetaData->getFaker(), $attributeMetaData->getArgs());
             if (is_object($value)) {
@@ -152,21 +164,18 @@ final class Anonymizer implements AnonymizerInterface
                         $value
                     );
 
-                    continue;
-                }
-
-                throw new GDPRValueException('Value or type don\'t match with object');
+                return;
             }
 
-            $this->setValue(
-                $entity,
-                $propertyName,
-                $type,
-                sprintf('%s%s', (string) $attributeMetaData->getPrefix(), (string) $value)
-            );
+            throw new GDPRValueException('Value or type don\'t match with object');
         }
 
-        $this->eventDispatcher->dispatch(new AfterAnonymize($entity, ['entity' => $clonedEntity]));
+        $this->setValue(
+            $entity,
+            $propertyName,
+            $type,
+            sprintf('%s%s', (string) $attributeMetaData->getPrefix(), (string) $value)
+        );
     }
 
     /** @param array|string|bool $value */
