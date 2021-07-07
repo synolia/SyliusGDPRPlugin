@@ -20,31 +20,6 @@ final class AnonymizerTest extends KernelTestCase
         $this->anonymizer = self::$container->get(Anonymizer::class);
     }
 
-    public function testPassArrayToAnonymizerThrowAnException(): void
-    {
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('This is not an object');
-
-        $data = ['coucou' => 'hello'];
-        $this->anonymizer->anonymize($data, false, 10000);
-    }
-
-    public function testPassStringToAnonymizerThrowAnException(): void
-    {
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('This is not an object');
-
-        $this->anonymizer->anonymize('coucou', false, 10000);
-    }
-
-    public function testPassIntToAnonymizerThrowAnException(): void
-    {
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('This is not an object');
-
-        $this->anonymizer->anonymize(12, false, 10000);
-    }
-
     public function testAnonymizeWithAnnotationAndYamlProperties(): void
     {
         $foo = new Foo();
