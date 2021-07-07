@@ -7,17 +7,24 @@ Sylius\Component\Core\Model\Customer:
         email:
             faker: email
             unique: true
+            prefix: 'anonymized-'
         emailCanonical:
             faker: email
             unique: true
+            prefix: 'anonymized-'
         firstName:
             faker: firstName
+            prefix: 'anonymized-'
         lastName:
             faker: lastName
+            prefix: 'anonymized-'
         birthday:
             faker: dateTime
+        gender:
+            value: 'u'
         phoneNumber:
             faker: phoneNumber
+            prefix: 'anonymized-'
         subscribedToNewsletter:
             faker: boolean
             args: [0]

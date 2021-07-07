@@ -20,6 +20,7 @@ final class LoaderChain implements LoaderInterface
         if ($loader instanceof self) {
             return;
         }
+
         $this->loaders[] = $loader;
     }
 

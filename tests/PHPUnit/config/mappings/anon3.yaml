@@ -1,0 +1,4 @@
+Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\Foo:
+    properties:
+        mergeYamlAnnotationConfiguration:
+            faker: email

@@ -6,9 +6,15 @@ namespace Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures;
 
 class YamlFoo
 {
-    /** @var string */
-    public $foo;
+    public $email = '';
 
-    /** @var string */
+    public $value;
+
+    public $prefix;
+
+    public $prefixValue;
+
+    public $nullValue;
+
     public $bar;
 }

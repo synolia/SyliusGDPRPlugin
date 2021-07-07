@@ -6,35 +6,27 @@ namespace Synolia\SyliusGDPRPlugin\Loader\Mapping;
 
 interface AttributeMetaDataInterface
 {
-    /**
-     * Get faker attribute
-     */
-    public function getFaker(): string;
+    public function getFaker(): ?string;
 
-    /**
-     * Set faker attribute
-     */
-    public function setFaker(string $faker);
+    public function setFaker(?string $faker): self;
 
-    /**
-     * Get arguments attributes
-     *
-     * @return string[]
-     */
     public function getArgs(): array;
 
-    /**
-     * Add arguments attributes
-     */
-    public function setArgs(array $arg);
+    public function setArgs(array $arg): self;
 
-    /**
-     * Get unique attribute
-     */
     public function isUnique(): bool;
 
-    /**
-     * Set unique attribute
-     */
-    public function setUnique(bool $unique);
+    public function setUnique(bool $unique): self;
+
+    /** @return int|string|null */
+    public function getPrefix();
+
+    /** @param int|string|null $prefix */
+    public function setPrefix($prefix): self;
+
+    /** @return int|string|array|bool|null */
+    public function getValue();
+
+    /** @param mixed $value */
+    public function setValue($value): self;
 }

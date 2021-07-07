@@ -10,14 +10,27 @@ use Faker\Generator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
+use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
+use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
+use Symfony\Component\PropertyInfo\Type;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Synolia\SyliusGDPRPlugin\Event\AfterAnonymize;
 use Synolia\SyliusGDPRPlugin\Event\BeforeAnonymize;
+use Synolia\SyliusGDPRPlugin\Exception\GDPRValueException;
 use Synolia\SyliusGDPRPlugin\Loader\LoaderChain;
 use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetaData;
+use Synolia\SyliusGDPRPlugin\Validator\FakerOptionsValidator;
 
 final class Anonymizer implements AnonymizerInterface
 {
+    private const TYPE_VALUES = [
+        'bool',
+        'string',
+        'int',
+        'float',
+    ];
+
     /** @var Generator */
     private $faker;
 
@@ -56,6 +69,7 @@ final class Anonymizer implements AnonymizerInterface
         $className = ClassUtils::getRealClass(get_class($entity));
         $attributeMetadataCollection = $this->loaderChain->loadClassMetadata($className);
         $attributeMetadataCollection = $attributeMetadataCollection->get();
+
         foreach ($attributeMetadataCollection as $propertyName => $attributeMetaData) {
             if ($this->isIterative($entity, $className, $propertyName)) {
                 $getter = 'get' . ucfirst($propertyName);
@@ -76,20 +90,153 @@ final class Anonymizer implements AnonymizerInterface
             if (!$attributeMetaData instanceof AttributeMetaData) {
                 $this->logger->error(sprintf('The attribute %s has no Attribute meta data and is not an object.', $propertyName));
 
-                continue;
-            }
-            if (true === $attributeMetaData->isUnique()) {
-                $value = $this->faker->unique($reset, $maxRetries)->format($attributeMetaData->getFaker(), $attributeMetaData->getArgs());
-                $this->propertyAccess->setValue($entity, $propertyName, $value);
-
-                continue;
+                return;
             }
 
-            $value = $this->faker->format($attributeMetaData->getFaker(), $attributeMetaData->getArgs());
-            $this->propertyAccess->setValue($entity, $propertyName, $value);
+            $this->anonymizeProcess($entity, $reset, $maxRetries, $className, $propertyName, $attributeMetaData);
         }
 
         $this->eventDispatcher->dispatch(new AfterAnonymize($entity, ['entity' => $clonedEntity]));
+    }
+
+    private function anonymizeProcess(
+        Object $entity,
+        bool $reset,
+        int $maxRetries,
+        string $className,
+        string $propertyName,
+        AttributeMetaData $attributeMetaData
+    ): void {
+        $propertyExtractor = (new PropertyInfoExtractor([], [new PhpDocExtractor(), new ReflectionExtractor()]));
+
+        /** @var array<int, Type>|null $types */
+        $types = $propertyExtractor->getTypes($className, $propertyName);
+        $type = null !== $types ? $types[0]->getBuiltinType() : 'string';
+        $value = $attributeMetaData->getValue();
+        if (FakerOptionsValidator::DEFAULT_VALUE !== $value) {
+            if (is_array($value)) {
+                $this->setValue($entity, $propertyName, $type, $value);
+
+                return;
+            }
+
+            $this->setValue(
+                $entity,
+                $propertyName,
+                $type,
+                sprintf('%s%s', (string) $attributeMetaData->getPrefix(), (string) $value)
+            );
+
+            return;
+        }
+
+        if (true === $attributeMetaData->isUnique()) {
+            $value = $this->faker->unique($reset, $maxRetries)->format($attributeMetaData->getFaker(), $attributeMetaData->getArgs());
+            if (is_object($value)) {
+                if (in_array($type, self::TYPE_VALUES, true)) {
+                    $this->propertyAccess->setValue(
+                        $entity,
+                        $propertyName,
+                        $value
+                    );
+
+                    return;
+                }
+
+                throw new GDPRValueException('Value or type don\'t match with object');
+            }
+            $this->setValue(
+                $entity,
+                $propertyName,
+                $type,
+                sprintf('%s%s', (string) $attributeMetaData->getPrefix(), (string) $value)
+            );
+
+            return;
+        }
+
+        if (null === $attributeMetaData->getFaker()) {
+            $this->setValue(
+                $entity,
+                $propertyName,
+                $type,
+                null
+            );
+
+            return;
+        }
+
+        $value = $this->faker->format($attributeMetaData->getFaker(), $attributeMetaData->getArgs());
+        if (is_object($value)) {
+            if (in_array($type, self::TYPE_VALUES, true)) {
+                $this->propertyAccess->setValue(
+                    $entity,
+                    $propertyName,
+                    $value
+                );
+
+                return;
+            }
+
+            throw new GDPRValueException('Value or type don\'t match with object');
+        }
+
+        $this->setValue(
+            $entity,
+            $propertyName,
+            $type,
+            sprintf('%s%s', (string) $attributeMetaData->getPrefix(), (string) $value)
+        );
+    }
+
+    /** @param array|string|bool|null $value */
+    private function setValue(object $entity, string $propertyName, string $type, $value): void
+    {
+        if (is_array($value)) {
+            if ('array' === $type) {
+                $this->propertyAccess->setValue(
+                    $entity,
+                    $propertyName,
+                    $value
+                );
+
+                return;
+            }
+
+            throw new GDPRValueException('Value or type don\'t match with array');
+        }
+
+        if ('int' === $type) {
+            $this->propertyAccess->setValue(
+                $entity,
+                $propertyName,
+                (int) $value
+            );
+
+            return;
+        }
+
+        if ('float' === $type) {
+            $this->propertyAccess->setValue(
+                $entity,
+                $propertyName,
+                (float) $value
+            );
+        }
+
+        if ('bool' === $type) {
+            $this->propertyAccess->setValue(
+                $entity,
+                $propertyName,
+                (bool) $value
+            );
+        }
+
+        $this->propertyAccess->setValue(
+            $entity,
+            $propertyName,
+            $value
+        );
     }
 
     private function isSubclass(object $entity, string $className, string $propertyName): bool

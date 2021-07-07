@@ -49,11 +49,11 @@ final class FakerOptionsValidatorTest extends KernelTestCase
     public function testFakerConfirmeOptionWithoutUnique(): void
     {
         $options = ['faker' => 'realText', 'args' => []];
-        $exepctedResult = ['faker' => 'realText', 'args' => [], 'unique' => false];
+        $exepctedResult = ['faker' => 'realText', 'args' => [], 'unique' => false, 'prefix' => '', 'value' => FakerOptionsValidator::DEFAULT_VALUE];
         $fakerOption = new FakerOptionsValidator($options);
         $this->assertSame(
-            get_object_vars($fakerOption),
-            $exepctedResult
+            $exepctedResult,
+            get_object_vars($fakerOption)
         );
     }
 }

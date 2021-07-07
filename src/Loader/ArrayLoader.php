@@ -6,6 +6,7 @@ namespace Synolia\SyliusGDPRPlugin\Loader;
 
 use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetaData;
 use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetadataCollection;
+use Synolia\SyliusGDPRPlugin\Validator\FakerOptionsValidator;
 
 final class ArrayLoader implements LoaderInterface
 {
@@ -46,9 +47,12 @@ final class ArrayLoader implements LoaderInterface
 
                 continue;
             }
+            $faker = $options['faker'] ?? null;
             $fakerArguments = $options['args'] ?? [];
             $isUnique = $options['unique'] ?? false;
-            $attributeMetaData = new AttributeMetaData($options['faker'], $fakerArguments, $isUnique);
+            $prefix = $options['prefix'] ?? '';
+            $value = $options['value'] ?? FakerOptionsValidator::DEFAULT_VALUE;
+            $attributeMetaData = new AttributeMetaData($faker, $fakerArguments, $isUnique, $prefix, $value);
 
             $attributeMetaDataCollection->add($property, $attributeMetaData);
         }
