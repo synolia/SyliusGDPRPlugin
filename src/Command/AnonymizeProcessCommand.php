@@ -91,7 +91,7 @@ final class AnonymizeProcessCommand extends Command
         }
     }
 
-    private function anonymizeEntityForClassName(string $className, ?string $id = null, $force): void
+    private function anonymizeEntityForClassName(string $className, ?string $id = null, bool $force): void
     {
         try {
             $entity = $this->entityManager->getMetadataFactory()->getMetadataFor($className);

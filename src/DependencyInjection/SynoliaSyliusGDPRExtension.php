@@ -103,7 +103,7 @@ final class SynoliaSyliusGDPRExtension extends Extension
     private function validateYamlParse($filePath): array
     {
         $finder = new Finder();
-        $finder->in($filePath)->name(['*.yml', '*.yaml']);
+        $finder->in($filePath)->name(['*.yml', '*.yaml'])->sortByName(true)->reverseSorting();
         $mappings = [];
         foreach ($finder as $file) {
             $mappings = $this::mergeConfig($mappings, Yaml::parse($file->getContents()) ?? []);

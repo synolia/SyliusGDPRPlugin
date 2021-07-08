@@ -1,3 +1,0 @@
-synolia_sylius_gdpr_admin:
-    resource: "@SynoliaSyliusGDPRPlugin/Resources/config/routes/admin/*"
-    prefix: /admin
