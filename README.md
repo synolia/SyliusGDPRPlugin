@@ -11,6 +11,26 @@
 
 ## Features
 
+   - Anonymize any entity with command for example :
+
+   ```shell
+   php bin/console synolia:gdpr:anonymize --entity='Sylius\Component\Core\Model\Customer' --id=1 
+   ```
+   Use --help to get more informations
+   - Anonymize customer with the GDPR section in the admin customer show.
+   - Export customer data with the GDPR section in the admin customer show.
+
+   [Click to see the anonymization configuration](ANONYMIZE_CONFIGURATION.md).
+
+   [Click to see the export data configuration](EXPORT_CONFIGURATION.md).
+
+### Events
+
+   - Synolia\SyliusGDPRPlugin\Event\BeforeAnonymize
+   - Synolia\SyliusGDPRPlugin\Event\AfterAnonymize
+   - Synolia\SyliusGDPRPlugin\Event\AfterCustomerAnonymize
+   - Synolia\SyliusGDPRPlugin\Event\BeforeExportCustomerData
+
 ## Requirements
 
 | | Version |

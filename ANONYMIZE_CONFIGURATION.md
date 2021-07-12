@@ -64,4 +64,4 @@
 - city
 - postCode
 
-To see the full configuration go to @SynoliaSyliusRGPDPlugin\Resources\mappings
+To see the full configuration go to @SynoliaSyliusRGPDPlugin\Resources\config\mappings
