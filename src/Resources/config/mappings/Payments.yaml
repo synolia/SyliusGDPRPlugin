@@ -1,5 +1,4 @@
 Sylius\Component\Core\Model\Payment:
     properties:
         details:
-            faker: text
-            prefix: 'anonymized-'
+            value: ['anonymized-details']

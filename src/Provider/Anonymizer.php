@@ -82,7 +82,10 @@ final class Anonymizer implements AnonymizerInterface
                             continue;
                         }
                         $this->anonymizeProcess($entity, $reset, $maxRetries, $className, $propertyName, $attributeMetaData);
+
+                        continue;
                     }
+
                     $this->anonymize($item, $reset, $maxRetries);
                 }
 
