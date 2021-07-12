@@ -74,6 +74,14 @@ final class Anonymizer implements AnonymizerInterface
             if ($this->isIterative($entity, $className, $propertyName)) {
                 $getter = 'get' . ucfirst($propertyName);
                 foreach ($entity->$getter() as $item) {
+                    if (!is_object($item) || is_countable($item)) {
+                        if (!$attributeMetaData instanceof AttributeMetaData) {
+                            $this->logger->error(sprintf('The attribute %s has no Attribute meta data and is not an object.', $propertyName));
+
+                            continue;
+                        }
+                        $this->anonymizeProcess($entity, $reset, $maxRetries, $className, $propertyName, $attributeMetaData);
+                    }
                     $this->anonymize($item, $reset, $maxRetries);
                 }
 
