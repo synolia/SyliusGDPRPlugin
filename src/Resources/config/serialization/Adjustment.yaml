@@ -1,4 +1,4 @@
-Sylius\Component\Core\Model\Adjusment:
+Sylius\Component\Core\Model\Adjustment:
     attributes:
         label: &defaultGroup
             groups:
