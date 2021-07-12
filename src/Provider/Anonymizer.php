@@ -20,6 +20,7 @@ use Synolia\SyliusGDPRPlugin\Event\BeforeAnonymize;
 use Synolia\SyliusGDPRPlugin\Exception\GDPRValueException;
 use Synolia\SyliusGDPRPlugin\Loader\LoaderChain;
 use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetaData;
+use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetaDataInterface;
 use Synolia\SyliusGDPRPlugin\Validator\FakerOptionsValidator;
 
 final class Anonymizer implements AnonymizerInterface
@@ -140,25 +141,7 @@ final class Anonymizer implements AnonymizerInterface
 
         if (true === $attributeMetaData->isUnique()) {
             $value = $this->faker->unique($reset, $maxRetries)->format($attributeMetaData->getFaker(), $attributeMetaData->getArgs());
-            if (is_object($value)) {
-                if (!in_array($type, self::TYPE_VALUES, true)) {
-                    $this->propertyAccess->setValue(
-                        $entity,
-                        $propertyName,
-                        $value
-                    );
-
-                    return;
-                }
-
-                throw new GDPRValueException('Value or type don\'t match with object');
-            }
-            $this->setValue(
-                $entity,
-                $propertyName,
-                $type,
-                sprintf('%s%s', (string) $attributeMetaData->getPrefix(), (string) $value)
-            );
+            $this->setUniqueValue($entity, $value, $type, $propertyName, $attributeMetaData);
 
             return;
         }
@@ -189,6 +172,30 @@ final class Anonymizer implements AnonymizerInterface
             throw new GDPRValueException('Value or type don\'t match with object');
         }
 
+        $this->setValue(
+            $entity,
+            $propertyName,
+            $type,
+            is_array($value) ? $value : sprintf('%s%s', (string) $attributeMetaData->getPrefix(), (string) $value)
+        );
+    }
+
+    /** @param mixed $value */
+    private function setUniqueValue(Object $entity, $value, string $type, string $propertyName, AttributeMetaDataInterface $attributeMetaData): void
+    {
+        if (is_object($value)) {
+            if (!in_array($type, self::TYPE_VALUES, true)) {
+                $this->propertyAccess->setValue(
+                    $entity,
+                    $propertyName,
+                    $value
+                );
+
+                return;
+            }
+
+            throw new GDPRValueException('Value or type don\'t match with object');
+        }
         $this->setValue(
             $entity,
             $propertyName,
