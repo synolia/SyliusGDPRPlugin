@@ -7,29 +7,24 @@ namespace Synolia\SyliusGDPRPlugin\Controller;
 use Sylius\Component\Core\Repository\CustomerRepositoryInterface;
 use Sylius\Component\Customer\Model\CustomerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Synolia\SyliusGDPRPlugin\Event\AfterAnonymize;
+use Synolia\SyliusGDPRPlugin\Event\AfterCustomerAnonymize;
 use Synolia\SyliusGDPRPlugin\Provider\AnonymizerInterface;
 
 class AnonymizationController extends AbstractController
 {
     public function __invoke(
-        Request $request,
+        string $id,
         CustomerRepositoryInterface $customerRepository,
         AnonymizerInterface $anonymizer,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        ParameterBagInterface $parameterBag
     ): Response {
-        $id = $request->get('id');
-        if (null === $id) {
-            throw new \InvalidArgumentException('No customer provided');
-        }
-
         $customer = $customerRepository->find($id);
         if (!$customer instanceof CustomerInterface) {
-            throw new NotFoundHttpException('Customer not found.');
+            $parameterBag->set('error', 'sylius.ui.admin.sylius_gdpr.customer.not_found');
         }
 
         $email = $customer->getEmail();
@@ -38,7 +33,7 @@ class AnonymizationController extends AbstractController
 
         $customerRepository->add($customer);
 
-        $eventDispatcher->dispatch(new AfterAnonymize($customer, ['email' => $email]));
+        $eventDispatcher->dispatch(new AfterCustomerAnonymize($customer, $email));
 
         return $this->redirectToRoute('sylius_admin_customer_show', ['id' => $customer->getId()]);
     }
