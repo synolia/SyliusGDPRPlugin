@@ -1,6 +1,6 @@
-[![License](https://img.shields.io/packagist/l/synolia/sylius-gdpr-plugin.svg)](https://github.com/synolia/SyliusGDPRPlugin/blob/master/LICENSE)
+[![License](https://badgen.net/github/license/synolia/SyliusGDPRPlugin)](https://github.com/synolia/SyliusGDPRPlugin/blob/master/LICENSE)
 [![CI](https://github.com/synolia/SyliusGDPRPlugin/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/synolia/SyliusGDPRPlugin/actions/workflows/ci.yaml)
-[![Version](https://img.shields.io/packagist/v/synolia/sylius-gdpr-plugin.svg)](https://packagist.org/packages/synolia/sylius-gdpr-plugin)
+[![Version](https://badgen.net/github/tag/synolia/SyliusGDPRPlugin?label=Version)](https://packagist.org/packages/synolia/sylius-gdpr-plugin)
 [![Total Downloads](https://poser.pugx.org/synolia/sylius-gdpr-plugin/downloads)](https://packagist.org/packages/synolia/sylius-gdpr-plugin)
 
 <p align="center">
