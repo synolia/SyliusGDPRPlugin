@@ -3,6 +3,7 @@ sylius:
         admin:
             synolia_gdpr:
                 customer:
+                    not_found: Client introuvable
                     anonymize: Anonymizer
                     export_data: Récupération des informations
                     gdpr_title: RGPD
