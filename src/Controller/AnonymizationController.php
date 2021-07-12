@@ -15,25 +15,44 @@ use Synolia\SyliusGDPRPlugin\Provider\AnonymizerInterface;
 
 class AnonymizationController extends AbstractController
 {
-    public function __invoke(
-        string $id,
+    /** @var CustomerRepositoryInterface */
+    private $customerRepository;
+
+    /** @var AnonymizerInterface */
+    private $anonymizer;
+
+    /** @var EventDispatcherInterface */
+    private $eventDispatcher;
+
+    /** @var ParameterBagInterface */
+    private $parameterBag;
+
+    public function __construct(
         CustomerRepositoryInterface $customerRepository,
         AnonymizerInterface $anonymizer,
         EventDispatcherInterface $eventDispatcher,
-        ParameterBagInterface $parameterBag
-    ): Response {
-        $customer = $customerRepository->find($id);
+        ParameterBagInterface $parameterBag)
+    {
+        $this->customerRepository = $customerRepository;
+        $this->anonymizer = $anonymizer;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->parameterBag = $parameterBag;
+    }
+
+    public function __invoke(string $id): Response
+    {
+        $customer = $this->customerRepository->find($id);
         if (!$customer instanceof CustomerInterface) {
-            $parameterBag->set('error', 'sylius.ui.admin.sylius_gdpr.customer.not_found');
+            $this->parameterBag->set('error', 'sylius.ui.admin.sylius_gdpr.customer.not_found');
         }
 
         $email = $customer->getEmail();
 
-        $anonymizer->anonymize($customer);
+        $this->anonymizer->anonymize($customer);
 
-        $customerRepository->add($customer);
+        $this->customerRepository->add($customer);
 
-        $eventDispatcher->dispatch(new AfterCustomerAnonymize($customer, $email));
+        $this->eventDispatcher->dispatch(new AfterCustomerAnonymize($customer, $email));
 
         return $this->redirectToRoute('sylius_admin_customer_show', ['id' => $customer->getId()]);
     }
