@@ -5,5 +5,5 @@ sylius:
                 customer:
                     not_found: Customer not found
                     anonymize: Anonymize
-                    export_data: Export datas
+                    export_data: Export data
                     gdpr_title: GDPR
