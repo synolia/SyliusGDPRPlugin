@@ -8,8 +8,18 @@
         <img src="https://demo.sylius.com/assets/shop/img/logo.png" />
     </a>
 </p>
+<h1 align="center">Sylius GDPR Plugin</h1>
+
+![Capture](/etc/capture.png "Capture")
 
 ## Features
+
+   - Anonymize customer with the GDPR section in the admin customer show.
+   - Export customer data with the GDPR section in the admin customer show.
+
+   [Click to see the anonymization configuration](ANONYMIZE_CONFIGURATION.md).
+   
+   [Click to see the export data configuration](EXPORT_CONFIGURATION.md).
 
    - Anonymize any entity with command for example :
 
@@ -17,12 +27,6 @@
    php bin/console synolia:gdpr:anonymize --entity='Sylius\Component\Core\Model\Customer' --id=1 
    ```
    Use --help to get more informations
-   - Anonymize customer with the GDPR section in the admin customer show.
-   - Export customer data with the GDPR section in the admin customer show.
-
-   [Click to see the anonymization configuration](ANONYMIZE_CONFIGURATION.md).
-
-   [Click to see the export data configuration](EXPORT_CONFIGURATION.md).
 
 ### Events
 
@@ -67,17 +71,10 @@
         prefix: '/%sylius_admin.path_name%'
     ```
 
-5. Copy plugin migrations to your migrations directory (e.g. `src/Migrations`) and apply them to your database:
+5. Clear cache
 
     ```shell
-    cp -R vendor/synolia/sylius-gdpr-plugin/src/Migrations/* src/Migrations
-    bin/console doctrine:migrations:migrate
-    ```
-
-6. Clear cache
-
-    ```shell
-    bin/console cache:clear
+    php bin/console cache:clear
     ```
 
 ## Development
