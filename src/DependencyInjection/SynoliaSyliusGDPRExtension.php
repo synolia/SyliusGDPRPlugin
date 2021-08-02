@@ -25,8 +25,8 @@ final class SynoliaSyliusGDPRExtension extends Extension
 
         $container->registerForAutoconfiguration(LoaderInterface::class)
             ->addTag('anonymization_loader');
+        $mapping = $this->retrieveMappings($configs, $config['disable_default_mappings']);
 
-        $mapping = $this->retrieveMappings($configs);
         $container->setParameter('synolia_anonymization_mapping', $mapping);
     }
 
@@ -65,7 +65,7 @@ final class SynoliaSyliusGDPRExtension extends Extension
         return $base;
     }
 
-    private function retrieveMappings(array $configs): array
+    private function retrieveMappings(array $configs, bool $disableDefaultMappings = false): array
     {
         $defaultConfig = [
             'anonymization' => [
@@ -76,7 +76,9 @@ final class SynoliaSyliusGDPRExtension extends Extension
                 ],
             ],
         ];
-        $mappings = $this->retrieveMapping($defaultConfig);
+
+        $mappings = $disableDefaultMappings ? [] : $this->retrieveMapping($defaultConfig);
+
         foreach ($configs as $config) {
             $mappings = array_merge($mappings, $this->retrieveMapping($config));
         }
