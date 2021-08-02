@@ -11,7 +11,9 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Synolia\SyliusGDPRPlugin\Enum\GDPRSerializationKeyEnum;
+use Synolia\SyliusGDPRPlugin\Event\BeforeExportCustomerData;
 
 class ExportDataController extends AbstractController
 {
@@ -23,16 +25,21 @@ class ExportDataController extends AbstractController
     /** @var ParameterBagInterface */
     private $parameterBag;
 
+    /** @var EventDispatcherInterface */
+    private $eventDispatcher;
+
     /** @var SerializerInterface */
     private $serializer;
 
     public function __construct(
         CustomerRepositoryInterface $customerRepository,
         ParameterBagInterface $parameterBag,
+        EventDispatcherInterface $eventDispatcher,
         SerializerInterface $serializer
     ) {
         $this->customerRepository = $customerRepository;
         $this->parameterBag = $parameterBag;
+        $this->eventDispatcher = $eventDispatcher;
         $this->serializer = $serializer;
     }
 
@@ -44,6 +51,8 @@ class ExportDataController extends AbstractController
 
             return $this->redirectToRoute('sylius_admin_customer_index');
         }
+
+        $this->eventDispatcher->dispatch(new BeforeExportCustomerData($customer));
 
         $formattedCustomerData = $this->serializer->serialize($customer, 'json', ['groups' => [GDPRSerializationKeyEnum::CUSTOMER_DATA]]);
 
