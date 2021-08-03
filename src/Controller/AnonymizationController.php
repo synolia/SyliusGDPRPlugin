@@ -11,6 +11,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Synolia\SyliusGDPRPlugin\Event\AfterCustomerAnonymize;
+use Synolia\SyliusGDPRPlugin\Event\BeforeCustomerAnonymize;
 use Synolia\SyliusGDPRPlugin\Provider\AnonymizerInterface;
 
 class AnonymizationController extends AbstractController
@@ -45,6 +46,8 @@ class AnonymizationController extends AbstractController
         if (!$customer instanceof CustomerInterface) {
             $this->parameterBag->set('error', 'sylius.ui.admin.sylius_gdpr.customer.not_found');
         }
+
+        $this->eventDispatcher->dispatch(new BeforeCustomerAnonymize($customer));
 
         $email = $customer->getEmail();
 
