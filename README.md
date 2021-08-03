@@ -86,8 +86,23 @@ synolia_sylius_gdpr:
     anonymization:
         mappings:
             paths:
-                - # Your\Paths
+                - # Your\Paths\To\Mappings\Directory
  ```
+
+   Example of configuration
+ ```yaml
+Sylius\Component\Core\Model\Address: # Your class path
+   properties:
+      firstName:
+         faker: text # let's see => https://fakerphp.github.io/formatters/
+         args: [20] # The associated faker arguments
+         prefix: 'anonymized-'
+      lastName:
+         value: 'Fake lastName'
+         prefix: 'anonymized-'
+ ```
+
+   Value can be null, an array, an int and a string
 
 ## Development
 
