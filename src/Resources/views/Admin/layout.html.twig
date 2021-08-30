@@ -1,0 +1,21 @@
+{% extends '@SyliusAdmin/layout.html.twig' %}
+{% import '@SyliusAdmin/Macro/breadcrumb.html.twig' as breadcrumb %}
+
+{% if form is defined %}
+    {% form_theme form '@SynoliaSyliusAkeneoPlugin/Admin/Form/theme.html.twig' %}
+{% endif %}
+
+{% block title %} | Synolia Sylius GDPR Plugin{% endblock %}
+
+{% set breadcrumbs = breadcrumbs|default([
+    {label: 'sylius.ui.administration'|trans, url: path('sylius_admin_dashboard')}
+]) %}
+
+{% block breadcrumb %}
+    {{ breadcrumb.crumble(breadcrumbs) }}
+{% endblock %}
+
+{% block footer %}
+    {{ 'sylius.ui.powered_by'|trans }} <a href="https://synolia.com" target="_blank">Synolia</a>. {{ 'sylius.ui.see_issue'|trans }}? <a href="https://github.com/synolia/SyliusGDPRPlugin/issues" target="_blank">{{ 'sylius.ui.report_it'|trans }}!</a>
+    <div>Plugin version : {{ constant('Synolia\\SyliusGDPRPlugin\\SynoliaSyliusGDPRPlugin::VERSION') }}</div>
+{% endblock %}

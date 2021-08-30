@@ -4,9 +4,14 @@ sylius:
             synolia_gdpr:
                 customer:
                     not_found: Client introuvable
-                    anonymize: Anonymizer
+                    anonymize: Anonymiser
                     export_data: Récupération des informations
                     gdpr_title: RGPD
+                advanced_actions:
+                    title: Actions avancée
+                    anonymize_customer_not_logged_since:
+                        label: Anonymiser les utlisateurs non connecté depuis
+        execute: Executer
 sylius_plus:
     rbac:
         parent:
