@@ -14,11 +14,10 @@ final class SynoliaSyliusGDPRPlugin extends Bundle
 {
     use SyliusPluginTrait;
 
-    public const VERSION = '1.1.0';
-
     public function build(ContainerBuilder $container): void
     {
         parent::build($container);
+
         $container->addCompilerPass(new RegisterAnonymizationLoader());
         $container->addCompilerPass(new RegisterAdvancedActionsFormDataProcessorsPass());
     }

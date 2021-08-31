@@ -11,9 +11,3 @@ services:
     Synolia\SyliusGDPRPlugin\Menu\GDPRMenuListener:
         tags:
             - { name: kernel.event_listener, event: sylius.menu.admin.main, method: addGDPRMenuItems }
-
-#    Synolia\SyliusGDPRPlugin\Controller\AdvancedActionsController:
-#        arguments:
-#            $formsType:
-#                - 'Synolia\SyliusGDPRPlugin\Form\Type\Actions\AnonymizeCustomerNotLoggedSinceType2'
-#        tags: ['controller.service_arguments']
