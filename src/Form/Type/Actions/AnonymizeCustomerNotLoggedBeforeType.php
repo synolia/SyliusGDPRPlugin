@@ -10,13 +10,13 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class AnonymizeCustomerNotLoggedSinceType extends AbstractType
+class AnonymizeCustomerNotLoggedBeforeType extends AbstractType
 {
     /** {@inheritdoc} */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('since_date', DateType::class, [
+            ->add('before_date', DateType::class, [
                 'label' => false,
                 'widget' => 'single_text',
                 'row_attr' => ['class' => 'ui field'],
@@ -30,6 +30,6 @@ class AnonymizeCustomerNotLoggedSinceType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefault('label', 'sylius.ui.admin.synolia_gdpr.advanced_actions.anonymize_customer_not_logged_since.label');
+        $resolver->setDefault('label', 'sylius.ui.admin.synolia_gdpr.advanced_actions.anonymize_customer_not_logged_before.label');
     }
 }

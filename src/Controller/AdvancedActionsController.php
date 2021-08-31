@@ -8,13 +8,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use function Symfony\Component\String\u;
-use Synolia\SyliusGDPRPlugin\Form\Type\Actions\AnonymizeCustomerNotLoggedSinceType;
+use Synolia\SyliusGDPRPlugin\Form\Type\Actions\AnonymizeCustomerNotLoggedBeforeType;
 use Synolia\SyliusGDPRPlugin\Processor\AdvancedActions\CompositeAdvancedActionsFormDataProcessor;
 
 class AdvancedActionsController extends AbstractController
 {
     private const FORMS = [
-        AnonymizeCustomerNotLoggedSinceType::class,
+        AnonymizeCustomerNotLoggedBeforeType::class,
     ];
 
     /** @var CompositeAdvancedActionsFormDataProcessor */

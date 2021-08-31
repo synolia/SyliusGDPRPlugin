@@ -9,10 +9,9 @@ sylius:
                     gdpr_title: RGPD
                 advanced_actions:
                     title: Actions avancée
-                    anonymize_customer_not_logged_since:
-                        label: Anonymiser les utlisateurs non connecté depuis
-        execute: Executer
-sylius_plus:
+                    anonymize_customer_not_logged_before:
+                        label: Anonymiser tous les utlisateurs non connecté avant
+        execute: Executersylius_plus:
     rbac:
         parent:
             plugin_synolia_gdpr_anonymize_customers: RGPD Anonymisation
