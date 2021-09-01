@@ -10,18 +10,18 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class AnonymizeCustomerNotLoggedBeforeType extends AbstractType
+class AnonymizeCustomersWithoutAnyOrdersBeforeType extends AbstractType
 {
     /** {@inheritdoc} */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('before_date', DateType::class, [
+            ->add('anonymize_customer_without_any_orders_before_date', DateType::class, [
                 'label' => false,
                 'widget' => 'single_text',
                 'row_attr' => ['class' => 'ui field'],
             ])
-            ->add('submit', SubmitType::class, [
+            ->add('anonymize_customer_without_any_orders_submit', SubmitType::class, [
                 'label' => 'sylius.ui.execute',
                 'attr' => ['class' => 'ui blue button'],
             ])
@@ -30,6 +30,6 @@ class AnonymizeCustomerNotLoggedBeforeType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefault('label', 'sylius.ui.admin.synolia_gdpr.advanced_actions.anonymize_customer_not_logged_before.label');
+        $resolver->setDefault('label', 'sylius.ui.admin.synolia_gdpr.advanced_actions.anonymize_customer_without_any_orders.label');
     }
 }

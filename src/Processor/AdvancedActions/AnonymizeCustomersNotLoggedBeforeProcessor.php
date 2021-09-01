@@ -7,10 +7,11 @@ namespace Synolia\SyliusGDPRPlugin\Processor\AdvancedActions;
 use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\ShopUserInterface;
+use Sylius\Component\Resource\Factory\FactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Synolia\SyliusGDPRPlugin\Processor\AnonymizerProcessor;
 
-class AnonymizeCustomerNotLoggedBeforeProcessor implements AdvancedActionsFormDataProcessorInterface
+class AnonymizeCustomersNotLoggedBeforeProcessor implements AdvancedActionsFormDataProcessorInterface
 {
     /** @var EntityManagerInterface */
     private $entityManager;
@@ -18,25 +19,25 @@ class AnonymizeCustomerNotLoggedBeforeProcessor implements AdvancedActionsFormDa
     /** @var AnonymizerProcessor */
     private $anonymizerProcessor;
 
-    public function __construct(EntityManagerInterface $entityManager, AnonymizerProcessor $anonymizerProcessor)
+    /** @var FactoryInterface */
+    private $shopUserFactory;
+
+    public function __construct(EntityManagerInterface $entityManager, AnonymizerProcessor $anonymizerProcessor, FactoryInterface $shopUserFactory)
     {
         $this->entityManager = $entityManager;
         $this->anonymizerProcessor = $anonymizerProcessor;
+        $this->shopUserFactory = $shopUserFactory;
     }
 
     /** {@inheritdoc} */
     public function process(string $formTypeClass, FormInterface $form): void
     {
-        /** @var \DateTime $before */
-        $before = $form->getData()['before_date'];
-        $beforeClean = new \DateTime($before->format('Y-m-d'));
-
         $shopUsers = $this->entityManager
             ->createQueryBuilder()
             ->select('su')
-            ->from(ShopUserInterface::class, 'su')
+            ->from(get_class($this->shopUserFactory->createNew()), 'su')
             ->where('su.lastLogin < :before')
-            ->setParameter('before', $beforeClean)
+            ->setParameter('before', $form->getData()['anonymize_customers_not_logged_before_date'])
             ->getQuery()
             ->execute();
 
@@ -62,6 +63,6 @@ class AnonymizeCustomerNotLoggedBeforeProcessor implements AdvancedActionsFormDa
 
     public function getFormTypesClass(): array
     {
-        return ['Synolia\SyliusGDPRPlugin\Form\Type\Actions\AnonymizeCustomerNotLoggedBeforeType'];
+        return ['Synolia\SyliusGDPRPlugin\Form\Type\Actions\AnonymizeCustomersNotLoggedBeforeType'];
     }
 }
