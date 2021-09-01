@@ -8,7 +8,7 @@ sylius:
                     gdpr_title: RGPD
                 advanced_actions:
                     title: Actions avancées
-                    anonymize_customer_not_logged_before:
+                    anonymize_customers_not_logged_before:
                         label: Anonymiser tous les utlisateurs non connectés avant
                     anonymize_customer_without_any_orders:
                         label: Anonymiser tous les utilisateurs n'ayant jamais créé de commande avant
