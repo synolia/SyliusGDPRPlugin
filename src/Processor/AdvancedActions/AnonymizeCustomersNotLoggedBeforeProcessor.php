@@ -7,33 +7,33 @@ namespace Synolia\SyliusGDPRPlugin\Processor\AdvancedActions;
 use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\ShopUserInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Sylius\Component\Resource\Factory\FactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Synolia\SyliusGDPRPlugin\Processor\AnonymizerProcessor;
 
-class AnonymizeCustomerNotLoggedBeforeProcessor implements AdvancedActionsFormDataProcessorInterface
+class AnonymizeCustomersNotLoggedBeforeProcessor implements AdvancedActionsFormDataProcessorInterface
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
         private AnonymizerProcessor $anonymizerProcessor,
+        private ParameterBagInterface $parameterBag
     ) {
+
     }
 
     /** @inheritdoc */
     public function process(string $formTypeClass, FormInterface $form): void
     {
-        /** @var array $formData */
-        $formData = $form->getData();
-
-        /** @var \DateTime $before */
-        $before = $formData['before_date'];
-        $beforeClean = new \DateTime($before->format('Y-m-d'));
+        /** @var string $shopUser */
+        $shopUser = $this->parameterBag->get('sylius.model.shop_user.class');
 
         $shopUsers = $this->entityManager
             ->createQueryBuilder()
             ->select('su')
-            ->from(ShopUserInterface::class, 'su')
+            ->from($shopUser, 'su')
             ->where('su.lastLogin < :before')
-            ->setParameter('before', $beforeClean)
+            ->setParameter('before', $form->getData()['anonymize_customers_not_logged_before_date'])
             ->getQuery()
             ->execute()
         ;
@@ -64,6 +64,6 @@ class AnonymizeCustomerNotLoggedBeforeProcessor implements AdvancedActionsFormDa
 
     public function getFormTypesClass(): array
     {
-        return [\Synolia\SyliusGDPRPlugin\Form\Type\Actions\AnonymizeCustomerNotLoggedBeforeType::class];
+        return [\Synolia\SyliusGDPRPlugin\Form\Type\Actions\AnonymizeCustomersNotLoggedBeforeType::class];
     }
 }

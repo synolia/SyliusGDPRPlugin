@@ -106,7 +106,7 @@ There's two steps to add your custom form into the page:
 
    - Then create your form processor by implementing Synolia\SyliusGDPRPlugin\Processor\AnonymizerProcessor\AdvancedActionsFormDataProcessorInterface
 
-[There](src/Processor/AdvancedActions/AnonymizeCustomerNotLoggedBeforeProcessor.php) a form processor example
+[There](src/Processor/AdvancedActions/AnonymizeCustomersNotLoggedBeforeProcessor.php) a form processor example
 
 ### Events
 
