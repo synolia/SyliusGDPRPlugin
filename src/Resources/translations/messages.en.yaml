@@ -9,10 +9,9 @@ sylius:
                     gdpr_title: GDPR
                 advanced_actions:
                     title: Advanced actions
-                    anonymize_customer_not_logged_before:
-                        label: Anonymize customer not logged before
-        execute: Execute
-sylius_plus:
+                    anonymize_customers_not_logged_before:
+                        label: Anonymize customers not logged before
+        execute: Executesylius_plus:
     rbac:
         parent:
             plugin_synolia_gdpr_anonymize_customer: GDPR Anonymize
