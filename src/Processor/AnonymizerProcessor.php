@@ -35,6 +35,7 @@ final class AnonymizerProcessor
 
             if (0 === $index % self::MODULO_FLUSH) {
                 $this->entityManager->flush();
+                $this->entityManager->clear();
             }
         }
 
