@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Synolia\SyliusGDPRPlugin\Processor\AdvancedActions;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\Expr\Join;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
@@ -39,9 +40,9 @@ class AnonymizeCustomersWithoutAnyOrdersBeforeProcessor implements AdvancedActio
         $customers = $this->entityManager->createQueryBuilder()
             ->select('c')
             ->from(get_class($this->customerFactory->createNew()), 'c')
-            ->innerJoin(get_class($this->orderFactory->createNew()), 'o')
+            ->leftJoin(get_class($this->orderFactory->createNew()), 'o', Join::WITH, 'o.customer = c')
             ->where('c.createdAt < :before')
-            ->andWhere('o.state = :state')
+            ->andWhere('o.state = :state OR o IS NULL')
             ->setParameter('before', $form->getData()['anonymize_customer_without_any_orders_before_date'])
             ->setParameter('state', OrderInterface::STATE_CART)
             ->getQuery()
