@@ -2,8 +2,18 @@ synolia_sylius_gdpr_admin_anonymize_customer:
     path: /customers/{id}/anonymize
     methods: POST|GET
     controller: Synolia\SyliusGDPRPlugin\Controller\AnonymizationController
+    defaults:
+        _sylius:
+            permission: true
+            section: admin
+            alias: plugin_synolia_gdpr_anonymize_customer
 
 synolia_sylius_gdpr_admin_export_customer_datas:
     path: /customers/{id}/export-data
     methods: POST|GET
     controller: Synolia\SyliusGDPRPlugin\Controller\ExportDataController
+    defaults:
+        _sylius:
+            permission: true
+            section: admin
+            alias: plugin_synolia_gdpr_export_customer_data

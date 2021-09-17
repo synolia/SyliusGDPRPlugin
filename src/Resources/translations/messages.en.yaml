@@ -7,3 +7,10 @@ sylius:
                     anonymize: Anonymize
                     export_data: Export data
                     gdpr_title: GDPR
+sylius_plus:
+    rbac:
+        parent:
+            plugin_synolia_gdpr_anonymize_customer: GDPR Anonymize
+            plugin_synolia_gdpr_export_customer_data: GDPR Export data
+        synolia_sylius_gdpr_admin_anonymize_customer: Anonymize
+        synolia_sylius_gdpr_admin_export_customer_datas: Export data
