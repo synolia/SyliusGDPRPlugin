@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Resource\Factory\FactoryInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\FormInterface;
 use Synolia\SyliusGDPRPlugin\Processor\AnonymizerProcessor;
 
@@ -20,27 +20,28 @@ class AnonymizeCustomersWithoutAnyOrdersBeforeProcessor implements AdvancedActio
     /** @var AnonymizerProcessor */
     private $anonymizerProcessor;
 
-    /** @var FactoryInterface */
-    private $customerFactory;
+    /** @var ParameterBagInterface */
+    private $parameterBag;
 
-    /** @var FactoryInterface */
-    private $orderFactory;
-
-    public function __construct(EntityManagerInterface $entityManager, AnonymizerProcessor $anonymizerProcessor, FactoryInterface $customerFactory, FactoryInterface $orderFactory)
+    public function __construct(EntityManagerInterface $entityManager, AnonymizerProcessor $anonymizerProcessor, ParameterBagInterface $parameterBag)
     {
         $this->entityManager = $entityManager;
         $this->anonymizerProcessor = $anonymizerProcessor;
-        $this->customerFactory = $customerFactory;
-        $this->orderFactory = $orderFactory;
+        $this->parameterBag = $parameterBag;
     }
 
     /** {@inheritdoc} */
     public function process(string $formTypeClass, FormInterface $form): void
     {
+        /** @var string $customer */
+        $customer = $this->parameterBag->get('sylius.model.customer.class');
+        /** @var string $order */
+        $order = $this->parameterBag->get('sylius.model.order.class');
+
         $customers = $this->entityManager->createQueryBuilder()
             ->select('c')
-            ->from(get_class($this->customerFactory->createNew()), 'c')
-            ->leftJoin(get_class($this->orderFactory->createNew()), 'o', Join::WITH, 'o.customer = c')
+            ->from($customer, 'c')
+            ->leftJoin($order, 'o', Join::WITH, 'o.customer = c')
             ->where('c.createdAt < :before')
             ->andWhere('o.state = :state OR o IS NULL')
             ->setParameter('before', $form->getData()['anonymize_customer_without_any_orders_before_date'])
