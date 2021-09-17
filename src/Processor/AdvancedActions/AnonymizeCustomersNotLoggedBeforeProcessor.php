@@ -7,7 +7,7 @@ namespace Synolia\SyliusGDPRPlugin\Processor\AdvancedActions;
 use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\ShopUserInterface;
-use Sylius\Component\Resource\Factory\FactoryInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\FormInterface;
 use Synolia\SyliusGDPRPlugin\Processor\AnonymizerProcessor;
 
@@ -19,23 +19,26 @@ class AnonymizeCustomersNotLoggedBeforeProcessor implements AdvancedActionsFormD
     /** @var AnonymizerProcessor */
     private $anonymizerProcessor;
 
-    /** @var FactoryInterface */
-    private $shopUserFactory;
+    /** @var ParameterBagInterface */
+    private $parameterBag;
 
-    public function __construct(EntityManagerInterface $entityManager, AnonymizerProcessor $anonymizerProcessor, FactoryInterface $shopUserFactory)
+    public function __construct(EntityManagerInterface $entityManager, AnonymizerProcessor $anonymizerProcessor, ParameterBagInterface $parameterBag)
     {
         $this->entityManager = $entityManager;
         $this->anonymizerProcessor = $anonymizerProcessor;
-        $this->shopUserFactory = $shopUserFactory;
+        $this->parameterBag = $parameterBag;
     }
 
     /** {@inheritdoc} */
     public function process(string $formTypeClass, FormInterface $form): void
     {
+        /** @var string $shopUser */
+        $shopUser = $this->parameterBag->get('sylius.model.shop_user.class');
+
         $shopUsers = $this->entityManager
             ->createQueryBuilder()
             ->select('su')
-            ->from(get_class($this->shopUserFactory->createNew()), 'su')
+            ->from($shopUser, 'su')
             ->where('su.lastLogin < :before')
             ->setParameter('before', $form->getData()['anonymize_customers_not_logged_before_date'])
             ->getQuery()

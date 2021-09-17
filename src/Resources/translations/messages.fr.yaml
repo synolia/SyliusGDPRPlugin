@@ -11,7 +11,10 @@ sylius:
                     title: Actions avancée
                     anonymize_customers_not_logged_before:
                         label: Anonymiser tous les utlisateurs non connecté avant
-        execute: Executersylius_plus:
+                    anonymize_customer_without_any_orders:
+                        label: Anonymiser tous les utilisateurs n'ayant jamais créé de commande avant
+        execute: Executer
+sylius_plus:
     rbac:
         parent:
             plugin_synolia_gdpr_anonymize_customers: RGPD Anonymisation
