@@ -32,7 +32,49 @@ class AnonymizeCustomerWithoutAnyOrdersBeforeProcessorTest extends KernelTestCas
         $this->manager->rollback();
     }
 
-    public function testAnonymizeCustomers(): void
+//    public function testAnonymizeCustomers(): void
+//    {
+//        /** @var array<int, CustomerInterface> $customers */
+//        $customers = $this->getContainer()->get('sylius.repository.customer')->findAll();
+//        $customers[0]->setCreatedAt(new \DateTime());
+//        $customers[1]->setCreatedAt((new \Datetime())->sub(new \DateInterval('P2D')));
+//
+//        $this->createOrder($customers[1], OrderInterface::STATE_CART);
+//        foreach ($customers[1]->getOrders() as $order) {
+//            $order->setState(OrderInterface::STATE_CART);
+//        }
+//
+//        $customers[2]->setCreatedAt((new \Datetime())->sub(new \DateInterval('P2D')));
+//        $this->createOrder($customers[2], OrderInterface::STATE_CART);
+//        $this->createOrder($customers[2], OrderInterface::STATE_NEW);
+//
+//        $customers[3]->setCreatedAt((new \Datetime())->sub(new \DateInterval('P2D')));
+//        /** @var OrderInterface $order */
+//        foreach ($customers[3]->getOrders() as $order) {
+//            self::$container->get(EntityManagerInterface::class)->remove($order);
+//        }
+//
+//        $this->manager->flush();
+//
+//        $form = Forms::createFormFactoryBuilder()->getFormFactory()->create(
+//            AnonymizeCustomersWithoutAnyOrdersBeforeType::class,
+//            [
+//                'anonymize_customer_without_any_orders_before_date' => (new \Datetime())->sub(new \DateInterval('P1D')),
+//                'remove_customer_without_any_orders_checkbox' => false,
+//            ]
+//        );
+//
+//        /** @var CompositeAdvancedActionsFormDataProcessor $composite */
+//        $composite = $this->getContainer()->get(CompositeAdvancedActionsFormDataProcessor::class);
+//        $composite->process(AnonymizeCustomersWithoutAnyOrdersBeforeType::class, $form);
+//
+//        $this->assertStringContainsString('anonymized-', $customers[3]->getEmail());
+//        $this->assertStringContainsString('anonymized-', $customers[1]->getEmail());
+//        $this->assertStringNotContainsString('anonymized-', $customers[0]->getEmail());
+//        $this->assertStringNotContainsString('anonymized-', $customers[2]->getEmail());
+//    }
+
+    public function testRemoveCustomers(): void
     {
         /** @var array<int, CustomerInterface> $customers */
         $customers = $this->getContainer()->get('sylius.repository.customer')->findAll();
@@ -58,7 +100,10 @@ class AnonymizeCustomerWithoutAnyOrdersBeforeProcessorTest extends KernelTestCas
 
         $form = Forms::createFormFactoryBuilder()->getFormFactory()->create(
             AnonymizeCustomersWithoutAnyOrdersBeforeType::class,
-            ['anonymize_customer_without_any_orders_before_date' => (new \Datetime())->sub(new \DateInterval('P1D'))]
+            [
+                'anonymize_customer_without_any_orders_before_date' => (new \Datetime())->sub(new \DateInterval('P1D')),
+                'remove_customer_without_any_orders_checkbox' => true,
+            ]
         );
 
         /** @var CompositeAdvancedActionsFormDataProcessor $composite */

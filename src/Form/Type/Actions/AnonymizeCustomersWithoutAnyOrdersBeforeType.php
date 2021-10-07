@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Synolia\SyliusGDPRPlugin\Form\Type\Actions;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,6 +21,10 @@ class AnonymizeCustomersWithoutAnyOrdersBeforeType extends AbstractType
                 'label' => false,
                 'widget' => 'single_text',
                 'row_attr' => ['class' => 'ui field'],
+            ])
+            ->add('remove_customer_without_any_orders_checkbox', CheckboxType::class, [
+                'label' => 'sylius.ui.admin.synolia_gdpr.advanced_actions.anonymize_customer_without_any_orders.do_remove_users',
+                'row_attr' => ['class' => 'ui toggle checkbox field'],
             ])
             ->add('anonymize_customer_without_any_orders_submit', SubmitType::class, [
                 'label' => 'sylius.ui.execute',

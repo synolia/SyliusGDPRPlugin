@@ -51,6 +51,23 @@ class AnonymizeCustomersWithoutAnyOrdersBeforeProcessor implements AdvancedActio
 
         $this->removeNoneEligibleCustomers($customers);
 
+        if (true === $form->getData()['remove_customer_without_any_orders_checkbox']) {
+            /** @var CustomerInterface $customer */
+            foreach ($customers as $customer) {
+                /** @var OrderInterface $order */
+                foreach ($customer->getOrders() as $order) {
+                    $this->entityManager->remove($order);
+                }
+
+                $this->entityManager->remove($customer->getUser());
+                $this->entityManager->remove($customer);
+            }
+
+            $this->entityManager->flush();
+
+            return;
+        }
+
         $this->anonymizerProcessor->anonymizeEntities($customers);
     }
 

@@ -13,6 +13,7 @@ sylius:
                         label: Anonymiser tous les utlisateurs non connecté avant
                     anonymize_customer_without_any_orders:
                         label: Anonymiser tous les utilisateurs n'ayant jamais créé de commande avant
+                        do_remove_users: Supprimer les données ?
         execute: Executer
 sylius_plus:
     rbac:

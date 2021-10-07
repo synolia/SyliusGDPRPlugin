@@ -13,6 +13,7 @@ sylius:
                         label: Anonymize customers not logged before
                     anonymize_customer_without_any_orders:
                         label: Anonymize customers without any orders
+                        do_remove_users: Remove data ?
         execute: Execute
 sylius_plus:
     rbac:
