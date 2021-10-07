@@ -1,0 +1,13 @@
+/.github export-ignore
+/ruleset export-ignore
+/tests export-ignore
+/etc export-ignore
+/bin export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+.travis.yml export-ignore
+behat.yml.dist export-ignore
+grumphp.yml export-ignore
+phpspec.yml.dist export-ignore
+phpunit.xml.dist export-ignore
+CONTRIBUTING.md export-ignore

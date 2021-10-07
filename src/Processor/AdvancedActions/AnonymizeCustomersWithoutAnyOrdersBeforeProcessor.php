@@ -59,7 +59,7 @@ class AnonymizeCustomersWithoutAnyOrdersBeforeProcessor implements AdvancedActio
         /** @var CustomerInterface $customer */
         foreach ($customers as $key => $customer) {
             foreach ($customer->getOrders() as $order) {
-                if ($order->getState() === 'cart') {
+                if ($order->getState() === OrderInterface::STATE_CART) {
                     continue;
                 }
 
