@@ -1,0 +1,3 @@
+advanced_actions:
+    path: /actions
+    controller: Synolia\SyliusGDPRPlugin\Controller\AdvancedActionsController

@@ -1,0 +1,7 @@
+synolia_gdpr:
+    resource: "@SynoliaSyliusGDPRPlugin/Resources/config/routes/admin/customer.yaml"
+
+sylius_gdpr_controllers:
+    resource: '@SynoliaSyliusGDPRPlugin/Resources/config/routes/admin/gdpr.yaml'
+    prefix: 'gdpr/'
+    name_prefix: 'sylius_gdpr_'

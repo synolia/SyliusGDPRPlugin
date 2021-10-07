@@ -11,7 +11,9 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
+use Synolia\SyliusGDPRPlugin\DependencyInjection\CompilerPass\RegisterAdvancedActionsFormDataProcessorsPass;
 use Synolia\SyliusGDPRPlugin\Loader\LoaderInterface;
+use Synolia\SyliusGDPRPlugin\Processor\AdvancedActions\AdvancedActionsFormDataProcessorInterface;
 use Synolia\SyliusGDPRPlugin\Validator\ArrayMappingValidator;
 
 final class SynoliaSyliusGDPRExtension extends Extension
@@ -28,6 +30,11 @@ final class SynoliaSyliusGDPRExtension extends Extension
         $mapping = $this->retrieveMappings($configs, $config['disable_default_mappings']);
 
         $container->setParameter('synolia_anonymization_mapping', $mapping);
+
+        $container
+            ->registerForAutoconfiguration(AdvancedActionsFormDataProcessorInterface::class)
+            ->addTag(RegisterAdvancedActionsFormDataProcessorsPass::PROCESSOR_SERVICE_TAG)
+        ;
     }
 
     public function getConfiguration(array $config, ContainerBuilder $container): ConfigurationInterface
