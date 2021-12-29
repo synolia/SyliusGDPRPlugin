@@ -12,7 +12,8 @@ Sylius\Component\Core\Model\ShopUser:
             faker: sha256
             prefix: 'anonymized-'
         lastLogin:
-            faker: dateTime
+            faker: dateTimeBetween
+            args: ['+100 years', '+101 years']
         emailVerificationToken:
             value: null
         passwordResetToken:
