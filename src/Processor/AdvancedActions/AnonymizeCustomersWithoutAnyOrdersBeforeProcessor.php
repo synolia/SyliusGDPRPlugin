@@ -10,6 +10,7 @@ use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Synolia\SyliusGDPRPlugin\Processor\AnonymizerProcessor;
 
 class AnonymizeCustomersWithoutAnyOrdersBeforeProcessor implements AdvancedActionsFormDataProcessorInterface
@@ -18,6 +19,7 @@ class AnonymizeCustomersWithoutAnyOrdersBeforeProcessor implements AdvancedActio
         private EntityManagerInterface $entityManager,
         private AnonymizerProcessor $anonymizerProcessor,
         private ParameterBagInterface $parameterBag,
+        private FlashBagInterface $flashBag
     ) {
     }
 
@@ -46,6 +48,8 @@ class AnonymizeCustomersWithoutAnyOrdersBeforeProcessor implements AdvancedActio
         $this->removeNoneEligibleCustomers($customers);
 
         $this->anonymizerProcessor->anonymizeEntities($customers);
+
+        $this->flashBag->add('success', sprintf('%d customers anonymized.', $this->anonymizerProcessor->getAnonymizedEntityCount()));
     }
 
     private function removeNoneEligibleCustomers(array &$customers): array
