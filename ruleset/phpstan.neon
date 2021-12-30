@@ -21,4 +21,3 @@ parameters:
         - '#Variable method call on object.#'
         - '#Call to an undefined method Faker\\UniqueGenerator::format\(\).#'
         - '#Call to an undefined method Faker\\UniqueGenerator::format\(\).#'
-        - '#.*Zend\\Stdlib\\PriorityQueue*.#'
