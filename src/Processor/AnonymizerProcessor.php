@@ -33,7 +33,7 @@ final class AnonymizerProcessor
             }
             $this->anonymizeEntity($entity, $reset, $maxRetries);
 
-            if (0 === $index % self::MODULO_FLUSH) {
+            if (0 !== $index && 0 === $index % self::MODULO_FLUSH) {
                 $this->entityManager->flush();
                 $this->entityManager->clear();
             }

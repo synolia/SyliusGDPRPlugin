@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Synolia\SyliusGDPRPlugin\Processor\AdvancedActions;
 
+use Laminas\Stdlib\PriorityQueue;
 use Symfony\Component\Form\FormInterface;
-use Zend\Stdlib\PriorityQueue;
 
 class CompositeAdvancedActionsFormDataProcessor implements AdvancedActionsFormDataProcessorInterface
 {
