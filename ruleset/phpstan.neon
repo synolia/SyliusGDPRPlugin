@@ -22,3 +22,4 @@ parameters:
         - '#Call to an undefined method Faker\\UniqueGenerator::format\(\).#'
         - "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
         - '#.*Laminas\\Stdlib\\PriorityQueue*.#'
+        - '#Call to an undefined method Faker\\UniqueGenerator::format\(\).#'
