@@ -9,6 +9,7 @@ sylius:
                     gdpr_title: GDPR
                 advanced_actions:
                     title: Advanced actions
+                    customer_anonymized_count: customers anonymized.
                     anonymize_customers_not_logged_before:
                         label: Anonymize customers not logged before
                     anonymize_customer_without_any_orders:

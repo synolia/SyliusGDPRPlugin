@@ -94,6 +94,10 @@ final class Anonymizer implements AnonymizerInterface
 
             if ($this->isSubclass($entity, $className, $propertyName)) {
                 $getter = 'get' . ucfirst($propertyName);
+                if ($entity->$getter() instanceof \DateTime && $attributeMetaData instanceof AttributeMetaData) {
+                    $this->anonymizeProcess($entity, $reset, $maxRetries, $className, $propertyName, $attributeMetaData);
+                }
+
                 $this->anonymize($entity->$getter(), $reset, $maxRetries);
 
                 continue;

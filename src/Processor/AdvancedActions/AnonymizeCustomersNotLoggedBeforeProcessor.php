@@ -9,6 +9,7 @@ use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\ShopUserInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Synolia\SyliusGDPRPlugin\Processor\AnonymizerProcessor;
 
 class AnonymizeCustomersNotLoggedBeforeProcessor implements AdvancedActionsFormDataProcessorInterface
@@ -22,11 +23,15 @@ class AnonymizeCustomersNotLoggedBeforeProcessor implements AdvancedActionsFormD
     /** @var ParameterBagInterface */
     private $parameterBag;
 
-    public function __construct(EntityManagerInterface $entityManager, AnonymizerProcessor $anonymizerProcessor, ParameterBagInterface $parameterBag)
+    /** @var FlashBagInterface */
+    private $flashBag;
+
+    public function __construct(EntityManagerInterface $entityManager, AnonymizerProcessor $anonymizerProcessor, ParameterBagInterface $parameterBag, FlashBagInterface $flashBag)
     {
         $this->entityManager = $entityManager;
         $this->anonymizerProcessor = $anonymizerProcessor;
         $this->parameterBag = $parameterBag;
+        $this->flashBag = $flashBag;
     }
 
     /** {@inheritdoc} */
@@ -45,6 +50,8 @@ class AnonymizeCustomersNotLoggedBeforeProcessor implements AdvancedActionsFormD
             ->execute();
 
         $this->anonymizerProcessor->anonymizeEntities($this->getCustomersFromShopUsers($shopUsers));
+
+        $this->flashBag->add('success', sprintf('%d customers anonymized.', $this->anonymizerProcessor->getAnonymizedEntityCount()));
     }
 
     private function getCustomersFromShopUsers(array $shopUsers): array
