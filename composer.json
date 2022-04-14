@@ -12,7 +12,7 @@
     "license": "EUPL-1.2",
     "require": {
         "php": "^7.3 || ^8.0",
-        "sylius/sylius": "~1.9.0 || ~1.10.0"
+        "sylius/sylius": "~1.9.0 || ~1.10.0 || ~1.11.0"
     },
     "require-dev": {
         "friendsofsymfony/oauth-server-bundle": "^1.6 || >2.0.0-alpha.0 ^2.0@dev",
