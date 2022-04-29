@@ -17,11 +17,9 @@ class AdvancedActionsController extends AbstractController
         AnonymizeCustomerNotLoggedBeforeType::class,
     ];
 
-    /** @var CompositeAdvancedActionsFormDataProcessor */
-    private $compositeAdvancedActionsFormDataProcessor;
+    private CompositeAdvancedActionsFormDataProcessor $compositeAdvancedActionsFormDataProcessor;
 
-    /** @var array */
-    private $formsType;
+    private array $formsType;
 
     public function __construct(CompositeAdvancedActionsFormDataProcessor $compositeAdvancedActionsFormDataProcessor, array $formsType = [])
     {
@@ -33,8 +31,11 @@ class AdvancedActionsController extends AbstractController
     {
         $formViews = array_merge(
             $this->generateAndProcessFormsType($request, self::FORMS),
-            $this->generateAndProcessFormsType($request, $this->formsType
-        ));
+            $this->generateAndProcessFormsType(
+                $request,
+                $this->formsType
+            )
+        );
 
         return $this->render('@SynoliaSyliusGDPRPlugin\Gdpr\Actions.html.twig', ['forms' => $formViews]);
     }

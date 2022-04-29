@@ -9,11 +9,9 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class AfterCustomerAnonymize extends Event
 {
-    /** @var CustomerInterface */
-    private $customer;
+    private CustomerInterface $customer;
 
-    /** @var string */
-    private $oldEmail;
+    private string $oldEmail;
 
     public function __construct(CustomerInterface $customer, string $oldEmail)
     {

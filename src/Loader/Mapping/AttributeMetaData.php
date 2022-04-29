@@ -8,19 +8,16 @@ use Synolia\SyliusGDPRPlugin\Validator\FakerOptionsValidator;
 
 final class AttributeMetaData implements AttributeMetaDataInterface
 {
-    /** @var string|null */
-    private $faker;
+    private ?string $faker;
 
-    /** @var array */
-    private $args = [];
+    private array $args = [];
 
-    /** @var bool */
-    private $unique = false;
+    private bool $unique = false;
 
     /** @var string|int|null */
     private $prefix = '';
 
-    /** @var string|int|array|bool|null */
+    /** @var mixed */
     private $value = FakerOptionsValidator::DEFAULT_VALUE;
 
     /**
@@ -87,7 +84,7 @@ final class AttributeMetaData implements AttributeMetaDataInterface
         return $this;
     }
 
-    /** @return int|string|array|bool|null */
+    /** @return mixed */
     public function getValue()
     {
         return $this->value;

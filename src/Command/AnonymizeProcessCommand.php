@@ -19,20 +19,15 @@ final class AnonymizeProcessCommand extends Command
 
     protected static $defaultName = 'synolia:gdpr:anonymize';
 
-    /** @var AnonymizerProcessor */
-    private $anonymizerProcessor;
+    private AnonymizerProcessor$anonymizerProcessor;
 
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var SymfonyStyle */
-    private $io;
+    private SymfonyStyle $io;
 
-    /** @var bool */
-    private $reset;
+    private bool $reset;
 
-    /** @var int */
-    private $maxRetries;
+    private int $maxRetries;
 
     public function __construct(
         AnonymizerProcessor $anonymizerProcessor,
@@ -68,16 +63,17 @@ final class AnonymizeProcessCommand extends Command
 
         try {
             if (null !== $className) {
+                /** @var int|string|array|null $id */
                 $id = $input->getOption('id');
-                if (\is_array($id) || \is_array($className)) {
+                if (\is_array($id) || !is_string($className)) {
                     throw new \LogicException('Invalid parameters');
                 }
                 if (null === $id) {
-                    $this->anonymizeEntityForClassName((string) $className, null, $force);
+                    $this->anonymizeEntityForClassName($className, null, $force);
 
                     return 0;
                 }
-                $this->anonymizeEntityForClassName((string) $className, (string) $id, $force);
+                $this->anonymizeEntityForClassName($className, (string) $id, $force);
 
                 return 0;
             }

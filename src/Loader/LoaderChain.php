@@ -9,14 +9,10 @@ use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetadataCollection;
 final class LoaderChain implements LoaderInterface
 {
     /** @var LoaderInterface[] */
-    private $loaders;
+    private array $loaders = [];
 
     public function addLoader(LoaderInterface $loader): void
     {
-        if (null === $this->loaders) {
-            $this->loaders = [];
-        }
-
         if ($loader instanceof self) {
             return;
         }

@@ -11,8 +11,7 @@ use Synolia\SyliusGDPRPlugin\Validator\FakerOptionsValidator;
 
 final class ArrayLoader implements LoaderInterface
 {
-    /** @var array */
-    private $mappings;
+    private array $mappings;
 
     public function __construct(array $mappings = [])
     {

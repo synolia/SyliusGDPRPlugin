@@ -32,20 +32,15 @@ final class Anonymizer implements AnonymizerInterface
         'float',
     ];
 
-    /** @var Generator */
-    private $faker;
+    private Generator $faker;
 
-    /** @var PropertyAccessorInterface */
-    private $propertyAccess;
+    private PropertyAccessorInterface $propertyAccess;
 
-    /** @var LoaderChain */
-    private $loaderChain;
+    private LoaderChain $loaderChain;
 
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
+    private EventDispatcherInterface $eventDispatcher;
 
-    /** @var LoggerInterface */
-    private $logger;
+    private LoggerInterface $logger;
 
     public function __construct(
         LoaderChain $loaderChain,
@@ -136,6 +131,7 @@ final class Anonymizer implements AnonymizerInterface
                 $entity,
                 $propertyName,
                 $type,
+                /** @phpstan-ignore-next-line */
                 sprintf('%s%s', (string) $attributeMetaData->getPrefix(), (string) $value)
             );
 
@@ -203,6 +199,7 @@ final class Anonymizer implements AnonymizerInterface
             $entity,
             $propertyName,
             $type,
+            /** @phpstan-ignore-next-line */
             sprintf('%s%s', (string) $attributeMetaData->getPrefix(), (string) $value)
         );
     }

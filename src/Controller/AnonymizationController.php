@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Synolia\SyliusGDPRPlugin\Controller;
 
+use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Repository\CustomerRepositoryInterface;
-use Sylius\Component\Customer\Model\CustomerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,24 +16,20 @@ use Synolia\SyliusGDPRPlugin\Provider\AnonymizerInterface;
 
 class AnonymizationController extends AbstractController
 {
-    /** @var CustomerRepositoryInterface */
-    private $customerRepository;
+    private CustomerRepositoryInterface $customerRepository;
 
-    /** @var AnonymizerInterface */
-    private $anonymizer;
+    private AnonymizerInterface $anonymizer;
 
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
+    private EventDispatcherInterface $eventDispatcher;
 
-    /** @var ParameterBagInterface */
-    private $parameterBag;
+    private ParameterBagInterface $parameterBag;
 
     public function __construct(
         CustomerRepositoryInterface $customerRepository,
         AnonymizerInterface $anonymizer,
         EventDispatcherInterface $eventDispatcher,
-        ParameterBagInterface $parameterBag)
-    {
+        ParameterBagInterface $parameterBag
+    ) {
         $this->customerRepository = $customerRepository;
         $this->anonymizer = $anonymizer;
         $this->eventDispatcher = $eventDispatcher;
@@ -45,10 +41,13 @@ class AnonymizationController extends AbstractController
         $customer = $this->customerRepository->find($id);
         if (!$customer instanceof CustomerInterface) {
             $this->parameterBag->set('error', 'sylius.ui.admin.sylius_gdpr.customer.not_found');
+
+            return $this->redirectToRoute('sylius_admin_customer_index');
         }
 
         $this->eventDispatcher->dispatch(new BeforeCustomerAnonymize($customer));
 
+        /** @var string $email */
         $email = $customer->getEmail();
 
         $this->anonymizer->anonymize($customer);

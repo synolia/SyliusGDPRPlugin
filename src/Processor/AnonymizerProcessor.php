@@ -11,11 +11,9 @@ final class AnonymizerProcessor
 {
     private const MODULO_FLUSH = 50;
 
-    /** @var AnonymizerInterface */
-    private $anonymizer;
+    private AnonymizerInterface $anonymizer;
 
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(
         AnonymizerInterface $anonymizer,

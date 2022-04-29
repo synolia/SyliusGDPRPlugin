@@ -12,11 +12,9 @@ use Synolia\SyliusGDPRPlugin\Processor\AnonymizerProcessor;
 
 class AnonymizeCustomerNotLoggedBeforeProcessor implements AdvancedActionsFormDataProcessorInterface
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var AnonymizerProcessor */
-    private $anonymizerProcessor;
+    private AnonymizerProcessor $anonymizerProcessor;
 
     public function __construct(EntityManagerInterface $entityManager, AnonymizerProcessor $anonymizerProcessor)
     {
@@ -24,11 +22,14 @@ class AnonymizeCustomerNotLoggedBeforeProcessor implements AdvancedActionsFormDa
         $this->anonymizerProcessor = $anonymizerProcessor;
     }
 
-    /** {@inheritdoc} */
+    /** @inheritdoc */
     public function process(string $formTypeClass, FormInterface $form): void
     {
+        /** @var array $formData */
+        $formData = $form->getData();
+
         /** @var \DateTime $before */
-        $before = $form->getData()['before_date'];
+        $before = $formData['before_date'];
         $beforeClean = new \DateTime($before->format('Y-m-d'));
 
         $shopUsers = $this->entityManager
@@ -38,7 +39,12 @@ class AnonymizeCustomerNotLoggedBeforeProcessor implements AdvancedActionsFormDa
             ->where('su.lastLogin < :before')
             ->setParameter('before', $beforeClean)
             ->getQuery()
-            ->execute();
+            ->execute()
+        ;
+
+        if (!is_array($shopUsers)) {
+            throw new \LogicException('Error with query.');
+        }
 
         $this->anonymizerProcessor->anonymizeEntities($this->getCustomersFromShopUsers($shopUsers));
     }
