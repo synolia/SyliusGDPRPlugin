@@ -12,7 +12,7 @@ final class FakerOptionsValidator
 {
     public const DEFAULT_VALUE = 'NO_VALUE_PROVIDED';
 
-    public string $faker;
+    public ?string $faker;
 
     public array $args = [];
 
