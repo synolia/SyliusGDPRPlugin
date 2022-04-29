@@ -13,7 +13,7 @@ use Synolia\SyliusGDPRPlugin\Validator\FakerOptionsValidator;
  */
 final class Anonymize implements Annotation
 {
-    public string $faker;
+    public ?string $faker;
 
     public array $args = [];
 
