@@ -19,7 +19,7 @@ final class AnonymizeProcessCommand extends Command
 
     protected static $defaultName = 'synolia:gdpr:anonymize';
 
-    private AnonymizerProcessor$anonymizerProcessor;
+    private AnonymizerProcessor $anonymizerProcessor;
 
     private EntityManagerInterface $entityManager;
 

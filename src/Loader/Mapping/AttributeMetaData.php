@@ -17,7 +17,7 @@ final class AttributeMetaData implements AttributeMetaDataInterface
     /** @var string|int|null */
     private $prefix = '';
 
-    /** @var mixed */
+    /** @var string|int|array|bool|null */
     private $value = FakerOptionsValidator::DEFAULT_VALUE;
 
     /**
@@ -84,13 +84,13 @@ final class AttributeMetaData implements AttributeMetaDataInterface
         return $this;
     }
 
-    /** @return mixed */
+    /** @return string|int|array|bool|null */
     public function getValue()
     {
         return $this->value;
     }
 
-    /** @param mixed $value */
+    /** @param string|int|array|bool|null $value */
     public function setValue($value): AttributeMetaDataInterface
     {
         $this->value = $value;

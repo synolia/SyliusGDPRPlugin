@@ -131,7 +131,6 @@ final class Anonymizer implements AnonymizerInterface
                 $entity,
                 $propertyName,
                 $type,
-                /** @phpstan-ignore-next-line */
                 sprintf('%s%s', (string) $attributeMetaData->getPrefix(), (string) $value)
             );
 
@@ -195,12 +194,16 @@ final class Anonymizer implements AnonymizerInterface
 
             throw new GDPRValueException('Value or type don\'t match with object');
         }
+
+        if (!is_string($value) && !is_int($value)) {
+            throw new GDPRValueException('Value or type don\'t match with string or int');
+        }
+
         $this->setValue(
             $entity,
             $propertyName,
             $type,
-            /** @phpstan-ignore-next-line */
-            sprintf('%s%s', (string) $attributeMetaData->getPrefix(), (string) $value)
+            sprintf('%s%s', (string) $attributeMetaData->getPrefix(), $value)
         );
     }
 
