@@ -12,8 +12,7 @@ use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetadataCollection;
 
 final class AnnotationLoader implements LoaderInterface
 {
-    /** @var Reader */
-    private $annotationReader;
+    private Reader $annotationReader;
 
     public function __construct(Reader $annotationReader)
     {

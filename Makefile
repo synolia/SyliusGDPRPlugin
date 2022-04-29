@@ -2,11 +2,11 @@
 SHELL=/bin/bash
 COMPOSER_ROOT=composer
 TEST_DIRECTORY=tests/Application
-CONSOLE=cd tests/Application && symfony console
+CONSOLE=cd tests/Application && bin/console
 COMPOSER=cd tests/Application && composer
 YARN=cd tests/Application && yarn
 
-SYLIUS_VERSION=1.9.0
+SYLIUS_VERSION=1.10.0
 SYMFONY_VERSION=5.2
 PLUGIN_NAME=synolia/sylius-gdpr-plugin
 

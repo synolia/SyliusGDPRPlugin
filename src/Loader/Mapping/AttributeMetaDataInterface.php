@@ -24,9 +24,9 @@ interface AttributeMetaDataInterface
     /** @param int|string|null $prefix */
     public function setPrefix($prefix): self;
 
-    /** @return int|string|array|bool|null */
+    /** @return string|int|array|bool|null */
     public function getValue();
 
-    /** @param mixed $value */
+    /** @param string|int|array|bool|null $value */
     public function setValue($value): self;
 }

@@ -9,8 +9,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class BeforeExportCustomerData extends Event
 {
-    /** @var CustomerInterface */
-    private $customer;
+    private CustomerInterface $customer;
 
     public function __construct(CustomerInterface $customer)
     {

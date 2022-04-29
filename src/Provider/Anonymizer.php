@@ -32,20 +32,15 @@ final class Anonymizer implements AnonymizerInterface
         'float',
     ];
 
-    /** @var Generator */
-    private $faker;
+    private Generator $faker;
 
-    /** @var PropertyAccessorInterface */
-    private $propertyAccess;
+    private PropertyAccessorInterface $propertyAccess;
 
-    /** @var LoaderChain */
-    private $loaderChain;
+    private LoaderChain $loaderChain;
 
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
+    private EventDispatcherInterface $eventDispatcher;
 
-    /** @var LoggerInterface */
-    private $logger;
+    private LoggerInterface $logger;
 
     public function __construct(
         LoaderChain $loaderChain,
@@ -199,11 +194,16 @@ final class Anonymizer implements AnonymizerInterface
 
             throw new GDPRValueException('Value or type don\'t match with object');
         }
+
+        if (!is_string($value) && !is_int($value)) {
+            throw new GDPRValueException('Value or type don\'t match with string or int');
+        }
+
         $this->setValue(
             $entity,
             $propertyName,
             $type,
-            sprintf('%s%s', (string) $attributeMetaData->getPrefix(), (string) $value)
+            sprintf('%s%s', (string) $attributeMetaData->getPrefix(), $value)
         );
     }
 

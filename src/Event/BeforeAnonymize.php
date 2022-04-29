@@ -8,8 +8,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class BeforeAnonymize extends Event
 {
-    /** @var object */
-    private $entity;
+    private object $entity;
 
     public function __construct(Object $entity)
     {
