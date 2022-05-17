@@ -14,7 +14,7 @@ final class GDPRMenuListener
 
         $gdprMenu = $menu->addChild('gdpr');
         $gdprMenu
-            ->addChild('app.ui.gdpr.advanced_actions', [
+            ->addChild('sylius.ui.admin.synolia_gdpr.advanced_actions.title', [
                 'route' => 'sylius_gdpr_advanced_actions',
             ]);
     }
