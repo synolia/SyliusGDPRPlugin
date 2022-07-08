@@ -75,9 +75,10 @@
       And
 
      ```yaml
-     synolia_gdpr:
+     synolia_gdpr_controller:
          resource: "@SynoliaSyliusGDPRPlugin/Resources/config/routes/admin/gdpr.yaml"
-         prefix: '/%sylius_admin.path_name%'
+         prefix: '%sylius_admin.path_name%/gdpr/'
+         name_prefix: 'sylius_gdpr_'
      ```
 
       Or you can add this conf file, which will import the entire route configuration
