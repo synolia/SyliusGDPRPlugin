@@ -22,7 +22,7 @@ final class ArrayLoaderTest extends KernelTestCase
     public function testParseConfigForPathReturnEmail(): void
     {
         $attributeMetaDataCollection = $this->arrayLoader->loadClassMetadata(
-            'Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\YamlFoo'
+            'Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\YamlFoo',
         );
         $this->assertInstanceOf(AttributeMetadataCollection::class, $attributeMetaDataCollection);
         $this->assertSame('email', $attributeMetaDataCollection->get()['bar']->getFaker());
@@ -33,7 +33,7 @@ final class ArrayLoaderTest extends KernelTestCase
     {
         $this->expectException(\ReflectionException::class);
         $this->arrayLoader->loadClassMetadata(
-            'Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\NotEvenReal'
+            'Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\NotEvenReal',
         );
     }
 }

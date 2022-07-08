@@ -31,7 +31,7 @@ final class ArrayLoader implements LoaderInterface
             $attributeMetaDataCollection = $this->assignAttributeMetaDataCollection(
                 $mapping,
                 $realClassName,
-                $attributeMetaDataCollection
+                $attributeMetaDataCollection,
             );
         }
 

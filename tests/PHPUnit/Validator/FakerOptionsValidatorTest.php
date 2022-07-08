@@ -21,7 +21,7 @@ final class FakerOptionsValidatorTest extends KernelTestCase
         $fakerOption = new FakerOptionsValidator($options);
         $this->assertSame(
             ['faker' => $fakerOption->faker, 'args' => $fakerOption->args, 'unique' => $fakerOption->unique],
-            $options
+            $options,
         );
     }
 
@@ -53,7 +53,7 @@ final class FakerOptionsValidatorTest extends KernelTestCase
         $fakerOption = new FakerOptionsValidator($options);
         $this->assertSame(
             $exepctedResult,
-            get_object_vars($fakerOption)
+            get_object_vars($fakerOption),
         );
     }
 }

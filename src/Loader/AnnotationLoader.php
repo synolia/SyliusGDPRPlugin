@@ -28,7 +28,7 @@ final class AnnotationLoader implements LoaderInterface
         foreach ($properties as $property) {
             $annotation = $this->annotationReader->getPropertyAnnotation(
                 $property,
-                Anonymize::class
+                Anonymize::class,
             );
 
             if (!$annotation instanceof Anonymize) {

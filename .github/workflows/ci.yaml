@@ -10,7 +10,8 @@ on:
       - README.md
 
 jobs:
-  php:
+
+  analysis:
     name: PHP ${{ matrix.php }} Symfony ${{ matrix.symfony }}
     runs-on: ubuntu-18.04
 
@@ -18,7 +19,10 @@ jobs:
       fail-fast: false
       matrix:
         php: [7.4, 8.0, 8.1]
-        symfony: [4.4.*, 5.2.*]
+        symfony: [4.4.*, 5.4.*]
+
+    env:
+      APP_ENV: test
 
     steps:
       - uses: actions/checkout@v2
@@ -48,6 +52,9 @@ jobs:
       - name: Composer - Github Auth
         run: composer config -g github-oauth.github.com ${{ github.token }}
 
+      - name: Composer - Allow all plugins
+        run: composer config allow-plugins true
+
       - name: Composer - Restrict Symfony version
         run: composer config extra.symfony.require "${{ matrix.symfony }}"
 
@@ -56,11 +63,15 @@ jobs:
         id: end-of-setup
 
       - name: ECS - Run
-        run: if [ -f ruleset/ecs.php ]; then vendor/bin/ecs check --no-progress-bar -c ruleset/ecs.php ; else echo Ecs rulesets file does not exist, skipping step ; fi
+        run: if [ -f ruleset/ecs.php ]; then vendor/bin/ecs check src/ --no-progress-bar -c ruleset/ecs.php ; else echo Ecs ruleset file does not exist, skipping step ; fi
         if: always() && steps.end-of-setup.outcome == 'success'
 
       - name: PHPStan - Run
-        run: if [ -f ruleset/phpstan.neon ]; then vendor/bin/phpstan analyse -c ruleset/phpstan.neon src/ ; else echo PHPStan rulesets file does not exist, skipping step ; fi
+        run: if [ -f ruleset/phpstan.neon ]; then vendor/bin/phpstan analyse -c ruleset/phpstan.neon src/ ; else echo PHPStan ruleset file does not exist, skipping step ; fi
+        if: always() && steps.end-of-setup.outcome == 'success'
+
+      - name: PHPSpec - Run
+        run: if [ -f phpspec.yml.dist ]; then vendor/bin/phpspec run ; else echo PHPSpec config file does not exist, skipping step ; fi
         if: always() && steps.end-of-setup.outcome == 'success'
 
       - name: PHPMD - Run
@@ -68,30 +79,31 @@ jobs:
         if: always() && steps.end-of-setup.outcome == 'success'
 
       - name: GrumPHP - Run
-        run: (test -f grumphp.yml && vendor/bin/grumphp run) || echo Grumphp ruleset file does not exist, skipping step
+        run: if [ -f grumphp.yml ]; then vendor/bin/grumphp run ; else echo Grumphp ruleset file does not exist, skipping step ; fi
         if: always() && steps.end-of-setup.outcome == 'success'
 
-      - name: Checks security issues - Run
-        run: symfony security:check
+      - uses: symfonycorp/security-checker-action@v3
         if: always() && steps.end-of-setup.outcome == 'success'
 
   sylius:
-    name: "Sylius ${{ matrix.sylius }}, PHP ${{ matrix.php }}, Symfony ${{ matrix.symfony }}"
+    name: PHPUnit-Behat (PHP ${{ matrix.php }} Sylius ${{ matrix.sylius }} Symfony ${{ matrix.symfony }})
     runs-on: ubuntu-18.04
     strategy:
       fail-fast: false
       matrix:
         php: [7.4, 8.0, 8.1]
-        sylius: [1.10.0, 1.11.0]
-        symfony: [4.4, 5.2]
+        sylius: [1.9.0, 1.10.0, 1.11.0]
+        symfony: [4.4, 5.4]
         node: [10.x]
         exclude:
-          -   sylius: 1.10.0
-              symfony: 4.4
-          -   sylius: 1.11.0
-              symfony: 4.4
-          -   sylius: 1.11.0
-              php: 7.4
+          - sylius: 1.9.0
+            php: 8.0
+          - sylius: 1.9.0
+            php: 8.1
+          - sylius: 1.11.0
+            symfony: 4.4
+          - sylius: 1.11.0
+            php: 7.4
 
     env:
       APP_ENV: test
@@ -146,7 +158,11 @@ jobs:
             node-${{ matrix.node }}-yarn-
 
       - name: Install Sylius-Standard and Plugin
-        run: make install -e SYLIUS_VERSION=${{ matrix.sylius }} SYMFONY_VERSION=${{ matrix.symfony }}
+        run: make install -e SYLIUS_VERSION=${{ matrix.sylius }} SYMFONY_VERSION=${{ matrix.symfony }} PHP_VERSION=${{ matrix.php }}
+
+      - name: Doctrine Schema Validate - Run
+        working-directory: ./tests/Application
+        run: php bin/console doctrine:schema:validate --skip-sync
 
       - name: Run PHPUnit
         run: make phpunit

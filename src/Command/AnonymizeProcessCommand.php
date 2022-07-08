@@ -97,7 +97,7 @@ final class AnonymizeProcessCommand extends Command
         if (false === $force) {
             $response = $this->io->confirm(
                 'Are you sure to anonymize this entity (' . $className . ') ? Data will be changed without back-up.',
-                false
+                false,
             );
             if (true !== $response) {
                 throw new \LogicException('No data has been changed.');

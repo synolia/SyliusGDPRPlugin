@@ -33,8 +33,8 @@ class AdvancedActionsController extends AbstractController
             $this->generateAndProcessFormsType($request, self::FORMS),
             $this->generateAndProcessFormsType(
                 $request,
-                $this->formsType
-            )
+                $this->formsType,
+            ),
         );
 
         return $this->render('@SynoliaSyliusGDPRPlugin\Gdpr\Actions.html.twig', ['forms' => $formViews]);

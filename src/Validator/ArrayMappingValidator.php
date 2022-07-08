@@ -51,7 +51,7 @@ final class ArrayMappingValidator
                 throw new GDPRPropertyException(
                     'The property ' . $propertyMapping . ' does not exist in entity ' . $className . '.',
                     Response::HTTP_NOT_FOUND,
-                    $exception
+                    $exception,
                 );
             }
 
