@@ -50,7 +50,8 @@ final class Anonymizer implements AnonymizerInterface
         $this->faker = Factory::create();
         $this->propertyAccess = PropertyAccess::createPropertyAccessorBuilder()
             ->enableMagicCall()
-            ->getPropertyAccessor();
+            ->getPropertyAccessor()
+        ;
         $this->loaderChain = $loaderChain;
         $this->eventDispatcher = $eventDispatcher;
         $this->logger = $logger;
@@ -131,7 +132,7 @@ final class Anonymizer implements AnonymizerInterface
                 $entity,
                 $propertyName,
                 $type,
-                sprintf('%s%s', (string) $attributeMetaData->getPrefix(), (string) $value)
+                sprintf('%s%s', (string) $attributeMetaData->getPrefix(), (string) $value),
             );
 
             return;
@@ -149,7 +150,7 @@ final class Anonymizer implements AnonymizerInterface
                 $entity,
                 $propertyName,
                 $type,
-                null
+                null,
             );
 
             return;
@@ -161,7 +162,7 @@ final class Anonymizer implements AnonymizerInterface
                 $this->propertyAccess->setValue(
                     $entity,
                     $propertyName,
-                    $value
+                    $value,
                 );
 
                 return;
@@ -174,7 +175,7 @@ final class Anonymizer implements AnonymizerInterface
             $entity,
             $propertyName,
             $type,
-            is_array($value) ? $value : sprintf('%s%s', (string) $attributeMetaData->getPrefix(), (string) $value)
+            is_array($value) ? $value : sprintf('%s%s', (string) $attributeMetaData->getPrefix(), (string) $value),
         );
     }
 
@@ -186,7 +187,7 @@ final class Anonymizer implements AnonymizerInterface
                 $this->propertyAccess->setValue(
                     $entity,
                     $propertyName,
-                    $value
+                    $value,
                 );
 
                 return;
@@ -203,7 +204,7 @@ final class Anonymizer implements AnonymizerInterface
             $entity,
             $propertyName,
             $type,
-            sprintf('%s%s', (string) $attributeMetaData->getPrefix(), $value)
+            sprintf('%s%s', (string) $attributeMetaData->getPrefix(), $value),
         );
     }
 
@@ -215,7 +216,7 @@ final class Anonymizer implements AnonymizerInterface
                 $this->propertyAccess->setValue(
                     $entity,
                     $propertyName,
-                    $value
+                    $value,
                 );
 
                 return;
@@ -228,7 +229,7 @@ final class Anonymizer implements AnonymizerInterface
             $this->propertyAccess->setValue(
                 $entity,
                 $propertyName,
-                (int) $value
+                (int) $value,
             );
 
             return;
@@ -238,7 +239,7 @@ final class Anonymizer implements AnonymizerInterface
             $this->propertyAccess->setValue(
                 $entity,
                 $propertyName,
-                (float) $value
+                (float) $value,
             );
         }
 
@@ -246,14 +247,14 @@ final class Anonymizer implements AnonymizerInterface
             $this->propertyAccess->setValue(
                 $entity,
                 $propertyName,
-                (bool) $value
+                (bool) $value,
             );
         }
 
         $this->propertyAccess->setValue(
             $entity,
             $propertyName,
-            $value
+            $value,
         );
     }
 

@@ -18,9 +18,9 @@ class AnonymizeCustomerNotLoggedBeforeProcessorTest extends KernelTestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
+        self::bootKernel();
 
-        $this->manager = $this->getContainer()->get(EntityManagerInterface::class);
+        $this->manager = self::$container->get(EntityManagerInterface::class);
         $this->manager->beginTransaction();
     }
 
@@ -34,7 +34,7 @@ class AnonymizeCustomerNotLoggedBeforeProcessorTest extends KernelTestCase
     public function testAnonymizeCustomers(): void
     {
         /** @var array<int, ShopUserInterface> $shopUsers */
-        $shopUsers = $this->getContainer()->get('sylius.repository.shop_user')->findAll();
+        $shopUsers = self::$container->get('sylius.repository.shop_user')->findAll();
         $shopUsers[0]->setLastLogin(new \DateTime());
         $shopUsers[1]->setLastLogin((new \Datetime())->sub(new \DateInterval('P2D')));
 
@@ -42,11 +42,11 @@ class AnonymizeCustomerNotLoggedBeforeProcessorTest extends KernelTestCase
 
         $form = Forms::createFormFactoryBuilder()->getFormFactory()->create(
             AnonymizeCustomerNotLoggedBeforeType::class,
-            ['before_date' => (new \Datetime())->sub(new \DateInterval('P1D'))]
+            ['before_date' => (new \Datetime())->sub(new \DateInterval('P1D'))],
         );
 
         /** @var CompositeAdvancedActionsFormDataProcessor $composite */
-        $composite = $this->getContainer()->get(CompositeAdvancedActionsFormDataProcessor::class);
+        $composite = self::$container->get(CompositeAdvancedActionsFormDataProcessor::class);
         $composite->process(AnonymizeCustomerNotLoggedBeforeType::class, $form);
 
         $this->assertStringContainsString('anonymized-', $shopUsers[1]->getEmail());

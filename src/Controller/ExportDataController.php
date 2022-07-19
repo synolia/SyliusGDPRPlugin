@@ -57,7 +57,7 @@ class ExportDataController extends AbstractController
         $response = new Response($formattedCustomerData);
         $disposition = HeaderUtils::makeDisposition(
             HeaderUtils::DISPOSITION_ATTACHMENT,
-            $fileName . '.json'
+            $fileName . '.json',
         );
 
         $response->headers->set('Content-Disposition', $disposition);

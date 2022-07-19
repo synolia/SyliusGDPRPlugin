@@ -26,7 +26,8 @@ final class SynoliaSyliusGDPRExtension extends Extension
         $loader->load('services.yaml');
 
         $container->registerForAutoconfiguration(LoaderInterface::class)
-            ->addTag('anonymization_loader');
+            ->addTag('anonymization_loader')
+        ;
         $mapping = $this->retrieveMappings($configs, $config['disable_default_mappings']);
 
         $container->setParameter('synolia_anonymization_mapping', $mapping);

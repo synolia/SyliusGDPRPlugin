@@ -16,6 +16,7 @@ final class GDPRMenuListener
         $gdprMenu
             ->addChild('sylius.ui.admin.synolia_gdpr.advanced_actions.title', [
                 'route' => 'sylius_gdpr_advanced_actions',
-            ]);
+            ])
+        ;
     }
 }

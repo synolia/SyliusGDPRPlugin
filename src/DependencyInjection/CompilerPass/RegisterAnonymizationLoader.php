@@ -22,7 +22,7 @@ final class RegisterAnonymizationLoader implements CompilerPassInterface
             if (ArrayLoader::class === $definition->getClass()) {
                 $definition->setArgument(
                     0,
-                    $container->getParameter('synolia_anonymization_mapping')
+                    $container->getParameter('synolia_anonymization_mapping'),
                 );
             }
             $chainLoader->addMethodCall('addLoader', [new Reference($id)]);

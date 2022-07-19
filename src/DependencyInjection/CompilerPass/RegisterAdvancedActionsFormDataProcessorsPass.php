@@ -18,7 +18,7 @@ final class RegisterAdvancedActionsFormDataProcessorsPass extends PrioritizedCom
             'synolia.gdpr_processing.advanced_actions_form_data_processor',
             'Synolia\SyliusGDPRPlugin\Processor\AdvancedActions\CompositeAdvancedActionsFormDataProcessor',
             self::PROCESSOR_SERVICE_TAG,
-            'addProcessor'
+            'addProcessor',
         );
     }
 
