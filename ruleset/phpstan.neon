@@ -5,7 +5,7 @@ parameters:
     checkGenericClassInNonGenericObjectType: false
     bootstrapFiles:
         - '../vendor/autoload.php'
-    excludes_analyse:
+    excludePaths:
         - '../vendor/'
         - '../src/Migrations/'
         - '../source/src/Kernel.php'
