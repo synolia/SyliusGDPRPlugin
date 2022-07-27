@@ -41,7 +41,7 @@
 | | Version |
 | :--- | :--- |
 | PHP  | 7.4, 8.0, 8.1 |
-| Sylius | 1.10, 1.11 |
+| Sylius | ^1.9 |
 
 ## Installation
 
