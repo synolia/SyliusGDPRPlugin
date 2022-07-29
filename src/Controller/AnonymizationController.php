@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Synolia\SyliusGDPRPlugin\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Repository\CustomerRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,6 +17,8 @@ use Synolia\SyliusGDPRPlugin\Provider\AnonymizerInterface;
 
 class AnonymizationController extends AbstractController
 {
+    private EntityManagerInterface $entityManager;
+
     private CustomerRepositoryInterface $customerRepository;
 
     private AnonymizerInterface $anonymizer;
@@ -25,11 +28,13 @@ class AnonymizationController extends AbstractController
     private ParameterBagInterface $parameterBag;
 
     public function __construct(
+        EntityManagerInterface $entityManager,
         CustomerRepositoryInterface $customerRepository,
         AnonymizerInterface $anonymizer,
         EventDispatcherInterface $eventDispatcher,
         ParameterBagInterface $parameterBag
     ) {
+        $this->entityManager = $entityManager;
         $this->customerRepository = $customerRepository;
         $this->anonymizer = $anonymizer;
         $this->eventDispatcher = $eventDispatcher;
@@ -52,7 +57,7 @@ class AnonymizationController extends AbstractController
 
         $this->anonymizer->anonymize($customer);
 
-        $this->customerRepository->add($customer);
+        $this->entityManager->flush();
 
         $this->eventDispatcher->dispatch(new AfterCustomerAnonymize($customer, $email));
 

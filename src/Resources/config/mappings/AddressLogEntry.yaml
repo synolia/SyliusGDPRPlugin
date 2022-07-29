@@ -1,0 +1,8 @@
+Sylius\Component\Addressing\Model\AddressLogEntry:
+    properties:
+        loggedAt:
+            faker: dateTime
+        data:
+            value: ['anonymized-details']
+        objectId:
+            value: 'anonymized'
