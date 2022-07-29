@@ -15,12 +15,24 @@ use Synolia\SyliusGDPRPlugin\Processor\AnonymizerProcessor;
 
 class AnonymizeCustomersWithoutAnyOrdersBeforeProcessor implements AdvancedActionsFormDataProcessorInterface
 {
+    private EntityManagerInterface $entityManager;
+
+    private AnonymizerProcessor $anonymizerProcessor;
+
+    private ParameterBagInterface $parameterBag;
+
+    private FlashBagInterface $flashBag;
+
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private AnonymizerProcessor $anonymizerProcessor,
-        private ParameterBagInterface $parameterBag,
-        private FlashBagInterface $flashBag
+        EntityManagerInterface $entityManager,
+        AnonymizerProcessor $anonymizerProcessor,
+        ParameterBagInterface $parameterBag,
+        FlashBagInterface $flashBag
     ) {
+        $this->entityManager = $entityManager;
+        $this->anonymizerProcessor = $anonymizerProcessor;
+        $this->parameterBag = $parameterBag;
+        $this->flashBag = $flashBag;
     }
 
     /** @inheritdoc */
