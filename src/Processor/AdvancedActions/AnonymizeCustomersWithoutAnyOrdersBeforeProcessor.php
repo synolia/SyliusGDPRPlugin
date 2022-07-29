@@ -15,17 +15,13 @@ use Synolia\SyliusGDPRPlugin\Processor\AnonymizerProcessor;
 
 class AnonymizeCustomersWithoutAnyOrdersBeforeProcessor implements AdvancedActionsFormDataProcessorInterface
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var AnonymizerProcessor */
-    private $anonymizerProcessor;
+    private AnonymizerProcessor $anonymizerProcessor;
 
-    /** @var ParameterBagInterface */
-    private $parameterBag;
+    private ParameterBagInterface $parameterBag;
 
-    /** @var FlashBagInterface */
-    private $flashBag;
+    private FlashBagInterface $flashBag;
 
     public function __construct(EntityManagerInterface $entityManager, AnonymizerProcessor $anonymizerProcessor, ParameterBagInterface $parameterBag, FlashBagInterface $flashBag)
     {
@@ -35,7 +31,7 @@ class AnonymizeCustomersWithoutAnyOrdersBeforeProcessor implements AdvancedActio
         $this->flashBag = $flashBag;
     }
 
-    /** {@inheritdoc} */
+    /** @inheritdoc */
     public function process(string $formTypeClass, FormInterface $form): void
     {
         /** @var string $customer */
@@ -43,13 +39,16 @@ class AnonymizeCustomersWithoutAnyOrdersBeforeProcessor implements AdvancedActio
         /** @var string $order */
         $order = $this->parameterBag->get('sylius.model.order.class');
 
+        /** @var array $data */
+        $data = $form->getData();
+
         $customers = $this->entityManager->createQueryBuilder()
             ->select('c')
             ->from($customer, 'c')
             ->leftJoin($order, 'o', Join::WITH, 'o.customer = c')
             ->where('c.createdAt < :before')
             ->andWhere('o.state = :state OR o IS NULL')
-            ->setParameter('before', $form->getData()['anonymize_customer_without_any_orders_before_date'])
+            ->setParameter('before', $data['anonymize_customer_without_any_orders_before_date'])
             ->setParameter('state', OrderInterface::STATE_CART)
             ->getQuery()
             ->execute();

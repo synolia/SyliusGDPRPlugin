@@ -17,14 +17,11 @@ final class AnonymizerProcessor
 
     private EntityManagerInterface $entityManager;
 
-    /** @var TranslatorInterface */
-    private $translator;
+    private TranslatorInterface $translator;
 
-    /** @var LoggerInterface */
-    private $logger;
+    private LoggerInterface $logger;
 
-    /** @var int */
-    private $anonymizedEntity = 0;
+    private int $anonymizedEntity = 0;
 
     public function __construct(
         AnonymizerInterface $anonymizer,

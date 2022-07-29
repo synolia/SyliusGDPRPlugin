@@ -14,17 +14,13 @@ use Synolia\SyliusGDPRPlugin\Processor\AnonymizerProcessor;
 
 class AnonymizeCustomersNotLoggedBeforeProcessor implements AdvancedActionsFormDataProcessorInterface
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var AnonymizerProcessor */
-    private $anonymizerProcessor;
+    private AnonymizerProcessor $anonymizerProcessor;
 
-    /** @var ParameterBagInterface */
-    private $parameterBag;
+    private ParameterBagInterface $parameterBag;
 
-    /** @var FlashBagInterface */
-    private $flashBag;
+    private FlashBagInterface $flashBag;
 
     public function __construct(EntityManagerInterface $entityManager, AnonymizerProcessor $anonymizerProcessor, ParameterBagInterface $parameterBag, FlashBagInterface $flashBag)
     {
@@ -34,18 +30,21 @@ class AnonymizeCustomersNotLoggedBeforeProcessor implements AdvancedActionsFormD
         $this->flashBag = $flashBag;
     }
 
-    /** {@inheritdoc} */
+    /** @inheritdoc */
     public function process(string $formTypeClass, FormInterface $form): void
     {
         /** @var string $shopUser */
         $shopUser = $this->parameterBag->get('sylius.model.shop_user.class');
+
+        /** @var array $data */
+        $data = $form->getData();
 
         $shopUsers = $this->entityManager
             ->createQueryBuilder()
             ->select('su')
             ->from($shopUser, 'su')
             ->where('su.lastLogin < :before')
-            ->setParameter('before', $form->getData()['anonymize_customers_not_logged_before_date'])
+            ->setParameter('before', $data['anonymize_customers_not_logged_before_date'])
             ->getQuery()
             ->execute()
         ;
