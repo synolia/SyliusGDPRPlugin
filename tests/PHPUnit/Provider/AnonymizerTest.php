@@ -17,7 +17,7 @@ final class AnonymizerTest extends KernelTestCase
     protected function setUp(): void
     {
         self::bootKernel();
-        $this->anonymizer = self::$container->get(Anonymizer::class);
+        $this->anonymizer = static::getContainer()->get(Anonymizer::class);
     }
 
     public function testAnonymizeWithAnnotationAndYamlProperties(): void

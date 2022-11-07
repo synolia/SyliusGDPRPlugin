@@ -38,11 +38,6 @@
     "config": {
         "sort-packages": true
     },
-    "extra": {
-        "symfony": {
-            "require": "^4.3 || ^5.1"
-        }
-    },
     "autoload": {
         "psr-4": {
             "Synolia\\SyliusGDPRPlugin\\": "src/",

@@ -28,20 +28,12 @@
    ```
    Use --help to get more informations
 
-### Events
-
-   - Synolia\SyliusGDPRPlugin\Event\BeforeAnonymize
-   - Synolia\SyliusGDPRPlugin\Event\AfterAnonymize
-   - Synolia\SyliusGDPRPlugin\Event\BeforeCustomerAnonymize
-   - Synolia\SyliusGDPRPlugin\Event\AfterCustomerAnonymize
-   - Synolia\SyliusGDPRPlugin\Event\BeforeExportCustomerData
-
 ## Requirements
 
-| | Version |
-| :--- | :--- |
-| PHP  | 7.4, 8.0, 8.1 |
-| Sylius | ^1.9 |
+| | Version         |
+| :--- |:----------------|
+| PHP  | ^7.4, ^8.0 |
+| Sylius | ^1.9            |
 
 ## Installation
 
@@ -138,6 +130,14 @@ There's two steps to add your custom form into the page:
    - Then create your form processor by implementing Synolia\SyliusGDPRPlugin\Processor\AnonymizerProcessor\AdvancedActionsFormDataProcessorInterface
 
 [There](src/Processor/AdvancedActions/AnonymizeCustomerNotLoggedBeforeProcessor.php) a form processor example
+
+### Events
+
+- Synolia\SyliusGDPRPlugin\Event\BeforeAnonymize
+- Synolia\SyliusGDPRPlugin\Event\AfterAnonymize
+- Synolia\SyliusGDPRPlugin\Event\BeforeCustomerAnonymize
+- Synolia\SyliusGDPRPlugin\Event\AfterCustomerAnonymize
+- Synolia\SyliusGDPRPlugin\Event\BeforeExportCustomerData
 
 ## Development
 
