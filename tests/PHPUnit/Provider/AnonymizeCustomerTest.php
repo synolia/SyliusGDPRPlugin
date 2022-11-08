@@ -22,9 +22,9 @@ class AnonymizeCustomerTest extends KernelTestCase
     public function testAnonymizeCustomer(): void
     {
         /** @var EntityManagerInterface $entityManager */
-        $entityManager = self::$container->get(EntityManagerInterface::class);
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
 
-        $customer = self::$container->get('sylius.factory.customer')->createNew();
+        $customer = static::getContainer()->get('sylius.factory.customer')->createNew();
         /** @var CustomerInterface $customer */
         $customer = $entityManager->getRepository(get_class($customer))->findOneBy([]);
         $this->assertInstanceOf(CustomerInterface::class, $customer);
@@ -39,7 +39,7 @@ class AnonymizeCustomerTest extends KernelTestCase
 
         $addressFirstName = $address->getFirstName();
 
-        $anonymizationController = self::$container->get(AnonymizationController::class);
+        $anonymizationController = static::getContainer()->get(AnonymizationController::class);
         $anonymizationController->__invoke((string) $customer->getId());
 
         $entityManager->refresh($customer);
@@ -54,7 +54,7 @@ class AnonymizeCustomerTest extends KernelTestCase
     private function createAddress(EntityManagerInterface $entityManager): AddressInterface
     {
         /** @var AddressInterface $address */
-        $address = self::$container->get('sylius.factory.address')->createNew();
+        $address = static::getContainer()->get('sylius.factory.address')->createNew();
         $address->setFirstName('test');
         $address->setLastName('test');
         $address->setPostcode('test');
@@ -71,15 +71,15 @@ class AnonymizeCustomerTest extends KernelTestCase
 
     private function createPaymentAndAssignOrder(EntityManagerInterface $entityManager, CustomerInterface $customer): OrderInterface
     {
-        $order = self::$container->get('sylius.factory.order')->createNew();
+        $order = static::getContainer()->get('sylius.factory.order')->createNew();
         /** @var OrderInterface $order */
         $order = $entityManager->getRepository(get_class($order))->findOneBy([]);
         /** @var PaymentInterface $payment */
-        $payment = self::$container->get('sylius.factory.payment')->createNew();
+        $payment = static::getContainer()->get('sylius.factory.payment')->createNew();
         $order->getPayments()->clear();
 
         $payment->setAmount(100);
-        $paymentMethod = self::$container->get('sylius.factory.payment_method')->createNew();
+        $paymentMethod = static::getContainer()->get('sylius.factory.payment_method')->createNew();
         $payment->setMethod($entityManager->getRepository(get_class($paymentMethod))->findOneBy([]));
         $payment->setCurrencyCode('EUR');
         $payment->setDetails(['test']);

@@ -16,7 +16,7 @@ final class LoaderChainTest extends KernelTestCase
     protected function setUp(): void
     {
         self::bootKernel();
-        $this->loadChain = self::$container->get(LoaderChain::class);
+        $this->loadChain = static::getContainer()->get(LoaderChain::class);
     }
 
     public function testLoadClassMetaData(): void

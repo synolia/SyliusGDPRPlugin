@@ -16,7 +16,7 @@ final class ArrayLoaderTest extends KernelTestCase
     protected function setUp(): void
     {
         self::bootKernel();
-        $this->arrayLoader = self::$container->get(ArrayLoader::class);
+        $this->arrayLoader = static::getContainer()->get(ArrayLoader::class);
     }
 
     public function testParseConfigForPathReturnEmail(): void
