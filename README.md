@@ -1,5 +1,6 @@
 [![License](https://badgen.net/github/license/synolia/SyliusGDPRPlugin)](https://github.com/synolia/SyliusGDPRPlugin/blob/master/LICENSE)
-[![CI](https://github.com/synolia/SyliusGDPRPlugin/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/synolia/SyliusGDPRPlugin/actions/workflows/ci.yaml)
+[![CI - Analysis](https://github.com/synolia/SyliusGDPRPlugin/actions/workflows/analysis.yaml/badge.svg?branch=master)](https://github.com/synolia/SyliusGDPRPlugin/actions/workflows/analysis.yaml)
+[![CI - Sylius](https://github.com/synolia/SyliusGDPRPlugin/actions/workflows/sylius.yaml/badge.svg?branch=master)](https://github.com/synolia/SyliusGDPRPlugin/actions/workflows/sylius.yaml)
 [![Version](https://badgen.net/github/tag/synolia/SyliusGDPRPlugin?label=Version)](https://packagist.org/packages/synolia/sylius-gdpr-plugin)
 [![Total Downloads](https://poser.pugx.org/synolia/sylius-gdpr-plugin/downloads)](https://packagist.org/packages/synolia/sylius-gdpr-plugin)
 
@@ -43,12 +44,6 @@
     composer require synolia/sylius-gdpr-plugin --no-scripts
     ```
 
-2. Enable the plugin in your `config/bundles.php` file by add
-
-    ```php
-    Synolia\SyliusGDPRPlugin\SynoliaSyliusGDPRPlugin::class => ['all' => true],
-    ```
-
 3. Import required config in your `config/packages/_sylius.yaml` file:
 
     ```yaml
@@ -57,23 +52,6 @@
     ```
 
 4. Import routing in your `config/routes.yaml` file:
-
-     ```yaml
-     synolia_gdpr:
-         resource: "@SynoliaSyliusGDPRPlugin/Resources/config/routes/admin/customer.yaml"
-         prefix: '/%sylius_admin.path_name%'
-     ```
-
-      And
-
-     ```yaml
-     synolia_gdpr_controller:
-         resource: "@SynoliaSyliusGDPRPlugin/Resources/config/routes/admin/gdpr.yaml"
-         prefix: '%sylius_admin.path_name%/gdpr/'
-         name_prefix: 'sylius_gdpr_'
-     ```
-
-      Or you can add this conf file, which will import the entire route configuration
 
      ```yaml
      synolia_gdpr:
