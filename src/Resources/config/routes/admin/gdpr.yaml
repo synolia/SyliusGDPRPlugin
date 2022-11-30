@@ -1,3 +1,8 @@
 advanced_actions:
     path: /actions
     controller: Synolia\SyliusGDPRPlugin\Controller\AdvancedActionsController
+    defaults:
+        _sylius:
+            permission: true
+            section: admin
+            alias: plugin_synolia_gdpr

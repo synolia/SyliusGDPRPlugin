@@ -6,7 +6,7 @@ synolia_sylius_gdpr_admin_anonymize_customer:
         _sylius:
             permission: true
             section: admin
-            alias: plugin_synolia_gdpr_anonymize_customer
+            alias: plugin_synolia_gdpr
 
 synolia_sylius_gdpr_admin_export_customer_datas:
     path: /customers/{id}/export-data
@@ -16,4 +16,4 @@ synolia_sylius_gdpr_admin_export_customer_datas:
         _sylius:
             permission: true
             section: admin
-            alias: plugin_synolia_gdpr_export_customer_data
+            alias: plugin_synolia_gdpr
