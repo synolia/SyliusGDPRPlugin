@@ -21,8 +21,10 @@ class AdvancedActionsController extends AbstractController
 
     private array $formsType;
 
-    public function __construct(CompositeAdvancedActionsFormDataProcessor $compositeAdvancedActionsFormDataProcessor, array $formsType = [])
-    {
+    public function __construct(
+        CompositeAdvancedActionsFormDataProcessor $compositeAdvancedActionsFormDataProcessor,
+        array $formsType = []
+    ) {
         $this->compositeAdvancedActionsFormDataProcessor = $compositeAdvancedActionsFormDataProcessor;
         $this->formsType = $formsType;
     }
@@ -54,6 +56,8 @@ class AdvancedActionsController extends AbstractController
             $formTypeViews[u($className)->snake()->toString()] = $form->createView();
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->compositeAdvancedActionsFormDataProcessor->process($formType, $form);
+
+                $request->getSession()->getFlashBag()->add('success', 'sylius.ui.admin.synolia_gdpr.success');
             }
         }
 

@@ -44,14 +44,14 @@
     composer require synolia/sylius-gdpr-plugin --no-scripts
     ```
 
-3. Import required config in your `config/packages/_sylius.yaml` file:
+2. Import required config in your `config/packages/_sylius.yaml` file:
 
     ```yaml
     imports:
         - { resource: "@SynoliaSyliusGDPRPlugin/Resources/config/app/config.yaml" }
     ```
 
-4. Import routing in your `config/routes.yaml` file:
+3. Import routing in your `config/routes.yaml` file:
 
      ```yaml
      synolia_gdpr:
@@ -59,7 +59,7 @@
          prefix: '/%sylius_admin.path_name%'
      ```
 
-5. Clear cache
+4. Clear cache
 
     ```shell
     php bin/console cache:clear

@@ -1,0 +1,7 @@
+sylius:
+    ui:
+        admin:
+            synolia_gdpr:
+                customer:
+                    not_found: Client introuvable
+                success: L'opération a bien été effectuée
