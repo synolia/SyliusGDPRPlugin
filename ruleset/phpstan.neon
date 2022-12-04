@@ -20,3 +20,4 @@ parameters:
         - '#Variable method call on mixed.#'
         - '#Variable method call on object.#'
         - '#Call to an undefined method Faker\\UniqueGenerator::format\(\).#'
+        - "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"

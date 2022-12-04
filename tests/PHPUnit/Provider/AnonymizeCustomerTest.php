@@ -10,6 +10,8 @@ use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionFactoryInterface;
 use Synolia\SyliusGDPRPlugin\Controller\AnonymizationController;
 
 class AnonymizeCustomerTest extends KernelTestCase
@@ -23,6 +25,12 @@ class AnonymizeCustomerTest extends KernelTestCase
     {
         /** @var EntityManagerInterface $entityManager */
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+
+        /** @var SessionFactoryInterface $sessionFactory */
+        $sessionFactory = static::getContainer()->get('session.factory');
+        $session = $sessionFactory->createSession();
+        $request = new Request();
+        $request->setSession($session);
 
         $customer = static::getContainer()->get('sylius.factory.customer')->createNew();
         /** @var CustomerInterface $customer */
@@ -40,7 +48,7 @@ class AnonymizeCustomerTest extends KernelTestCase
         $addressFirstName = $address->getFirstName();
 
         $anonymizationController = static::getContainer()->get(AnonymizationController::class);
-        $anonymizationController->__invoke((string) $customer->getId());
+        $anonymizationController->__invoke($request, (string) $customer->getId());
 
         $entityManager->refresh($customer);
         $entityManager->refresh($order);

@@ -3,7 +3,6 @@ sylius:
         admin:
             synolia_gdpr:
                 customer:
-                    not_found: Client introuvable
                     anonymize: Anonymiser
                     export_data: Récupération des informations
                     gdpr_title: RGPD
@@ -15,7 +14,7 @@ sylius:
 sylius_plus:
     rbac:
         parent:
-            plugin_synolia_gdpr_anonymize_customers: RGPD Anonymisation
-            plugin_synolia_gdpr_export_customer_datas: RGPD Récupération des informations
+            plugin_synolia_gdprs: GDPR
         synolia_sylius_gdpr_admin_anonymize_customer: Anonymiser
         synolia_sylius_gdpr_admin_export_customer_datas: Récupération des informations
+        sylius_gdpr_advanced_actions: Actions avancées

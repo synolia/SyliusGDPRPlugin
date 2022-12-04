@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Repository\CustomerRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Synolia\SyliusGDPRPlugin\Event\AfterCustomerAnonymize;
@@ -25,27 +25,23 @@ class AnonymizationController extends AbstractController
 
     private EventDispatcherInterface $eventDispatcher;
 
-    private ParameterBagInterface $parameterBag;
-
     public function __construct(
         EntityManagerInterface $entityManager,
         CustomerRepositoryInterface $customerRepository,
         AnonymizerInterface $anonymizer,
-        EventDispatcherInterface $eventDispatcher,
-        ParameterBagInterface $parameterBag
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->entityManager = $entityManager;
         $this->customerRepository = $customerRepository;
         $this->anonymizer = $anonymizer;
         $this->eventDispatcher = $eventDispatcher;
-        $this->parameterBag = $parameterBag;
     }
 
-    public function __invoke(string $id): Response
+    public function __invoke(Request $request, string $id): Response
     {
         $customer = $this->customerRepository->find($id);
         if (!$customer instanceof CustomerInterface) {
-            $this->parameterBag->set('error', 'sylius.ui.admin.sylius_gdpr.customer.not_found');
+            $request->getSession()->getFlashBag()->add('error', 'sylius.ui.admin.sylius_gdpr.customer.not_found');
 
             return $this->redirectToRoute('sylius_admin_customer_index');
         }
@@ -60,6 +56,8 @@ class AnonymizationController extends AbstractController
         $this->entityManager->flush();
 
         $this->eventDispatcher->dispatch(new AfterCustomerAnonymize($customer, $email));
+
+        $request->getSession()->getFlashBag()->add('success', 'sylius.ui.admin.synolia_gdpr.success');
 
         return $this->redirectToRoute('sylius_admin_customer_show', ['id' => $customer->getId()]);
     }
