@@ -12,14 +12,10 @@ use Synolia\SyliusGDPRPlugin\Processor\AnonymizerProcessor;
 
 class AnonymizeCustomerNotLoggedBeforeProcessor implements AdvancedActionsFormDataProcessorInterface
 {
-    private EntityManagerInterface $entityManager;
-
-    private AnonymizerProcessor $anonymizerProcessor;
-
-    public function __construct(EntityManagerInterface $entityManager, AnonymizerProcessor $anonymizerProcessor)
-    {
-        $this->entityManager = $entityManager;
-        $this->anonymizerProcessor = $anonymizerProcessor;
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private AnonymizerProcessor $anonymizerProcessor,
+    ) {
     }
 
     /** @inheritdoc */
@@ -68,6 +64,6 @@ class AnonymizeCustomerNotLoggedBeforeProcessor implements AdvancedActionsFormDa
 
     public function getFormTypesClass(): array
     {
-        return ['Synolia\SyliusGDPRPlugin\Form\Type\Actions\AnonymizeCustomerNotLoggedBeforeType'];
+        return [\Synolia\SyliusGDPRPlugin\Form\Type\Actions\AnonymizeCustomerNotLoggedBeforeType::class];
     }
 }

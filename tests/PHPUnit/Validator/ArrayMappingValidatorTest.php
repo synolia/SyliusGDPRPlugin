@@ -10,8 +10,7 @@ use Synolia\SyliusGDPRPlugin\Validator\ArrayMappingValidator;
 
 class ArrayMappingValidatorTest extends KernelTestCase
 {
-    /** @var ArrayMappingValidator */
-    private $arrayMappingValidator;
+    private \Synolia\SyliusGDPRPlugin\Validator\ArrayMappingValidator $arrayMappingValidator;
 
     protected function setUp(): void
     {
@@ -31,7 +30,7 @@ class ArrayMappingValidatorTest extends KernelTestCase
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('properddddddties is not supported, try properties instead.');
         $mapping = ['properddddddties' => ['email' => ['faker' => 'email', 'args' => []]]];
-        $this->arrayMappingValidator->checkParse($mapping, 'Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\Foo');
+        $this->arrayMappingValidator->checkParse($mapping, \Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\Foo::class);
     }
 
     public function testCheckParseWithWrongProperty()
@@ -39,7 +38,7 @@ class ArrayMappingValidatorTest extends KernelTestCase
         $this->expectException(GDPRPropertyException::class);
         $this->expectExceptionMessage('The property title does not exist in entity Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\Foo.');
         $mapping = ['properties' => ['title' => ['faker' => 'company']]];
-        $this->arrayMappingValidator->checkParse($mapping, 'Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\Foo');
+        $this->arrayMappingValidator->checkParse($mapping, \Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\Foo::class);
     }
 
     public function testCheckParseWithWrongOptions()
@@ -47,6 +46,6 @@ class ArrayMappingValidatorTest extends KernelTestCase
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('The option "fallllker" does not exist. Defined options are: "args", "faker", "prefix", "unique", "value".');
         $mapping = ['properties' => ['email' => ['fallllker' => 'company', 'args' => []]]];
-        $this->arrayMappingValidator->checkParse($mapping, 'Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\Foo');
+        $this->arrayMappingValidator->checkParse($mapping, \Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\Foo::class);
     }
 }

@@ -10,8 +10,7 @@ use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetadataCollection;
 
 final class LoaderChainTest extends KernelTestCase
 {
-    /** @var LoaderChain */
-    private $loadChain;
+    private ?object $loadChain = null;
 
     protected function setUp(): void
     {
@@ -21,7 +20,7 @@ final class LoaderChainTest extends KernelTestCase
 
     public function testLoadClassMetaData(): void
     {
-        $attributeMetaDataCollection = $this->loadChain->loadClassMetadata('Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\YamlFoo');
+        $attributeMetaDataCollection = $this->loadChain->loadClassMetadata(\Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\YamlFoo::class);
         $this->assertInstanceOf(AttributeMetadataCollection::class, $attributeMetaDataCollection);
         $this->assertSame('email', $attributeMetaDataCollection->get()['bar']->getFaker());
     }

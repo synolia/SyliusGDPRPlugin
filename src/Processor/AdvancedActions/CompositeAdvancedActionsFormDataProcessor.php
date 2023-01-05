@@ -14,7 +14,7 @@ class CompositeAdvancedActionsFormDataProcessor implements AdvancedActionsFormDa
      *
      * @psalm-var PriorityQueue<AdvancedActionsFormDataProcessorInterface>
      */
-    private $advancedActionsFormDataProcessor;
+    private \Laminas\Stdlib\PriorityQueue $advancedActionsFormDataProcessor;
 
     public function __construct()
     {

@@ -17,24 +17,12 @@ use Synolia\SyliusGDPRPlugin\Provider\AnonymizerInterface;
 
 class AnonymizationController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    private CustomerRepositoryInterface $customerRepository;
-
-    private AnonymizerInterface $anonymizer;
-
-    private EventDispatcherInterface $eventDispatcher;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        CustomerRepositoryInterface $customerRepository,
-        AnonymizerInterface $anonymizer,
-        EventDispatcherInterface $eventDispatcher
+        private EntityManagerInterface $entityManager,
+        private CustomerRepositoryInterface $customerRepository,
+        private AnonymizerInterface $anonymizer,
+        private EventDispatcherInterface $eventDispatcher,
     ) {
-        $this->entityManager = $entityManager;
-        $this->customerRepository = $customerRepository;
-        $this->anonymizer = $anonymizer;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function __invoke(Request $request, string $id): Response

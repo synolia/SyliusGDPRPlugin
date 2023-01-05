@@ -9,11 +9,8 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class BeforeCustomerAnonymize extends Event
 {
-    private CustomerInterface $customer;
-
-    public function __construct(CustomerInterface $customer)
+    public function __construct(private CustomerInterface $customer)
     {
-        $this->customer = $customer;
     }
 
     public function getCustomer(): CustomerInterface

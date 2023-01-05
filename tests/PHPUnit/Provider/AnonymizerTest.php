@@ -11,8 +11,7 @@ use Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\YamlFoo;
 
 final class AnonymizerTest extends KernelTestCase
 {
-    /** @var Anonymizer */
-    private $anonymizer;
+    private ?object $anonymizer = null;
 
     protected function setUp(): void
     {
@@ -41,7 +40,7 @@ final class AnonymizerTest extends KernelTestCase
         $this->assertIsInt($foo->integer);
         $this->assertIsArray($foo->arrayValue);
         $this->assertCount(2, $foo->arrayValue);
-        $this->assertSame(15421542, $foo->integer);
+        $this->assertSame(15_421_542, $foo->integer);
     }
 
     public function testYamlConfig(): void

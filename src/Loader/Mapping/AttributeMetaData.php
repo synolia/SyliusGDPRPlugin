@@ -8,30 +8,13 @@ use Synolia\SyliusGDPRPlugin\Validator\FakerOptionsValidator;
 
 final class AttributeMetaData implements AttributeMetaDataInterface
 {
-    private ?string $faker;
-
-    private array $args = [];
-
-    private bool $unique = false;
-
-    /** @var string|int|null */
-    private $prefix = '';
-
-    /** @var string|int|array|bool|null */
-    private $value = FakerOptionsValidator::DEFAULT_VALUE;
-
-    /**
-     * @param string|int|null $prefix
-     * @param string|int|array|bool|null $value
-     */
-    public function __construct(?string $faker = null, array $args = [], bool $unique = false, $prefix = '', $value = FakerOptionsValidator::DEFAULT_VALUE)
-    {
-        $this->setFaker($faker)
-            ->setArgs($args)
-            ->setUnique($unique)
-            ->setValue($value)
-            ->setPrefix($prefix)
-        ;
+    public function __construct(
+        private ?string $faker = null,
+        private array $args = [],
+        private bool $unique = false,
+        private string|int|null $prefix = '',
+        private string|int|array|bool|null $value = FakerOptionsValidator::DEFAULT_VALUE,
+    ) {
     }
 
     public function getFaker(): ?string
@@ -39,23 +22,9 @@ final class AttributeMetaData implements AttributeMetaDataInterface
         return $this->faker;
     }
 
-    public function setFaker(?string $faker): AttributeMetaDataInterface
-    {
-        $this->faker = $faker;
-
-        return $this;
-    }
-
     public function getArgs(): array
     {
         return $this->args;
-    }
-
-    public function setArgs(array $args): AttributeMetaDataInterface
-    {
-        $this->args = $args;
-
-        return $this;
     }
 
     public function isUnique(): bool
@@ -63,38 +32,13 @@ final class AttributeMetaData implements AttributeMetaDataInterface
         return $this->unique;
     }
 
-    public function setUnique(bool $unique): AttributeMetaDataInterface
-    {
-        $this->unique = $unique;
-
-        return $this;
-    }
-
-    /** @return int|string|null */
-    public function getPrefix()
+    public function getPrefix(): string|int|null
     {
         return $this->prefix;
     }
 
-    /** @param int|string|null $prefix */
-    public function setPrefix($prefix): AttributeMetaDataInterface
-    {
-        $this->prefix = $prefix;
-
-        return $this;
-    }
-
-    /** @return string|int|array|bool|null */
-    public function getValue()
+    public function getValue(): string|int|array|bool|null
     {
         return $this->value;
-    }
-
-    /** @param string|int|array|bool|null $value */
-    public function setValue($value): AttributeMetaDataInterface
-    {
-        $this->value = $value;
-
-        return $this;
     }
 }

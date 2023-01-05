@@ -8,25 +8,11 @@ interface AttributeMetaDataInterface
 {
     public function getFaker(): ?string;
 
-    public function setFaker(?string $faker): self;
-
     public function getArgs(): array;
-
-    public function setArgs(array $arg): self;
 
     public function isUnique(): bool;
 
-    public function setUnique(bool $unique): self;
+    public function getPrefix(): string|int|null;
 
-    /** @return int|string|null */
-    public function getPrefix();
-
-    /** @param int|string|null $prefix */
-    public function setPrefix($prefix): self;
-
-    /** @return string|int|array|bool|null */
-    public function getValue();
-
-    /** @param string|int|array|bool|null $value */
-    public function setValue($value): self;
+    public function getValue(): string|int|array|bool|null;
 }

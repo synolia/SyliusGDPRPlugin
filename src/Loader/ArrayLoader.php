@@ -11,11 +11,8 @@ use Synolia\SyliusGDPRPlugin\Validator\FakerOptionsValidator;
 
 final class ArrayLoader implements LoaderInterface
 {
-    private array $mappings;
-
-    public function __construct(array $mappings = [])
+    public function __construct(private array $mappings = [])
     {
-        $this->mappings = $mappings;
     }
 
     public function loadClassMetadata(string $className): AttributeMetadataCollection
@@ -55,7 +52,7 @@ final class ArrayLoader implements LoaderInterface
     private function assignAttributeMetaDataCollection(
         array $mapping,
         string $className,
-        AttributeMetadataCollection $attributeMetaDataCollection
+        AttributeMetadataCollection $attributeMetaDataCollection,
     ): AttributeMetadataCollection {
         foreach ($mapping[$className]['properties'] as $property => $options) {
             if (null === $options) {

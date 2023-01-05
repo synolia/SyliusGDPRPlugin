@@ -28,12 +28,14 @@ class Foo
 
     /**
      * @var array
+     *
      * @Anonymize(value={"value1", "value2"})
      */
     public $arrayValue;
 
     /**
      * @var int
+     *
      * @Anonymize(value="1542", prefix="1542")
      */
     public $integer;
