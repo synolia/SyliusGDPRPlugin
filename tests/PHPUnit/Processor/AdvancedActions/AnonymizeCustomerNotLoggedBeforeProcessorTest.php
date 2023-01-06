@@ -13,7 +13,7 @@ use Synolia\SyliusGDPRPlugin\Processor\AdvancedActions\CompositeAdvancedActionsF
 
 class AnonymizeCustomerNotLoggedBeforeProcessorTest extends KernelTestCase
 {
-    private ?object $manager = null;
+    private ?EntityManagerInterface $manager = null;
 
     protected function setUp(): void
     {

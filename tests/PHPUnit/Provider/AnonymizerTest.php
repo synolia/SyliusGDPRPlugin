@@ -11,7 +11,7 @@ use Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\YamlFoo;
 
 final class AnonymizerTest extends KernelTestCase
 {
-    private ?object $anonymizer = null;
+    private ?Anonymizer $anonymizer = null;
 
     protected function setUp(): void
     {

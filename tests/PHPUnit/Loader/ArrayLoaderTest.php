@@ -10,12 +10,12 @@ use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetadataCollection;
 
 final class ArrayLoaderTest extends KernelTestCase
 {
-    private ?object $arrayLoader = null;
+    private ?ArrayLoader $arrayLoader = null;
 
     protected function setUp(): void
     {
         self::bootKernel();
-        $this->arrayLoader = static::getContainer()->get(ArrayLoader::class);
+        $this->arrayLoader = self::getContainer()->get(ArrayLoader::class);
     }
 
     public function testParseConfigForPathReturnEmail(): void

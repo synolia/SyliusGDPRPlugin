@@ -10,12 +10,12 @@ use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetadataCollection;
 
 final class LoaderChainTest extends KernelTestCase
 {
-    private ?object $loadChain = null;
+    private ?LoaderChain $loadChain = null;
 
     protected function setUp(): void
     {
         self::bootKernel();
-        $this->loadChain = static::getContainer()->get(LoaderChain::class);
+        $this->loadChain = self::getContainer()->get(LoaderChain::class);
     }
 
     public function testLoadClassMetaData(): void
