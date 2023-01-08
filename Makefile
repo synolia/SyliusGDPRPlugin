@@ -41,8 +41,8 @@ sylius-standard:
 	${COMPOSER} require sylius/sylius:"~${SYLIUS_VERSION}"
 
 update-dependencies:
-	${COMPOSER} config extra.symfony.require "^${SYMFONY_VERSION}"
-	${COMPOSER} require symfony/asset:^${SYMFONY_VERSION} --no-scripts --no-update
+	${COMPOSER} config extra.symfony.require "~${SYMFONY_VERSION}"
+	${COMPOSER} require symfony/asset:~${SYMFONY_VERSION} --no-scripts --no-update
 ifeq ($(SYLIUS_VERSION), 1.9.0)
 	${COMPOSER} require laminas/laminas-stdlib:3.4.0 --no-scripts --no-update
 endif
