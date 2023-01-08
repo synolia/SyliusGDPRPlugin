@@ -5,3 +5,6 @@ composer.lock
 
 /tests/Application/
 /install/Application/*.local
+
+# JetBrains IDE
+.idea/
