@@ -12,14 +12,10 @@ use Synolia\SyliusGDPRPlugin\Provider\AnonymizerInterface;
 
 class AnonymizeAddressLogEntrySubscriber implements EventSubscriberInterface
 {
-    private RepositoryInterface $addressLogEntryRepository;
-
-    private AnonymizerInterface $anonymizer;
-
-    public function __construct(AnonymizerInterface $anonymizer, RepositoryInterface $addressLogEntryRepository)
-    {
-        $this->addressLogEntryRepository = $addressLogEntryRepository;
-        $this->anonymizer = $anonymizer;
+    public function __construct(
+        private AnonymizerInterface $anonymizer,
+        private RepositoryInterface $addressLogEntryRepository,
+    ) {
     }
 
     public static function getSubscribedEvents(): array

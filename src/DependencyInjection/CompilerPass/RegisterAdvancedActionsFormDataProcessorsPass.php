@@ -16,7 +16,7 @@ final class RegisterAdvancedActionsFormDataProcessorsPass extends PrioritizedCom
     {
         parent::__construct(
             'synolia.gdpr_processing.advanced_actions_form_data_processor',
-            'Synolia\SyliusGDPRPlugin\Processor\AdvancedActions\CompositeAdvancedActionsFormDataProcessor',
+            \Synolia\SyliusGDPRPlugin\Processor\AdvancedActions\CompositeAdvancedActionsFormDataProcessor::class,
             self::PROCESSOR_SERVICE_TAG,
             'addProcessor',
         );

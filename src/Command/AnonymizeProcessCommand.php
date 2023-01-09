@@ -19,10 +19,6 @@ final class AnonymizeProcessCommand extends Command
 
     protected static $defaultName = 'synolia:gdpr:anonymize';
 
-    private AnonymizerProcessor $anonymizerProcessor;
-
-    private EntityManagerInterface $entityManager;
-
     private SymfonyStyle $io;
 
     private bool $reset;
@@ -30,14 +26,11 @@ final class AnonymizeProcessCommand extends Command
     private int $maxRetries;
 
     public function __construct(
-        AnonymizerProcessor $anonymizerProcessor,
-        EntityManagerInterface $entityManager,
-        string $name = null
+        private AnonymizerProcessor $anonymizerProcessor,
+        private EntityManagerInterface $entityManager,
+        string $name = null,
     ) {
         parent::__construct($name);
-
-        $this->anonymizerProcessor = $anonymizerProcessor;
-        $this->entityManager = $entityManager;
     }
 
     protected function configure(): void
@@ -69,11 +62,11 @@ final class AnonymizeProcessCommand extends Command
                     throw new \LogicException('Invalid parameters');
                 }
                 if (null === $id) {
-                    $this->anonymizeEntityForClassName($className, null, $force);
+                    $this->anonymizeEntityForClassName($className, $force, null);
 
                     return 0;
                 }
-                $this->anonymizeEntityForClassName($className, (string) $id, $force);
+                $this->anonymizeEntityForClassName($className, $force, (string) $id);
 
                 return 0;
             }
@@ -87,7 +80,7 @@ final class AnonymizeProcessCommand extends Command
         }
     }
 
-    private function anonymizeEntityForClassName(string $className, ?string $id = null, bool $force): void
+    private function anonymizeEntityForClassName(string $className, bool $force, ?string $id = null): void
     {
         try {
             $entity = $this->entityManager->getMetadataFactory()->getMetadataFor($className);

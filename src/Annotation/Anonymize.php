@@ -9,6 +9,7 @@ use Synolia\SyliusGDPRPlugin\Validator\FakerOptionsValidator;
 
 /**
  * @Annotation
+ *
  * @Target({"PROPERTY","ANNOTATION"})
  */
 final class Anonymize implements Annotation

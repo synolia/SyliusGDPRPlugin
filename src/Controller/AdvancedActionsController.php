@@ -17,16 +17,10 @@ class AdvancedActionsController extends AbstractController
         AnonymizeCustomerNotLoggedBeforeType::class,
     ];
 
-    private CompositeAdvancedActionsFormDataProcessor $compositeAdvancedActionsFormDataProcessor;
-
-    private array $formsType;
-
     public function __construct(
-        CompositeAdvancedActionsFormDataProcessor $compositeAdvancedActionsFormDataProcessor,
-        array $formsType = []
+        private CompositeAdvancedActionsFormDataProcessor $compositeAdvancedActionsFormDataProcessor,
+        private array $formsType = [],
     ) {
-        $this->compositeAdvancedActionsFormDataProcessor = $compositeAdvancedActionsFormDataProcessor;
-        $this->formsType = $formsType;
     }
 
     public function __invoke(Request $request): Response

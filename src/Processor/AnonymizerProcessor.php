@@ -11,16 +11,8 @@ final class AnonymizerProcessor
 {
     private const MODULO_FLUSH = 50;
 
-    private AnonymizerInterface $anonymizer;
-
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(
-        AnonymizerInterface $anonymizer,
-        EntityManagerInterface $entityManager
-    ) {
-        $this->anonymizer = $anonymizer;
-        $this->entityManager = $entityManager;
+    public function __construct(private AnonymizerInterface $anonymizer, private EntityManagerInterface $entityManager)
+    {
     }
 
     public function anonymizeEntities(array $entities, bool $reset = false, int $maxRetries = 50): void

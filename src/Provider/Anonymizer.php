@@ -36,25 +36,16 @@ final class Anonymizer implements AnonymizerInterface
 
     private PropertyAccessorInterface $propertyAccess;
 
-    private LoaderChain $loaderChain;
-
-    private EventDispatcherInterface $eventDispatcher;
-
-    private LoggerInterface $logger;
-
     public function __construct(
-        LoaderChain $loaderChain,
-        EventDispatcherInterface $eventDispatcher,
-        LoggerInterface $logger
+        private LoaderChain $loaderChain,
+        private EventDispatcherInterface $eventDispatcher,
+        private LoggerInterface $logger,
     ) {
         $this->faker = Factory::create();
         $this->propertyAccess = PropertyAccess::createPropertyAccessorBuilder()
             ->enableMagicCall()
             ->getPropertyAccessor()
         ;
-        $this->loaderChain = $loaderChain;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->logger = $logger;
     }
 
     public function anonymize(Object $entity, bool $reset = false, int $maxRetries = 10000): void
@@ -113,7 +104,7 @@ final class Anonymizer implements AnonymizerInterface
         int $maxRetries,
         string $className,
         string $propertyName,
-        AttributeMetaData $attributeMetaData
+        AttributeMetaData $attributeMetaData,
     ): void {
         $propertyExtractor = (new PropertyInfoExtractor([], [new PhpDocExtractor(), new ReflectionExtractor()]));
 
@@ -179,9 +170,13 @@ final class Anonymizer implements AnonymizerInterface
         );
     }
 
-    /** @param mixed $value */
-    private function setUniqueValue(Object $entity, $value, string $type, string $propertyName, AttributeMetaDataInterface $attributeMetaData): void
-    {
+    private function setUniqueValue(
+        Object $entity,
+        mixed $value,
+        string $type,
+        string $propertyName,
+        AttributeMetaDataInterface $attributeMetaData,
+    ): void {
         if (is_object($value)) {
             if (!in_array($type, self::TYPE_VALUES, true)) {
                 $this->propertyAccess->setValue(
@@ -265,7 +260,7 @@ final class Anonymizer implements AnonymizerInterface
 
         try {
             $getter = $classReflection->getMethod($getter)->getName();
-        } catch (\InvalidArgumentException | \ReflectionException $exception) {
+        } catch (\InvalidArgumentException | \ReflectionException) {
             return false;
         }
 
@@ -279,7 +274,7 @@ final class Anonymizer implements AnonymizerInterface
 
         try {
             $getter = $classReflection->getMethod($getter)->getName();
-        } catch (\InvalidArgumentException | \ReflectionException $exception) {
+        } catch (\InvalidArgumentException | \ReflectionException) {
             return false;
         }
 

@@ -10,19 +10,18 @@ use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetadataCollection;
 
 final class ArrayLoaderTest extends KernelTestCase
 {
-    /** @var ArrayLoader */
-    private $arrayLoader;
+    private ?ArrayLoader $arrayLoader = null;
 
     protected function setUp(): void
     {
         self::bootKernel();
-        $this->arrayLoader = static::getContainer()->get(ArrayLoader::class);
+        $this->arrayLoader = self::getContainer()->get(ArrayLoader::class);
     }
 
     public function testParseConfigForPathReturnEmail(): void
     {
         $attributeMetaDataCollection = $this->arrayLoader->loadClassMetadata(
-            'Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\YamlFoo',
+            \Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\YamlFoo::class,
         );
         $this->assertInstanceOf(AttributeMetadataCollection::class, $attributeMetaDataCollection);
         $this->assertSame('email', $attributeMetaDataCollection->get()['bar']->getFaker());

@@ -19,24 +19,12 @@ class ExportDataController extends AbstractController
 {
     protected const FILE_NAME = 'export_data';
 
-    private CustomerRepositoryInterface $customerRepository;
-
-    private ParameterBagInterface $parameterBag;
-
-    private EventDispatcherInterface $eventDispatcher;
-
-    private SerializerInterface $serializer;
-
     public function __construct(
-        CustomerRepositoryInterface $customerRepository,
-        ParameterBagInterface $parameterBag,
-        EventDispatcherInterface $eventDispatcher,
-        SerializerInterface $serializer
+        private CustomerRepositoryInterface $customerRepository,
+        private ParameterBagInterface $parameterBag,
+        private EventDispatcherInterface $eventDispatcher,
+        private SerializerInterface $serializer,
     ) {
-        $this->customerRepository = $customerRepository;
-        $this->parameterBag = $parameterBag;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->serializer = $serializer;
     }
 
     public function __invoke(string $id): Response
