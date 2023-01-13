@@ -14,14 +14,13 @@ use Synolia\SyliusGDPRPlugin\Processor\AdvancedActions\CompositeAdvancedActionsF
 
 class AnonymizeCustomerWithoutAnyOrdersBeforeProcessorTest extends KernelTestCase
 {
-    /** @var EntityManagerInterface */
-    private $manager;
+    private ?EntityManagerInterface $manager = null;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        self::bootKernel();
 
-        $this->manager = $this->getContainer()->get(EntityManagerInterface::class);
+        $this->manager = static::getContainer()->get(EntityManagerInterface::class);
         $this->manager->beginTransaction();
     }
 
@@ -35,7 +34,7 @@ class AnonymizeCustomerWithoutAnyOrdersBeforeProcessorTest extends KernelTestCas
     public function testAnonymizeCustomers(): void
     {
         /** @var array<int, CustomerInterface> $customers */
-        $customers = $this->getContainer()->get('sylius.repository.customer')->findAll();
+        $customers = static::getContainer()->get('sylius.repository.customer')->findAll();
         $customers[0]->setCreatedAt(new \DateTime());
         $customers[1]->setCreatedAt((new \Datetime())->sub(new \DateInterval('P2D')));
 
@@ -51,7 +50,7 @@ class AnonymizeCustomerWithoutAnyOrdersBeforeProcessorTest extends KernelTestCas
         $customers[3]->setCreatedAt((new \Datetime())->sub(new \DateInterval('P2D')));
         /** @var OrderInterface $order */
         foreach ($customers[3]->getOrders() as $order) {
-            self::$container->get(EntityManagerInterface::class)->remove($order);
+            static::getContainer()->get(EntityManagerInterface::class)->remove($order);
         }
 
         $this->manager->flush();
@@ -62,7 +61,7 @@ class AnonymizeCustomerWithoutAnyOrdersBeforeProcessorTest extends KernelTestCas
         );
 
         /** @var CompositeAdvancedActionsFormDataProcessor $composite */
-        $composite = $this->getContainer()->get(CompositeAdvancedActionsFormDataProcessor::class);
+        $composite = static::getContainer()->get(CompositeAdvancedActionsFormDataProcessor::class);
         $composite->process(AnonymizeCustomersWithoutAnyOrdersBeforeType::class, $form);
 
         $this->assertStringContainsString('anonymized-', $customers[3]->getEmail());
@@ -74,7 +73,7 @@ class AnonymizeCustomerWithoutAnyOrdersBeforeProcessorTest extends KernelTestCas
     private function createOrder(CustomerInterface $customer, string $state): OrderInterface
     {
         /** @var OrderInterface $order */
-        $order = self::$container->get('sylius.factory.order')->createNew();
+        $order = static::getContainer()->get('sylius.factory.order')->createNew();
         $order->setCustomer($customer);
         $order->setState($state);
         $order->setPaymentState('fake');
@@ -84,7 +83,7 @@ class AnonymizeCustomerWithoutAnyOrdersBeforeProcessorTest extends KernelTestCas
         $order->setCurrencyCode('EUR');
         $order->setLocaleCode('en_EN');
 
-        self::$container->get(EntityManagerInterface::class)->persist($order);
+        static::getContainer()->get(EntityManagerInterface::class)->persist($order);
 
         return $order;
     }

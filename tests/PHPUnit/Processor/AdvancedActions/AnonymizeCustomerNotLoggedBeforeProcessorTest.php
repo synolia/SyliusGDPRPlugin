@@ -45,7 +45,7 @@ class AnonymizeCustomerNotLoggedBeforeProcessorTest extends KernelTestCase
         );
 
         /** @var CompositeAdvancedActionsFormDataProcessor $composite */
-        $composite = $this->getContainer()->get(CompositeAdvancedActionsFormDataProcessor::class);
+        $composite = static::getContainer()->get(CompositeAdvancedActionsFormDataProcessor::class);
         $composite->process(AnonymizeCustomersNotLoggedBeforeType::class, $form);
 
         $this->assertStringContainsString('anonymized-', $shopUsers[1]->getEmail());
