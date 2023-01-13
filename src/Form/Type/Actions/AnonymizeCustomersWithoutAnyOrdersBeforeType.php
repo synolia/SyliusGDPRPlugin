@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AnonymizeCustomersWithoutAnyOrdersBeforeType extends AbstractType
 {
-    /** {@inheritdoc} */
+    /** @inheritdoc */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder

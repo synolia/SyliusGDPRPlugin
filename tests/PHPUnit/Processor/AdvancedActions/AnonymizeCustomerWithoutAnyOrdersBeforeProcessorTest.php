@@ -57,7 +57,7 @@ class AnonymizeCustomerWithoutAnyOrdersBeforeProcessorTest extends KernelTestCas
 
         $form = Forms::createFormFactoryBuilder()->getFormFactory()->create(
             AnonymizeCustomersWithoutAnyOrdersBeforeType::class,
-            ['anonymize_customer_without_any_orders_before_date' => (new \Datetime())->sub(new \DateInterval('P1D'))]
+            ['anonymize_customer_without_any_orders_before_date' => (new \Datetime())->sub(new \DateInterval('P1D'))],
         );
 
         /** @var CompositeAdvancedActionsFormDataProcessor $composite */

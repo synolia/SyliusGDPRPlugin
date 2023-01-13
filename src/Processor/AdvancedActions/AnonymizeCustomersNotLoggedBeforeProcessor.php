@@ -8,7 +8,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\ShopUserInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Sylius\Component\Resource\Factory\FactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Synolia\SyliusGDPRPlugin\Processor\AnonymizerProcessor;
 
@@ -17,9 +16,8 @@ class AnonymizeCustomersNotLoggedBeforeProcessor implements AdvancedActionsFormD
     public function __construct(
         private EntityManagerInterface $entityManager,
         private AnonymizerProcessor $anonymizerProcessor,
-        private ParameterBagInterface $parameterBag
+        private ParameterBagInterface $parameterBag,
     ) {
-
     }
 
     /** @inheritdoc */
@@ -27,13 +25,15 @@ class AnonymizeCustomersNotLoggedBeforeProcessor implements AdvancedActionsFormD
     {
         /** @var string $shopUser */
         $shopUser = $this->parameterBag->get('sylius.model.shop_user.class');
+        /** @var array $data */
+        $data = $form->getData();
 
         $shopUsers = $this->entityManager
             ->createQueryBuilder()
             ->select('su')
             ->from($shopUser, 'su')
             ->where('su.lastLogin < :before')
-            ->setParameter('before', $form->getData()['anonymize_customers_not_logged_before_date'])
+            ->setParameter('before', $data['anonymize_customers_not_logged_before_date'])
             ->getQuery()
             ->execute()
         ;
