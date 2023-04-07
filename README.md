@@ -56,7 +56,6 @@
      ```yaml
      synolia_gdpr:
          resource: "@SynoliaSyliusGDPRPlugin/Resources/config/routes.yaml"
-         prefix: '/%sylius_admin.path_name%'
      ```
 
 4. Clear cache
