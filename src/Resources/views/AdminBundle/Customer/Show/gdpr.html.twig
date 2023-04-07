@@ -1,5 +1,5 @@
-{% if sylius_plus_rbac_has_permission("synolia_sylius_gdpr_admin_anonymize_customer") or
-    sylius_plus_rbac_has_permission("synolia_sylius_gdpr_admin_export_customer_datas") %}
+{% if sylius_plus_rbac_gdpr_has_permission("synolia_sylius_gdpr_admin_anonymize_customer") or
+    sylius_plus_rbac_gdpr_has_permission("synolia_sylius_gdpr_admin_export_customer_datas") %}
 <div class="content row">
     <h2>{{ 'sylius.ui.admin.synolia_gdpr.customer.gdpr_title'|trans }}</h2>
 
