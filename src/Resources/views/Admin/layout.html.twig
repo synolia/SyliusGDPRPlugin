@@ -1,10 +1,6 @@
 {% extends '@SyliusAdmin/layout.html.twig' %}
 {% import '@SyliusAdmin/Macro/breadcrumb.html.twig' as breadcrumb %}
 
-{% if form is defined %}
-    {% form_theme form '@SynoliaSyliusAkeneoPlugin/Admin/Form/theme.html.twig' %}
-{% endif %}
-
 {% block title %} | Synolia Sylius GDPR Plugin{% endblock %}
 
 {% set breadcrumbs = breadcrumbs|default([
