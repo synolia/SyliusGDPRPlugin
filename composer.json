@@ -39,7 +39,13 @@
         "thecodingmachine/phpstan-strict-rules": "1.0.0"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "symfony/thanks": true,
+            "phpro/grumphp": true,
+            "phpstan/extension-installer": true
+        }
     },
     "autoload": {
         "psr-4": {

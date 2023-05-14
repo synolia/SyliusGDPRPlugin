@@ -17,11 +17,10 @@ jobs:
             matrix:
                 php:
                     - 8.0
-                    - 8.1
                     - 8.2
                 symfony:
                     - '5.4.*'
-                    - '6.1.*'
+                    - '6.2.*'
         env:
             APP_ENV: test
         steps:
@@ -52,9 +51,6 @@ jobs:
                 name: 'Composer - Github Auth'
                 run: 'composer config -g github-oauth.github.com ${{ github.token }}'
             -
-                name: 'Composer - Allow all plugins'
-                run: 'composer config allow-plugins true'
-            -
                 name: 'Composer - Restrict Symfony version'
                 run: 'composer config extra.symfony.require "${{ matrix.symfony }}"'
             -
@@ -82,6 +78,5 @@ jobs:
                 run: 'if [ -f grumphp.yml ]; then vendor/bin/grumphp run ; else echo Grumphp ruleset file does not exist, skipping step ; fi'
                 if: 'always() && steps.end-of-setup.outcome == ''success'''
             -
-                name: 'Checks security issues - Run'
-                run: 'symfony security:check'
+                uses: symfonycorp/security-checker-action@v3
                 if: 'always() && steps.end-of-setup.outcome == ''success'''
