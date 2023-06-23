@@ -10,9 +10,12 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Form\Forms;
 use Synolia\SyliusGDPRPlugin\Form\Type\Actions\AnonymizeCustomersNotLoggedBeforeType;
 use Synolia\SyliusGDPRPlugin\Processor\AdvancedActions\CompositeAdvancedActionsFormDataProcessor;
+use Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Processor\WithSessionTrait;
 
 class AnonymizeCustomerNotLoggedBeforeProcessorTest extends KernelTestCase
 {
+    use WithSessionTrait;
+
     private ?EntityManagerInterface $manager = null;
 
     protected function setUp(): void
@@ -32,6 +35,8 @@ class AnonymizeCustomerNotLoggedBeforeProcessorTest extends KernelTestCase
 
     public function testAnonymizeCustomers(): void
     {
+        $this->createSession();
+
         /** @var array<int, ShopUserInterface> $shopUsers */
         $shopUsers = static::getContainer()->get('sylius.repository.shop_user')->findAll();
         $shopUsers[0]->setLastLogin(new \DateTime());
