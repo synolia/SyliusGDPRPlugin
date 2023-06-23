@@ -27,7 +27,7 @@ class AnonymizeCustomersWithoutAnyOrdersBeforeProcessor implements AdvancedActio
         EntityManagerInterface $entityManager,
         AnonymizerProcessor $anonymizerProcessor,
         ParameterBagInterface $parameterBag,
-        FlashBagInterface $flashBag
+        FlashBagInterface $flashBag,
     ) {
         $this->entityManager = $entityManager;
         $this->anonymizerProcessor = $anonymizerProcessor;

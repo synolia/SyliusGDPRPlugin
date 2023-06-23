@@ -12,6 +12,7 @@ use Synolia\SyliusGDPRPlugin\Provider\AnonymizerInterface;
 final class AnonymizerProcessor
 {
     private const MODULO_FLUSH = 50;
+
     private AnonymizerInterface $anonymizer;
 
     private EntityManagerInterface $entityManager;
@@ -26,7 +27,7 @@ final class AnonymizerProcessor
         AnonymizerInterface $anonymizer,
         EntityManagerInterface $entityManager,
         TranslatorInterface $translator,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         $this->anonymizer = $anonymizer;
         $this->entityManager = $entityManager;
