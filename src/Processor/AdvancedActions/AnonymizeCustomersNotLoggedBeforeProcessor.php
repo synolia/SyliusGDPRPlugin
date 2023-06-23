@@ -64,6 +64,6 @@ class AnonymizeCustomersNotLoggedBeforeProcessor implements AdvancedActionsFormD
 
     public function getFormTypesClass(): array
     {
-        return [\Synolia\SyliusGDPRPlugin\Form\Type\Actions\AnonymizeCustomersNotLoggedBeforeType::class];
+        return ['Synolia\SyliusGDPRPlugin\Form\Type\Actions\AnonymizeCustomersNotLoggedBeforeType'];
     }
 }

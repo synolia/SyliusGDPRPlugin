@@ -25,9 +25,9 @@ class AnonymizeCustomerNotLoggedBeforeProcessorTest extends KernelTestCase
 
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         $this->manager->rollback();
+
+        parent::tearDown();
     }
 
     public function testAnonymizeCustomers(): void
