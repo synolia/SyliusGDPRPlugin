@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\Model\ShopUserInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Form\Forms;
-use Synolia\SyliusGDPRPlugin\Form\Type\Actions\AnonymizeCustomerNotLoggedBeforeType;
+use Synolia\SyliusGDPRPlugin\Form\Type\Actions\AnonymizeCustomersNotLoggedBeforeType;
 use Synolia\SyliusGDPRPlugin\Processor\AdvancedActions\CompositeAdvancedActionsFormDataProcessor;
 
 class AnonymizeCustomerNotLoggedBeforeProcessorTest extends KernelTestCase
@@ -25,9 +25,9 @@ class AnonymizeCustomerNotLoggedBeforeProcessorTest extends KernelTestCase
 
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         $this->manager->rollback();
+
+        parent::tearDown();
     }
 
     public function testAnonymizeCustomers(): void
@@ -40,13 +40,13 @@ class AnonymizeCustomerNotLoggedBeforeProcessorTest extends KernelTestCase
         $this->manager->flush();
 
         $form = Forms::createFormFactoryBuilder()->getFormFactory()->create(
-            AnonymizeCustomerNotLoggedBeforeType::class,
-            ['before_date' => (new \Datetime())->sub(new \DateInterval('P1D'))],
+            AnonymizeCustomersNotLoggedBeforeType::class,
+            ['anonymize_customers_not_logged_before_date' => (new \Datetime())->sub(new \DateInterval('P1D'))],
         );
 
         /** @var CompositeAdvancedActionsFormDataProcessor $composite */
         $composite = static::getContainer()->get(CompositeAdvancedActionsFormDataProcessor::class);
-        $composite->process(AnonymizeCustomerNotLoggedBeforeType::class, $form);
+        $composite->process(AnonymizeCustomersNotLoggedBeforeType::class, $form);
 
         $this->assertStringContainsString('anonymized-', $shopUsers[1]->getEmail());
         $this->assertStringNotContainsString('anonymized-', $shopUsers[0]->getEmail());

@@ -10,6 +10,8 @@ sylius:
                     title: Actions avancées
                     anonymize_customer_not_logged_before:
                         label: Anonymiser tous les utlisateurs non connectés avant
+                    anonymize_customer_without_any_orders:
+                        label: Anonymiser tous les utilisateurs n'ayant jamais créé de commande avant
         execute: Executer
 sylius_plus:
     rbac:

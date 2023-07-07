@@ -12,9 +12,10 @@
     "license": "EUPL-1.2",
     "require": {
         "php": "^8.0",
+        "php-http/message-factory": "^1.1",
+        "phpdocumentor/reflection-docblock": "^5.3",
         "sylius/sylius": "^1.10",
-        "symfony/property-info": "^5.4|^6.0",
-        "phpdocumentor/reflection-docblock": "^5.3"
+        "symfony/property-info": "^5.4|^6.0"
     },
     "require-dev": {
         "j13k/yaml-lint": "1.1.4",

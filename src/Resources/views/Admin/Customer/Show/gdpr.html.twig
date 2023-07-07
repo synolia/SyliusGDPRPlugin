@@ -1,18 +1,18 @@
 {% if sylius_plus_rbac_gdpr_has_permission("synolia_sylius_gdpr_admin_anonymize_customer") or
     sylius_plus_rbac_gdpr_has_permission("synolia_sylius_gdpr_admin_export_customer_datas") %}
-<div class="content row">
-    <h2>{{ 'sylius.ui.admin.synolia_gdpr.customer.gdpr_title'|trans }}</h2>
+    <div class="content row">
+        <h2>{{ 'sylius.ui.admin.synolia_gdpr.customer.gdpr_title'|trans }}</h2>
 
-    <div class="ui buttons">
-        <form class="form-inline row" action="{{ path('synolia_sylius_gdpr_admin_anonymize_customer', {'id': customer.id}) }}" method="post">
-            <button class="ui labeled icon button black" type="submit" data-requires-confirmation >
-                <i class="icon user secret"></i>{{ 'sylius.ui.admin.synolia_gdpr.customer.anonymize'|trans }}
-            </button>
-        </form>
-        <a
-            href="{{ path('synolia_sylius_gdpr_admin_export_customer_datas', {'id': customer.id}) }}"
-            class="ui labeled icon button blue"
-        ><i class="file icon"></i>{{ 'sylius.ui.admin.synolia_gdpr.customer.export_data'|trans }}</a>
+        <div class="ui buttons">
+            <form class="form-inline row" action="{{ path('synolia_sylius_gdpr_admin_anonymize_customer', {'id': customer.id}) }}" method="post">
+                <button class="ui labeled icon button black" type="submit" data-requires-confirmation >
+                    <i class="icon user secret"></i>{{ 'sylius.ui.admin.synolia_gdpr.customer.anonymize'|trans }}
+                </button>
+            </form>
+            <a
+                    href="{{ path('synolia_sylius_gdpr_admin_export_customer_datas', {'id': customer.id}) }}"
+                    class="ui labeled icon button blue"
+            ><i class="file icon"></i>{{ 'sylius.ui.admin.synolia_gdpr.customer.export_data'|trans }}</a>
+        </div>
     </div>
-</div>
 {% endif %}
