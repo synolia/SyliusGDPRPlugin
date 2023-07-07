@@ -11,9 +11,12 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Form\Forms;
 use Synolia\SyliusGDPRPlugin\Form\Type\Actions\AnonymizeCustomersWithoutAnyOrdersBeforeType;
 use Synolia\SyliusGDPRPlugin\Processor\AdvancedActions\CompositeAdvancedActionsFormDataProcessor;
+use Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Processor\WithSessionTrait;
 
 class AnonymizeCustomerWithoutAnyOrdersBeforeProcessorTest extends KernelTestCase
 {
+    use WithSessionTrait;
+
     private ?EntityManagerInterface $manager = null;
 
     protected function setUp(): void
@@ -33,6 +36,8 @@ class AnonymizeCustomerWithoutAnyOrdersBeforeProcessorTest extends KernelTestCas
 
     public function testAnonymizeCustomers(): void
     {
+        $this->createSession();
+
         /** @var array<int, CustomerInterface> $customers */
         $customers = static::getContainer()->get('sylius.repository.customer')->findAll();
         $customers[0]->setCreatedAt(new \DateTime());
