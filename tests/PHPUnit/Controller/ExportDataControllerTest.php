@@ -5,11 +5,16 @@ declare(strict_types=1);
 namespace Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpKernel\Kernel;
 
 class ExportDataControllerTest extends WebTestCase
 {
     public function testExportDataWithCart(): void
     {
+        if (Kernel::MAJOR_VERSION < 6) {
+            $this->markTestSkipped('Test on for Symfony 6+');
+        }
+
         $client = static::createClient();
 
         // login a user
