@@ -21,7 +21,7 @@ final class GdprExtension extends AbstractExtension
     {
         $function = $env->getFunction('sylius_plus_rbac_has_permission');
 
-        if ($function !== null && is_callable($function->getCallable())) {
+        if ($function instanceof TwigFunction && is_callable($function->getCallable())) {
             return $function->getCallable()($permission);
         }
 
