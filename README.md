@@ -95,7 +95,20 @@ Sylius\Component\Core\Model\Address: # Your class path
          prefix: 'anonymized-'
  ```
 
-   Value can be null, an array, an int and a string
+   `value` can be null, an array, an int, a string and an expression language
+
+Example of configuration with dynamic value
+```yaml
+Sylius\Component\Core\Model\Customer:
+   properties:
+      firstName:
+          value: '@="some-arbitrary-text..." ~ object.getId() ~ "...more-arbitrary-text"'
+```
+ 
+### Note:
+   > your expression language must starts with `@=` to be evaluated properly 
+   
+   > variable `object` is the current entity your are dealing with (eg. in that case `Sylius\Component\Core\Model\Customer`)
 
 ## Add form in advanced actions page
 

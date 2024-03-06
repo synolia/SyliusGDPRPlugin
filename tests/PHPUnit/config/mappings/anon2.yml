@@ -11,3 +11,5 @@ Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\YamlFoo:
         prefixValue:
             value: value
             prefix: 'test-yaml-prefix-'
+        dynamicValue:
+            value: '@="anonymized-" ~ object.getId() ~ "@domain+1.xyz"'

@@ -8,3 +8,5 @@ Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\YamlFoo:
             value: 'test-yaml-value'
         nullValue:
             value: null
+        dynamicValue:
+            value: 'condescending-angel'
