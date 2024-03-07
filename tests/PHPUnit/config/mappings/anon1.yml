@@ -9,4 +9,4 @@ Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures\YamlFoo:
         nullValue:
             value: null
         dynamicValue:
-            value: 'condescending-angel'
+            value: '@="anonymized-" ~ object.getId() ~ "@domain+1.xyz"'
