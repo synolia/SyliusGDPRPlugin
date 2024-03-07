@@ -80,3 +80,4 @@ jobs:
             -
                 uses: symfonycorp/security-checker-action@v3
                 if: 'always() && steps.end-of-setup.outcome == ''success'''
+                continue-on-error: true

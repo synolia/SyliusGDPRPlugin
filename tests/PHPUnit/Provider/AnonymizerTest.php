@@ -48,6 +48,7 @@ final class AnonymizerTest extends KernelTestCase
         $foo = new YamlFoo();
         $foo->email = 'contact@synolia.com';
         $foo->bar = 'coucou';
+        $foo->setId((new \DateTime())->getTimestamp());
 
         $this->anonymizer->anonymize($foo, false, 10000);
 
@@ -59,5 +60,6 @@ final class AnonymizerTest extends KernelTestCase
         $this->assertSame('anonymize@synolia.com', $foo->email);
         $this->assertStringContainsString('@', $foo->email);
         $this->assertNull($foo->nullValue);
+        $this->assertSame('anonymized-' . $foo->getId() . '@domain+1.xyz', $foo->dynamicValue);
     }
 }

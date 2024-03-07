@@ -83,7 +83,9 @@ final class AnonymizeProcessCommand extends Command
     private function anonymizeEntityForClassName(string $className, bool $force, ?string $id = null): void
     {
         try {
-            $entity = $this->entityManager->getMetadataFactory()->getMetadataFor($className);
+            /** @var class-string $classString */
+            $classString = $className;
+            $entity = $this->entityManager->getMetadataFactory()->getMetadataFor($classString);
         } catch (\Exception $exception) {
             throw new \LogicException('Entity does not exist', 1, $exception);
         }
