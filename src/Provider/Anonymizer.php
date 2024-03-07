@@ -106,6 +106,9 @@ final class Anonymizer implements AnonymizerInterface
         $this->eventDispatcher->dispatch(new AfterAnonymize($entity, ['entity' => $clonedEntity]));
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
     private function anonymizeProcess(
         Object $entity,
         bool $reset,
@@ -128,6 +131,7 @@ final class Anonymizer implements AnonymizerInterface
             }
             if (\is_string($value) && str_starts_with($value, '@=')) {
                 $dynamicValue = substr($value, 2);
+                /** @var string $value */
                 $value = $this->expressionLanguage->evaluate($dynamicValue, ['object' => $entity]);
                 $this->setValue($entity, $propertyName, $type, $value);
 
@@ -181,7 +185,7 @@ final class Anonymizer implements AnonymizerInterface
             $entity,
             $propertyName,
             $type,
-            is_array($value) ? $value : sprintf('%s%s', (string) $attributeMetaData->getPrefix(), (string) $value),
+            is_array($value) ? $value : sprintf('%s%s', $attributeMetaData->getPrefix(), $value),
         );
     }
 

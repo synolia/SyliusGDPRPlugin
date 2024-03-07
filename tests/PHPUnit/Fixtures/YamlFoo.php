@@ -27,7 +27,7 @@ class YamlFoo
         return $this->id;
     }
 
-    public function setId(int $id): YamlFoo
+    public function setId(int $id): self
     {
         $this->id = $id;
 
