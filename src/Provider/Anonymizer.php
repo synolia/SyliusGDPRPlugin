@@ -8,6 +8,7 @@ use Doctrine\Common\Util\ClassUtils;
 use Faker\Factory;
 use Faker\Generator;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
@@ -36,6 +37,8 @@ final class Anonymizer implements AnonymizerInterface
 
     private PropertyAccessorInterface $propertyAccess;
 
+    private ExpressionLanguage $expressionLanguage;
+
     public function __construct(
         private LoaderChain $loaderChain,
         private EventDispatcherInterface $eventDispatcher,
@@ -46,6 +49,7 @@ final class Anonymizer implements AnonymizerInterface
             ->enableMagicCall()
             ->getPropertyAccessor()
         ;
+        $this->expressionLanguage = new ExpressionLanguage();
     }
 
     public function anonymize(Object $entity, bool $reset = false, int $maxRetries = 10000): void
@@ -116,19 +120,9 @@ final class Anonymizer implements AnonymizerInterface
         $types = $propertyExtractor->getTypes($className, $propertyName);
         $type = null !== $types ? $types[0]->getBuiltinType() : 'string';
         $value = $attributeMetaData->getValue();
-        if (FakerOptionsValidator::DEFAULT_VALUE !== $value) {
-            if (is_array($value)) {
-                $this->setValue($entity, $propertyName, $type, $value);
 
-                return;
-            }
-
-            $this->setValue(
-                $entity,
-                $propertyName,
-                $type,
-                sprintf('%s%s', (string) $attributeMetaData->getPrefix(), (string) $value),
-            );
+        if ($this->isValueProvided($value)) {
+            $this->handleValue($entity, $value, $type, $propertyName, $attributeMetaData);
 
             return;
         }
@@ -170,7 +164,7 @@ final class Anonymizer implements AnonymizerInterface
             $entity,
             $propertyName,
             $type,
-            is_array($value) ? $value : sprintf('%s%s', (string) $attributeMetaData->getPrefix(), (string) $value),
+            is_array($value) ? $value : sprintf('%s%s', $attributeMetaData->getPrefix(), $value),
         );
     }
 
@@ -283,5 +277,41 @@ final class Anonymizer implements AnonymizerInterface
         }
 
         return is_countable($entity->$getter());
+    }
+
+    private function isValueProvided(mixed $value): bool
+    {
+        return FakerOptionsValidator::DEFAULT_VALUE !== $value;
+    }
+
+    /** @param array|bool|int|string|null $value */
+    private function handleValue(
+        Object $entity,
+        $value,
+        string $type,
+        string $propertyName,
+        AttributeMetaDataInterface $attributeMetaData,
+    ): void {
+        if (is_array($value)) {
+            $this->setValue($entity, $propertyName, $type, $value);
+
+            return;
+        }
+
+        if (\is_string($value) && str_starts_with($value, '@=')) {
+            $dynamicValue = substr($value, 2);
+            /** @var string $value */
+            $value = $this->expressionLanguage->evaluate($dynamicValue, ['object' => $entity]);
+            $this->setValue($entity, $propertyName, $type, $value);
+
+            return;
+        }
+
+        $this->setValue(
+            $entity,
+            $propertyName,
+            $type,
+            sprintf('%s%s', (string) $attributeMetaData->getPrefix(), (string) $value),
+        );
     }
 }
