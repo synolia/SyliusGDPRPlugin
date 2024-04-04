@@ -95,7 +95,7 @@ Sylius\Component\Core\Model\Address: # Your class path
          prefix: 'anonymized-'
  ```
 
-   `value` can be null, an array, an int, a string and an expression language
+   `value` can be null, an array, an int, a string and an [expression language](https://symfony.com/doc/current/reference/formats/expression_language.html)
 
 Example of configuration with dynamic value
 ```yaml
