@@ -44,6 +44,10 @@ sylius-standard:
 update-dependencies:
 	${COMPOSER} config extra.symfony.require "~${SYMFONY_VERSION}"
 	${COMPOSER} require symfony/asset:~${SYMFONY_VERSION} --no-scripts --no-update
+ifeq ($(SYLIUS_VERSION)$(SYMFONY_VERSION), 2.0.06.4)
+	${COMPOSER} update --no-progress -n --no-scripts
+	rm ${TEST_DIRECTORY}/config/packages/csrf.yaml
+endif
 	${COMPOSER} update --no-progress -n
 
 install-plugin:
