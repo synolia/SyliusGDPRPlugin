@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Synolia\SyliusGDPRPlugin\Annotation;
 
-use Doctrine\ORM\Mapping\Annotation;
+use Doctrine\ORM\Mapping\MappingAttribute;
 use Synolia\SyliusGDPRPlugin\Validator\FakerOptionsValidator;
 
 /**
@@ -12,7 +12,7 @@ use Synolia\SyliusGDPRPlugin\Validator\FakerOptionsValidator;
  *
  * @Target({"PROPERTY","ANNOTATION"})
  */
-final class Anonymize implements Annotation
+final class Anonymize implements MappingAttribute
 {
     public ?string $faker;
 

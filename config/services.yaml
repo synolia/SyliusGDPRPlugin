@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Synolia\SyliusGDPRPlugin\:
+        resource: '../src/*'
+        exclude: '../src/{SynoliaSyliusGDPRPlugin.php}'

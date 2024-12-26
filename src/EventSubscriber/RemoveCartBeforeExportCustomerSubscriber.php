@@ -13,7 +13,7 @@ use Synolia\SyliusGDPRPlugin\Event\BeforeExportCustomerData;
 class RemoveCartBeforeExportCustomerSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private OrderRepositoryInterface $orderRepository,
+        private readonly OrderRepositoryInterface $orderRepository,
     ) {
     }
 

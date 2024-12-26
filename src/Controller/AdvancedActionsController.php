@@ -7,11 +7,14 @@ namespace Synolia\SyliusGDPRPlugin\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\Routing\Attribute\Route;
 use function Symfony\Component\String\u;
 use Synolia\SyliusGDPRPlugin\Form\Type\Actions\AnonymizeCustomersNotLoggedBeforeType;
 use Synolia\SyliusGDPRPlugin\Form\Type\Actions\AnonymizeCustomersWithoutAnyOrdersBeforeType;
 use Synolia\SyliusGDPRPlugin\Processor\AdvancedActions\CompositeAdvancedActionsFormDataProcessor;
 
+#[AsController]
 class AdvancedActionsController extends AbstractController
 {
     private const FORMS = [
@@ -20,11 +23,12 @@ class AdvancedActionsController extends AbstractController
     ];
 
     public function __construct(
-        private CompositeAdvancedActionsFormDataProcessor $compositeAdvancedActionsFormDataProcessor,
-        private array $formsType = [],
+        private readonly CompositeAdvancedActionsFormDataProcessor $compositeAdvancedActionsFormDataProcessor,
+        private readonly array $formsType = [],
     ) {
     }
 
+    #[Route('/gdpr/actions', name: 'synolia_sylius_gdpr_admin_advanced_actions', defaults: ['_sylius' => ['permission' => true, 'section' => 'admin', 'alias' => 'plugin_synolia_gdpr']])]
     public function __invoke(Request $request): Response
     {
         $formViews = array_merge(
@@ -46,7 +50,7 @@ class AdvancedActionsController extends AbstractController
             $form->handleRequest($request);
 
             /** @var string $classNameToClean */
-            $classNameToClean = strrchr($formType, '\\');
+            $classNameToClean = strrchr((string) $formType, '\\');
             /** @var string $className */
             $className = substr($classNameToClean, 1);
             $formTypeViews[u($className)->snake()->toString()] = $form->createView();

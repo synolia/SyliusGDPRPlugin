@@ -10,23 +10,27 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Synolia\SyliusGDPRPlugin\Enum\GDPRSerializationKeyEnum;
 use Synolia\SyliusGDPRPlugin\Event\BeforeExportCustomerData;
 
+#[AsController]
 class ExportDataController extends AbstractController
 {
     protected const FILE_NAME = 'export_data';
 
     public function __construct(
-        private CustomerRepositoryInterface $customerRepository,
-        private ParameterBagInterface $parameterBag,
-        private EventDispatcherInterface $eventDispatcher,
-        private SerializerInterface $serializer,
+        private readonly CustomerRepositoryInterface $customerRepository,
+        private readonly ParameterBagInterface $parameterBag,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly SerializerInterface $serializer,
     ) {
     }
 
+    #[Route('/customers/{id}/export-data', name: 'synolia_sylius_gdpr_admin_export_customer_data', defaults: ['_sylius' => ['permission' => true, 'section' => 'admin', 'alias' => 'plugin_synolia_gdpr']], methods: ['GET|POST'])]
     public function __invoke(string $id): Response
     {
         $customer = $this->customerRepository->find($id);

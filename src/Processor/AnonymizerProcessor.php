@@ -13,26 +13,14 @@ final class AnonymizerProcessor
 {
     private const MODULO_FLUSH = 50;
 
-    private AnonymizerInterface $anonymizer;
-
-    private EntityManagerInterface $entityManager;
-
-    private TranslatorInterface $translator;
-
-    private LoggerInterface $logger;
-
     private int $anonymizedEntity = 0;
 
     public function __construct(
-        AnonymizerInterface $anonymizer,
-        EntityManagerInterface $entityManager,
-        TranslatorInterface $translator,
-        LoggerInterface $logger,
+        private readonly AnonymizerInterface $anonymizer,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly TranslatorInterface $translator,
+        private readonly LoggerInterface $logger,
     ) {
-        $this->anonymizer = $anonymizer;
-        $this->entityManager = $entityManager;
-        $this->translator = $translator;
-        $this->logger = $logger;
     }
 
     public function anonymizeEntities(array $entities, bool $reset = false, int $maxRetries = 50): void
@@ -59,7 +47,7 @@ final class AnonymizerProcessor
         return $this->anonymizedEntity;
     }
 
-    private function anonymizeEntity(Object $entity, bool $reset = false, int $maxRetries = 50): void
+    private function anonymizeEntity(object $entity, bool $reset = false, int $maxRetries = 50): void
     {
         $this->anonymizer->anonymize($entity, $reset, $maxRetries);
 

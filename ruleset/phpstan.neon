@@ -1,20 +1,19 @@
 parameters:
-    level: max
+    level: 8
     reportUnmatchedIgnoredErrors: false
-    checkMissingIterableValueType: false
-    checkGenericClassInNonGenericObjectType: false
+    paths:
+        - ../src
     bootstrapFiles:
         - '../vendor/autoload.php'
     excludePaths:
         - '../vendor/'
-        - '../src/Migrations/'
-        - '../source/src/Kernel.php'
-        - '../dev'
         - '../bin'
         - '../tests'
         - '../src/DependencyInjection'
         - '../src/SynoliaSyliusGDPRPlugin.php'
     ignoreErrors:
+        - identifier: missingType.iterableValue
+        - identifier: missingType.generics
         - '#Parameter \#1 \$className of static method Doctrine\\Common\\Util\\ClassUtils::newReflectionClass\(\) expects class-string, string given.#'
         - '#Variable method call on object.#'
         - '#Variable method call on mixed.#'

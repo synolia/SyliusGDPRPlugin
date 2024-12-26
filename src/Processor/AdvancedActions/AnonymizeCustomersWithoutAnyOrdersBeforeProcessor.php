@@ -11,31 +11,19 @@ use Sylius\Component\Core\Model\OrderInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Synolia\SyliusGDPRPlugin\Form\Type\Actions\AnonymizeCustomersWithoutAnyOrdersBeforeType;
 use Synolia\SyliusGDPRPlugin\Processor\AnonymizerProcessor;
 
 class AnonymizeCustomersWithoutAnyOrdersBeforeProcessor implements AdvancedActionsFormDataProcessorInterface
 {
-    private EntityManagerInterface $entityManager;
-
-    private AnonymizerProcessor $anonymizerProcessor;
-
-    private ParameterBagInterface $parameterBag;
-
-    private RequestStack $requestStack;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        AnonymizerProcessor $anonymizerProcessor,
-        ParameterBagInterface $parameterBag,
-        RequestStack $requestStack,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly AnonymizerProcessor $anonymizerProcessor,
+        private readonly ParameterBagInterface $parameterBag,
+        private readonly RequestStack $requestStack,
     ) {
-        $this->entityManager = $entityManager;
-        $this->anonymizerProcessor = $anonymizerProcessor;
-        $this->parameterBag = $parameterBag;
-        $this->requestStack = $requestStack;
     }
 
-    /** @inheritdoc */
     public function process(string $formTypeClass, FormInterface $form): void
     {
         /** @var string $customer */
@@ -84,6 +72,6 @@ class AnonymizeCustomersWithoutAnyOrdersBeforeProcessor implements AdvancedActio
 
     public function getFormTypesClass(): array
     {
-        return ['Synolia\SyliusGDPRPlugin\Form\Type\Actions\AnonymizeCustomersWithoutAnyOrdersBeforeType'];
+        return [AnonymizeCustomersWithoutAnyOrdersBeforeType::class];
     }
 }
