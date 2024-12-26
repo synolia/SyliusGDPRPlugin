@@ -6,6 +6,7 @@ namespace Synolia\SyliusGDPRPlugin\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\Mapping\ClassMetadata;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -13,11 +14,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Synolia\SyliusGDPRPlugin\Processor\AnonymizerProcessor;
 
+#[AsCommand(name: 'synolia:gdpr:anonymize', description: 'Change properties of data entity which have the `Anonymize` annotation.')]
 final class AnonymizeProcessCommand extends Command
 {
     private const MAX_RETRIES = 10000;
-
-    protected static $defaultName = 'synolia:gdpr:anonymize';
 
     private SymfonyStyle $io;
 
@@ -26,8 +26,8 @@ final class AnonymizeProcessCommand extends Command
     private int $maxRetries;
 
     public function __construct(
-        private AnonymizerProcessor $anonymizerProcessor,
-        private EntityManagerInterface $entityManager,
+        private readonly AnonymizerProcessor $anonymizerProcessor,
+        private readonly EntityManagerInterface $entityManager,
         string $name = null,
     ) {
         parent::__construct($name);
@@ -36,7 +36,6 @@ final class AnonymizeProcessCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Change proprieties data entity which have the annotation anonymize.')
             ->addOption('entity', 'E', InputOption::VALUE_REQUIRED, 'Entity full qualified class name')
             ->addOption('id', 'i', InputOption::VALUE_REQUIRED, 'Object ID')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Force command')
@@ -64,19 +63,19 @@ final class AnonymizeProcessCommand extends Command
                 if (null === $id) {
                     $this->anonymizeEntityForClassName($className, $force, null);
 
-                    return 0;
+                    return Command::SUCCESS;
                 }
                 $this->anonymizeEntityForClassName($className, $force, (string) $id);
 
-                return 0;
+                return Command::SUCCESS;
             }
             $this->io->error('Options are empty. Use --help to get the doc.');
 
-            return 0;
+            return Command::SUCCESS;
         } catch (\LogicException $exception) {
             $this->io->error($exception->getMessage());
 
-            return 1;
+            return Command::FAILURE;
         }
     }
 
@@ -94,7 +93,7 @@ final class AnonymizeProcessCommand extends Command
                 'Are you sure to anonymize this entity (' . $className . ') ? Data will be changed without back-up.',
                 false,
             );
-            if (true !== $response) {
+            if (!$response) {
                 throw new \LogicException('No data has been changed.');
             }
         }

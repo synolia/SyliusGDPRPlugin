@@ -6,7 +6,7 @@ namespace Synolia\SyliusGDPRPlugin\Loader\Mapping;
 
 use Synolia\SyliusGDPRPlugin\Validator\FakerOptionsValidator;
 
-final class AttributeMetaData implements AttributeMetaDataInterface
+final readonly class AttributeMetaData implements AttributeMetaDataInterface
 {
     public function __construct(
         private ?string $faker = null,

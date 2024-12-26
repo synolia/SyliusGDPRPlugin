@@ -8,11 +8,11 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class AfterAnonymize extends Event
 {
-    public function __construct(private Object $entity, private array $oldData = [])
+    public function __construct(private readonly object $entity, private readonly array $oldData = [])
     {
     }
 
-    public function getEntity(): Object
+    public function getEntity(): object
     {
         return $this->entity;
     }
