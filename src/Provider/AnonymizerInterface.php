@@ -6,5 +6,5 @@ namespace Synolia\SyliusGDPRPlugin\Provider;
 
 interface AnonymizerInterface
 {
-    public function anonymize(Object $entity, bool $reset = false, int $maxRetries = 10000): void;
+    public function anonymize(object $entity, bool $reset = false, int $maxRetries = 10000): void;
 }

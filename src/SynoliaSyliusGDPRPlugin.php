@@ -21,4 +21,9 @@ final class SynoliaSyliusGDPRPlugin extends Bundle
         $container->addCompilerPass(new RegisterAnonymizationLoader());
         $container->addCompilerPass(new RegisterAdvancedActionsFormDataProcessorsPass());
     }
+
+    public function getPath(): string
+    {
+        return \dirname(__DIR__);
+    }
 }

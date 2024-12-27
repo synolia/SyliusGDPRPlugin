@@ -24,7 +24,7 @@ use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetaData;
 use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetaDataInterface;
 use Synolia\SyliusGDPRPlugin\Validator\FakerOptionsValidator;
 
-final class Anonymizer implements AnonymizerInterface
+final readonly class Anonymizer implements AnonymizerInterface
 {
     private const TYPE_VALUES = [
         'bool',
@@ -52,7 +52,7 @@ final class Anonymizer implements AnonymizerInterface
         $this->expressionLanguage = new ExpressionLanguage();
     }
 
-    public function anonymize(Object $entity, bool $reset = false, int $maxRetries = 10000): void
+    public function anonymize(object $entity, bool $reset = false, int $maxRetries = 10000): void
     {
         $this->eventDispatcher->dispatch(new BeforeAnonymize($entity));
 
@@ -107,7 +107,7 @@ final class Anonymizer implements AnonymizerInterface
     }
 
     private function anonymizeProcess(
-        Object $entity,
+        object $entity,
         bool $reset,
         int $maxRetries,
         string $className,
@@ -127,7 +127,7 @@ final class Anonymizer implements AnonymizerInterface
             return;
         }
 
-        if (true === $attributeMetaData->isUnique()) {
+        if ($attributeMetaData->isUnique()) {
             $value = $this->faker->unique($reset, $maxRetries)->format($attributeMetaData->getFaker(), $attributeMetaData->getArgs());
             $this->setUniqueValue($entity, $value, $type, $propertyName, $attributeMetaData);
 
@@ -169,7 +169,7 @@ final class Anonymizer implements AnonymizerInterface
     }
 
     private function setUniqueValue(
-        Object $entity,
+        object $entity,
         mixed $value,
         string $type,
         string $propertyName,
@@ -286,7 +286,7 @@ final class Anonymizer implements AnonymizerInterface
 
     /** @param array|bool|int|string|null $value */
     private function handleValue(
-        Object $entity,
+        object $entity,
         $value,
         string $type,
         string $propertyName,

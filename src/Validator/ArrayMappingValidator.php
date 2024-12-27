@@ -54,14 +54,12 @@ final class ArrayMappingValidator
                     $exception,
                 );
             }
-
-            continue;
         }
     }
 
     private function checkPropertyOptions(array $options): void
     {
-        if (self::OPTIONS_LENGTH < \count($options) || 0 === \count($options)) {
+        if (self::OPTIONS_LENGTH < \count($options) || [] === $options) {
             throw new \LogicException('Anonymization expected 1 to 5 properties ' . \count($options) . ' given.');
         }
 

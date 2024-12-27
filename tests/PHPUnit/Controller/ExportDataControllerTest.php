@@ -36,7 +36,7 @@ class ExportDataControllerTest extends WebTestCase
         $client->request('GET', sprintf('/admin/customers/%s', $shopUser->getId()));
 
         // export data for this user
-        $client->clickLink('Export data');
+        $client->clickLink(self::getContainer()->get('translator')->trans('sylius.ui.admin.synolia_gdpr.customer.export_data'));
         $this->assertResponseIsSuccessful();
     }
 }

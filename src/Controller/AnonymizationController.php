@@ -10,21 +10,25 @@ use Sylius\Component\Core\Repository\CustomerRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Synolia\SyliusGDPRPlugin\Event\AfterCustomerAnonymize;
 use Synolia\SyliusGDPRPlugin\Event\BeforeCustomerAnonymize;
 use Synolia\SyliusGDPRPlugin\Provider\AnonymizerInterface;
 
+#[AsController]
 class AnonymizationController extends AbstractController
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private CustomerRepositoryInterface $customerRepository,
-        private AnonymizerInterface $anonymizer,
-        private EventDispatcherInterface $eventDispatcher,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly CustomerRepositoryInterface $customerRepository,
+        private readonly AnonymizerInterface $anonymizer,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
+    #[Route('/customers/{id}/anonymize', name: 'synolia_sylius_gdpr_admin_anonymize_customer', defaults: ['_sylius' => ['permission' => true, 'section' => 'admin', 'alias' => 'plugin_synolia_gdpr']], methods: ['GET|POST'])]
     public function __invoke(Request $request, string $id): Response
     {
         $customer = $this->customerRepository->find($id);
@@ -35,16 +39,11 @@ class AnonymizationController extends AbstractController
         }
 
         $this->eventDispatcher->dispatch(new BeforeCustomerAnonymize($customer));
-
         /** @var string $email */
         $email = $customer->getEmail();
-
         $this->anonymizer->anonymize($customer);
-
         $this->entityManager->flush();
-
         $this->eventDispatcher->dispatch(new AfterCustomerAnonymize($customer, $email));
-
         $request->getSession()->getFlashBag()->add('success', 'sylius.ui.admin.synolia_gdpr.success');
 
         return $this->redirectToRoute('sylius_admin_customer_show', ['id' => $customer->getId()]);

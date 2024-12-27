@@ -5,17 +5,19 @@ declare(strict_types=1);
 namespace Synolia\SyliusGDPRPlugin\Menu;
 
 use Sylius\Bundle\UiBundle\Menu\Event\MenuBuilderEvent;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
-final class GDPRMenuListener
+#[AsEventListener(event: 'sylius.menu.admin.main', method: 'addAdminMenuItems')]
+final class AdminMenuListener
 {
-    public function addGDPRMenuItems(MenuBuilderEvent $event): void
+    public function addAdminMenuItems(MenuBuilderEvent $event): void
     {
         $menu = $event->getMenu();
 
         $gdprMenu = $menu->addChild('gdpr');
         $gdprMenu
             ->addChild('sylius.ui.admin.synolia_gdpr.advanced_actions.title', [
-                'route' => 'sylius_gdpr_advanced_actions',
+                'route' => 'synolia_sylius_gdpr_admin_advanced_actions',
             ])
         ;
     }
