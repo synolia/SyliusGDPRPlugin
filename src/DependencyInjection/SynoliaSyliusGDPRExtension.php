@@ -21,7 +21,7 @@ final class SynoliaSyliusGDPRExtension extends Extension
     public function load(array $configs, ContainerBuilder $container): void
     {
         $config = $this->processConfiguration($this->getConfiguration([], $container), $configs);
-        $loader = new YamlFileLoader($container, new FileLocator(\dirname(__DIR__, 2) . '/config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
         $loader->load('services.yaml');
 
@@ -79,7 +79,7 @@ final class SynoliaSyliusGDPRExtension extends Extension
             'anonymization' => [
                 'mappings' => [
                     'paths' => [
-                        \dirname(__DIR__, 2) . '/config/mappings/',
+                        __DIR__ . '/../Resources/config/mappings/',
                     ],
                 ],
             ],

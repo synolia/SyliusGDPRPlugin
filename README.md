@@ -48,14 +48,14 @@
 
     ```yaml
     imports:
-        - { resource: "@SynoliaSyliusGDPRPlugin/config/gdpr.yaml" }
+        - { resource: "@SynoliaSyliusGDPRPlugin/Resources/config/app/config.yaml" }
     ```
 
 3. Create routing in `config/routes/gdpr.yaml` file:
 
      ```yaml
      synolia_gdpr:
-         resource: "@SynoliaSyliusGDPRPlugin/config/routes/attributes.yaml"
+         resource: "@SynoliaSyliusGDPRPlugin/Resources/config/routes.yaml"
          prefix: '/%sylius_admin.path_name%'
      ```
 
