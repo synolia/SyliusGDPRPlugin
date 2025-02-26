@@ -33,8 +33,8 @@
 
 |        | Version |
 |:-------|:--------|
-| PHP    | ^8.0    |
-| Sylius | ^1.10   |
+| PHP    | ^8.2    |
+| Sylius | ^1.12   |
 
 ## Installation
 
@@ -44,18 +44,19 @@
     composer require synolia/sylius-gdpr-plugin --no-scripts
     ```
 
-2. Import required config in your `config/packages/_sylius.yaml` file:
+2. Create required config in `config/packages/gdpr.yaml` file:
 
     ```yaml
     imports:
         - { resource: "@SynoliaSyliusGDPRPlugin/Resources/config/app/config.yaml" }
     ```
 
-3. Import routing in your `config/routes.yaml` file:
+3. Create routing in `config/routes/gdpr.yaml` file:
 
      ```yaml
      synolia_gdpr:
          resource: "@SynoliaSyliusGDPRPlugin/Resources/config/routes.yaml"
+         prefix: '/%sylius_admin.path_name%'
      ```
 
 4. Process translations
@@ -108,7 +109,7 @@ Sylius\Component\Core\Model\Customer:
 ### Note:
    > your expression language must starts with `@=` to be evaluated properly 
    
-   > variable `object` is the current entity your are dealing with (eg. in that case `Sylius\Component\Core\Model\Customer`)
+   > variable `object` is the current entity you are dealing with (e.g. in that case `Sylius\Component\Core\Model\Customer`)
 
 ## Add form in advanced actions page
 
@@ -123,6 +124,8 @@ There's two steps to add your custom form into the page:
                 - 'Synolia\SyliusGDPRPlugin\Form\Type\Actions\AnonymizeCustomerNotLoggedSinceType'
         tags: ['controller.service_arguments']
  ```
+   
+   > or use php attributes `#[AsController]` on your controller and `#[Autowire(AnonymizeCustomerNotLoggedSinceType::class)]` in your constructor for `$formsType` parameter
 
    - Then create your form processor by implementing Synolia\SyliusGDPRPlugin\Processor\AnonymizerProcessor\AdvancedActionsFormDataProcessorInterface
 

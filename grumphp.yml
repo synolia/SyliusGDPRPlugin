@@ -2,18 +2,9 @@ grumphp:
     ascii:
         failed: ~
         succeeded: ~
-    ignore_unstaged_changes: true
     tasks:
         composer:
-            file: "composer.json"
             no_check_all: true
-        git_blacklist:
-            keywords:
-                - "var_dump"
-                - "dump("
-                - "print_r"
-                - "die("
-            triggered_by: [php, twig]
         jsonlint:
             detect_key_conflicts: true
         phplint:
@@ -21,10 +12,10 @@ grumphp:
             triggered_by: ['php']
         phpmd:
             ruleset: ["ruleset/.php_md.xml"]
-            exclude: ["src/Migrations/*"]
         phpstan:
-            configuration: "ruleset/phpstan.neon"
             level: ~
+            configuration: "ruleset/phpstan.neon"
+            use_grumphp_paths: false
         xmllint: ~
         yamllint: ~
         ecs:
@@ -32,16 +23,10 @@ grumphp:
             no-progress-bar: true
         phpmnd:
             directory: src
-    testsuites:
-        git_pre_commit:
-            tasks:
-                - composer
-                - git_blacklist
-                - jsonlint
-                - phplint
-                - phpmd
-                - phpstan
-                - xmllint
-                - yamllint
-                - ecs
-                - phpmnd
+        phpcs:
+            standard: "ruleset"
+            warning_severity: 0
+            whitelist_patterns:
+                - 'src'
+            exclude:
+                - 'PSR12.Files.FileHeader'

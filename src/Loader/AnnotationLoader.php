@@ -10,7 +10,7 @@ use Synolia\SyliusGDPRPlugin\Annotation\Anonymize;
 use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetaData;
 use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetadataCollection;
 
-final class AnnotationLoader implements LoaderInterface
+final readonly class AnnotationLoader implements LoaderInterface
 {
     public function __construct(private Reader $annotationReader)
     {

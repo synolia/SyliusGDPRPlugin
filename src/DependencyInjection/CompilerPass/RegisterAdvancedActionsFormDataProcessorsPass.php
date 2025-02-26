@@ -7,6 +7,7 @@ namespace Synolia\SyliusGDPRPlugin\DependencyInjection\CompilerPass;
 use Sylius\Bundle\ResourceBundle\DependencyInjection\Compiler\PrioritizedCompositeServicePass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Synolia\SyliusGDPRPlugin\Processor\AdvancedActions\AdvancedActionsFormDataProcessorInterface;
+use Synolia\SyliusGDPRPlugin\Processor\AdvancedActions\CompositeAdvancedActionsFormDataProcessor;
 
 final class RegisterAdvancedActionsFormDataProcessorsPass extends PrioritizedCompositeServicePass
 {
@@ -16,7 +17,7 @@ final class RegisterAdvancedActionsFormDataProcessorsPass extends PrioritizedCom
     {
         parent::__construct(
             'synolia.gdpr_processing.advanced_actions_form_data_processor',
-            \Synolia\SyliusGDPRPlugin\Processor\AdvancedActions\CompositeAdvancedActionsFormDataProcessor::class,
+            CompositeAdvancedActionsFormDataProcessor::class,
             self::PROCESSOR_SERVICE_TAG,
             'addProcessor',
         );

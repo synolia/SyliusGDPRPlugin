@@ -9,7 +9,7 @@ use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetaData;
 use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetadataCollection;
 use Synolia\SyliusGDPRPlugin\Validator\FakerOptionsValidator;
 
-final class ArrayLoader implements LoaderInterface
+final readonly class ArrayLoader implements LoaderInterface
 {
     public function __construct(private array $mappings = [])
     {
