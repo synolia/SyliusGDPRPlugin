@@ -32,7 +32,7 @@ sylius_twig_hooks:
 
       'sylius_admin.synolia_gdpr_plugin.index.content.header':
         breadcrumbs:
-          template: '@SyliusAdmin/shared/crud/index/content/header/breadcrumbs.html.twig'
+          template: '@SynoliaSyliusGDPRPlugin/Gdpr/part/header/breadcrumbs.html.twig'
           priority: 100
         title_block:
           template: '@SyliusAdmin/shared/crud/common/content/header/title_block.html.twig'
