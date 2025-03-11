@@ -1,0 +1,12 @@
+services:
+  mariadb:
+    image: 'mariadb:10.5'
+    ports:
+      - '3306:3306'
+    volumes:
+      - gdpr_mysql:/var/lib/data
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: true
+#    options: '--health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3'
+volumes:
+  gdpr_mysql: ~
