@@ -15,6 +15,8 @@ final class AdminMenuListener
         $menu = $event->getMenu();
 
         $gdprMenu = $menu->addChild('gdpr');
+        $gdprMenu->setLabel('sylius.ui.admin.synolia_gdpr.customer.gdpr_title');
+        $gdprMenu->setLabelAttribute('icon', 'tabler:database-star');
         $gdprMenu
             ->addChild('sylius.ui.admin.synolia_gdpr.advanced_actions.title', [
                 'route' => 'synolia_sylius_gdpr_admin_advanced_actions',

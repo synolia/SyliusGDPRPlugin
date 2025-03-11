@@ -19,11 +19,11 @@ class AnonymizeCustomersWithoutAnyOrdersBeforeType extends AbstractType
             ->add('anonymize_customer_without_any_orders_before_date', DateType::class, [
                 'label' => false,
                 'widget' => 'single_text',
-                'row_attr' => ['class' => 'ui field'],
+                'row_attr' => ['class' => ''],
             ])
             ->add('anonymize_customer_without_any_orders_submit', SubmitType::class, [
                 'label' => 'sylius.ui.execute',
-                'attr' => ['class' => 'ui blue button'],
+                'attr' => ['class' => 'btn btn-warning mb-3'],
             ])
         ;
     }

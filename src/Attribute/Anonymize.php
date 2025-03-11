@@ -2,29 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Synolia\SyliusGDPRPlugin\Annotation;
+namespace Synolia\SyliusGDPRPlugin\Attribute;
 
 use Doctrine\ORM\Mapping\MappingAttribute;
 use Synolia\SyliusGDPRPlugin\Validator\FakerOptionsValidator;
 
-/**
- * @Annotation
- *
- * @Target({"PROPERTY","ANNOTATION"})
- */
+#[\Attribute(\Attribute::TARGET_PROPERTY)]
 final class Anonymize implements MappingAttribute
 {
-    public ?string $faker;
+    public readonly ?string $faker;
 
-    public array $args = [];
+    public readonly array $args;
 
-    public bool $unique = false;
+    public readonly bool $unique;
 
-    /** @var string|int|null */
-    public $prefix = '';
+    public readonly string|int|null $prefix;
 
-    /** @var string|int|array|bool|null */
-    public $value;
+    public readonly string|int|array|bool|null $value;
 
     public function __construct(array $options = [])
     {

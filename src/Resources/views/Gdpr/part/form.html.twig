@@ -1,0 +1,15 @@
+{% set forms = hookable_metadata.context.forms %}
+<div class="page-body">
+    <div class="container-xl">
+        {% for form in forms %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    {% form_theme form '@SyliusAdmin/shared/form_theme.html.twig' %}
+                    {{ form_start(form, {'attr': {'class': 'ui form'}}) }}
+                    {{ form_label(form) }}
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>

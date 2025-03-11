@@ -1,8 +1,48 @@
-#sylius_twig_hooks:
-#  hooks:
-#    sylius_admin.customer.show.information:
+sylius_twig_hooks:
+  hooks:
+      'sylius_admin.customer.show.content.sections':
+        gdpr:
+          template: '@SynoliaSyliusGDPRPlugin/Admin/Customer/Show/gdpr.html.twig'
+          priority: -100
 
+      'sylius_admin.synolia_gdpr_plugin.index':
+          sidebar:
+            template: '@SyliusAdmin/shared/crud/common/sidebar.html.twig'
+            priority: 200
+          navbar:
+            template: '@SyliusAdmin/shared/crud/common/navbar.html.twig'
+            priority: 100
+          content:
+            template: '@SyliusAdmin/shared/crud/common/content.html.twig'
+            priority: 0
 
-#        sylius.admin.customer.show.information:
-#            blocks:
-#                gdpr: '@SynoliaSyliusGDPRPlugin\Admin\Customer\Show\gdpr.html.twig'
+      'sylius_admin.synolia_gdpr_plugin.index.content':
+        flashes:
+          template: '@SyliusAdmin/shared/crud/common/content/flashes.html.twig'
+          priority: 300
+        header:
+          template: '@SyliusAdmin/shared/crud/common/content/header.html.twig'
+          priority: 200
+        form:
+          template: '@SynoliaSyliusGDPRPlugin/Gdpr/part/form.html.twig'
+          priority: 100
+        footer:
+          template: '@SynoliaSyliusGDPRPlugin/Gdpr/part/footer.html.twig'
+          priority: -100
+
+      'sylius_admin.synolia_gdpr_plugin.index.content.header':
+        breadcrumbs:
+          template: '@SyliusAdmin/shared/crud/index/content/header/breadcrumbs.html.twig'
+          priority: 100
+        title_block:
+          template: '@SyliusAdmin/shared/crud/common/content/header/title_block.html.twig'
+          priority: 0
+
+      'sylius_admin.synolia_gdpr_plugin.index.content.header.title_block':
+        title:
+          template: '@SyliusAdmin/shared/crud/common/content/header/title_block/title.html.twig'
+          configuration:
+            title: sylius.ui.admin.synolia_gdpr.advanced_actions.title
+            sylius_test_html_attribute: 'dashboard-header'
+          priority: 100
+

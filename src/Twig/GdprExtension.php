@@ -10,7 +10,7 @@ use Twig\TwigFunction;
 
 final class GdprExtension extends AbstractExtension
 {
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('sylius_plus_rbac_gdpr_has_permission', $this->hasPermission(...), ['needs_environment' => true]),

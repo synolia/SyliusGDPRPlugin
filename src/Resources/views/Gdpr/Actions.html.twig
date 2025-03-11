@@ -1,28 +1,9 @@
-{% extends '@SynoliaSyliusGDPRPlugin/Admin/layout.html.twig' %}
+{% extends '@SyliusAdmin/shared/layout/base.html.twig' %}
 
-{% import '@SyliusUi/Macro/headers.html.twig' as headers %}
+{% set title = 'sylius.ui.admin.synolia_gdpr.advanced_actions.title'|trans %}
 
-{% block title %}{{ 'sylius.ui.admin.synolia_gdpr.advanced_actions.title'|trans }} {{ parent() }}{% endblock %}
+{% block title %}{{ 'sylius.ui.admin.synolia_gdpr.advanced_actions.title'|trans }} | Synolia Sylius GDPR Plugin{% endblock %}
 
-{% block content %}
-    {{ headers.default(
-        'sylius.ui.admin.synolia_gdpr.advanced_actions.title'|trans,
-        'cogs',
-    ) }}
-    {% block breadcrumb %}
-        {% set breadcrumbs = breadcrumbs|merge([
-            { label: 'sylius.ui.admin.synolia_gdpr.advanced_actions.title'|trans }
-        ]) %}
-        {{ parent() }}
-    {% endblock %}
-
-    {% for form in forms %}
-        <div class="ui segment">
-        {{ form_start(form, {'attr': {'class': 'ui form'}}) }}
-            <div class="ui field">
-                {{ form_label(form)}}
-            </div>
-        {{ form_end(form) }}
-        </div>
-    {% endfor %}
+{% block body %}
+    {% hook ['sylius_admin.synolia_gdpr_plugin.index'] %}
 {% endblock %}

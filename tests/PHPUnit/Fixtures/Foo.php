@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures;
 
-use Synolia\SyliusGDPRPlugin\Annotation\Anonymize;
+use Synolia\SyliusGDPRPlugin\Attribute\Anonymize;
 
 class Foo
 {
