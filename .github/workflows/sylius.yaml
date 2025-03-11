@@ -20,16 +20,12 @@ jobs:
                     - 8.2
                     - 8.3
                 sylius:
-                    - 1.14.0
                     - 2.0.0
                 symfony:
                     - 6.4
+                    - 7.2
                 node:
                     - 20.x
-                exclude:
-                    -
-                        sylius: 2.0.0
-                        symfony: 5.4
         env:
             APP_ENV: test
             package-name: synolia/sylius-gdpr-plugin
