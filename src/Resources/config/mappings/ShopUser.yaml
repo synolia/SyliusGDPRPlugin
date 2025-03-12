@@ -22,11 +22,6 @@ Sylius\Component\Core\Model\ShopUser:
             faker: dateTime
         verifiedAt:
             faker: dateTime
-#        locked:
-#            faker: boolean
-#            args: [100]
-#        credentialsExpireAt:
-#            faker: dateTime
         email:
             faker: email
             unique: true
