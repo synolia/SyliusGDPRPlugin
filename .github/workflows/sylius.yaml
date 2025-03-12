@@ -3,7 +3,6 @@ name: Install & Test
     push:
         branches:
             - main
-            - upgrade_sylius_2.0
         paths-ignore:
             - README.md
     pull_request:
