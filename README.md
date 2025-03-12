@@ -34,7 +34,7 @@
 |        | Version |
 |:-------|:--------|
 | PHP    | ^8.2    |
-| Sylius | ^1.12   |
+| Sylius | ^2.0    |
 
 ## Installation
 
