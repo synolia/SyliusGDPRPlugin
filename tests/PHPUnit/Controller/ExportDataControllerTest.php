@@ -30,7 +30,7 @@ class ExportDataControllerTest extends WebTestCase
 
         $client->request('GET', '/en_US/cart/');
 
-        $this->assertSelectorTextContains('h1', 'Your shopping cart');
+        $this->assertPageTitleContains('Your shopping cart');
 
         // login as admin and go to customer page
         $adminUser = static::getContainer()->get('sylius.repository.admin_user')->findOneBy([]);

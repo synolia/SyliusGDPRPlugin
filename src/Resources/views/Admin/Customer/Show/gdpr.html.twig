@@ -16,9 +16,12 @@
                     </button>
                 </form>
                 <a
-                        href="{{ path('synolia_sylius_gdpr_admin_export_customer_data', {'id': customer.id}) }}"
-                        class="btn btn-primary"
-                >{{ ux_icon('tabler:database-export') }}{{ 'sylius.ui.admin.synolia_gdpr.customer.export_data'|trans }}</a>
+                    href="{{ path('synolia_sylius_gdpr_admin_export_customer_data', {'id': customer.id}) }}"
+                    class="btn btn-primary"
+                >
+                    {{ ux_icon('tabler:database-export') }}
+                    {{ 'sylius.ui.admin.synolia_gdpr.customer.export_data'|trans }}
+                </a>
             </div>
         </div>
     </div>
