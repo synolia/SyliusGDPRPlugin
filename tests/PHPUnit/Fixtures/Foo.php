@@ -30,7 +30,7 @@ class Foo
     public array $arrayValue;
 
     #[Anonymize(['value' => '1542', 'prefix' => '1542'])]
-    public $integer;
+    public int $integer;
 
     public $bar;
 }

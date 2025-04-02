@@ -11,6 +11,8 @@ use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetadataCollection;
 
 final readonly class AttributeLoader implements LoaderInterface
 {
+    private const PRIORITY = 1024;
+
     /** @throws \ReflectionException */
     public function loadClassMetadata(string $className): AttributeMetadataCollection
     {
@@ -35,5 +37,10 @@ final readonly class AttributeLoader implements LoaderInterface
         }
 
         return $attributeMetaDataCollection;
+    }
+
+    public static function getDefaultPriority(): int
+    {
+        return self::PRIORITY;
     }
 }
