@@ -19,13 +19,12 @@ jobs:
                     - 8.2
                     - 8.3
                 sylius:
-                    - 1.12.0
-                    - 1.13.0
-                    - 1.14.0
+                    - 2.0.0
                 symfony:
                     - 6.4
+                    - 7.2
                 node:
-                    - 14.x
+                    - 20.x
         env:
             APP_ENV: test
             package-name: synolia/sylius-gdpr-plugin
@@ -45,14 +44,14 @@ jobs:
                 with:
                     node-version: '${{ matrix.node }}'
             -
-                uses: actions/checkout@v3
+                uses: actions/checkout@v4
             -
                 name: 'Composer - Get Cache Directory'
                 id: composer-cache
                 run: 'echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT'
             -
                 name: 'Composer - Set cache'
-                uses: actions/cache@v3
+                uses: actions/cache@v4
                 id: cache-composer
                 with:
                     path: '${{ steps.composer-cache.outputs.dir }}'
@@ -71,7 +70,7 @@ jobs:
                 run: 'echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT'
             -
                 name: 'Yarn - Set Cache'
-                uses: actions/cache@v3
+                uses: actions/cache@v4
                 with:
                     path: '${{ steps.yarn-cache.outputs.dir }}'
                     key: 'node-${{ matrix.node }}-yarn-${{ hashFiles(''**/package.json **/yarn.lock'') }}'

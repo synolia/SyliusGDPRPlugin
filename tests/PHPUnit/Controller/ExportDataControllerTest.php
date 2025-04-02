@@ -22,13 +22,15 @@ class ExportDataControllerTest extends WebTestCase
         $client->loginUser($shopUser);
 
         // go to product page
-        $client->request('GET', '/en_US/products/sport-basic-white-t-shirt');
-        $this->assertSelectorTextContains('h1', 'Sport basic white T-Shirt');
+        $client->request('GET', '/en_US/products/solar-echo-t-shirt');
+        $this->assertSelectorTextContains('h1', 'Solar Echo T-Shirt');
 
         // add product to cart
         $client->submitForm('Add to cart');
+
         $client->request('GET', '/en_US/cart/');
-        $this->assertSelectorTextContains('h1', 'Your shopping cart');
+
+        $this->assertPageTitleContains('Your shopping cart');
 
         // login as admin and go to customer page
         $adminUser = static::getContainer()->get('sylius.repository.admin_user')->findOneBy([]);

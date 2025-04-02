@@ -19,11 +19,11 @@ class AnonymizeCustomersNotLoggedBeforeType extends AbstractType
             ->add('anonymize_customers_not_logged_before_date', DateType::class, [
                 'label' => false,
                 'widget' => 'single_text',
-                'row_attr' => ['class' => 'ui field'],
+                'row_attr' => ['class' => ''],
             ])
             ->add('anonymize_customers_not_logged_submit', SubmitType::class, [
                 'label' => 'sylius.ui.execute',
-                'attr' => ['class' => 'ui blue button'],
+                'attr' => ['class' => 'btn btn-warning mb-3'],
             ])
         ;
     }

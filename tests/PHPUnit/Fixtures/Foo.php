@@ -4,41 +4,33 @@ declare(strict_types=1);
 
 namespace Tests\Synolia\SyliusGDPRPlugin\PHPUnit\Fixtures;
 
-use Synolia\SyliusGDPRPlugin\Annotation\Anonymize;
+use Synolia\SyliusGDPRPlugin\Attribute\Anonymize;
 
 class Foo
 {
-    /** @Anonymize(faker="email") */
+    #[Anonymize(['faker' => 'email'])]
     public $email = '';
 
-    /** @Anonymize(value="test-annonation-value") */
+    #[Anonymize(['value' => 'test-annonation-value'])]
     public $value;
 
-    /** @Anonymize("test-annonation-value-without-property") */
+    #[Anonymize(['value' => 'test-annonation-value-without-property'])]
     public $valueWithoutProperty;
 
-    /** @Anonymize(faker="email", prefix="test-annotation-prefix-") */
+    #[Anonymize(['faker' => 'email', 'prefix' => 'test-annotation-prefix-'])]
     public $prefix;
 
-    /** @Anonymize(value="value", prefix="test-annotation-prefix-value-") */
+    #[Anonymize(['value' => 'value', 'prefix' => 'test-annotation-prefix-value-'])]
     public $prefixValue;
 
-    /** @Anonymize(value="annotation") */
+    #[Anonymize(['value' => 'attribute'])]
     public $mergeYamlAnnotationConfiguration;
 
-    /**
-     * @var array
-     *
-     * @Anonymize(value={"value1", "value2"})
-     */
-    public $arrayValue;
+    #[Anonymize(['value' => ['value1', 'value2']])]
+    public array $arrayValue;
 
-    /**
-     * @var int
-     *
-     * @Anonymize(value="1542", prefix="1542")
-     */
-    public $integer;
+    #[Anonymize(['value' => '1542', 'prefix' => '1542'])]
+    public int $integer;
 
     public $bar;
 }

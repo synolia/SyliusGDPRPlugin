@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace Synolia\SyliusGDPRPlugin\Loader;
 
-use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Util\ClassUtils;
-use Synolia\SyliusGDPRPlugin\Annotation\Anonymize;
+use Synolia\SyliusGDPRPlugin\Attribute\Anonymize;
 use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetaData;
 use Synolia\SyliusGDPRPlugin\Loader\Mapping\AttributeMetadataCollection;
 
-final readonly class AnnotationLoader implements LoaderInterface
+final readonly class AttributeLoader implements LoaderInterface
 {
-    public function __construct(private Reader $annotationReader)
-    {
-    }
+    private const PRIORITY = 1024;
 
     /** @throws \ReflectionException */
     public function loadClassMetadata(string $className): AttributeMetadataCollection
@@ -23,20 +20,27 @@ final readonly class AnnotationLoader implements LoaderInterface
         $properties = $reflectionClass->getProperties();
         $attributeMetaDataCollection = new AttributeMetadataCollection();
         foreach ($properties as $property) {
-            $annotation = $this->annotationReader->getPropertyAnnotation(
-                $property,
-                Anonymize::class,
-            );
+            $attributes = $property->getAttributes(Anonymize::class, \ReflectionAttribute::IS_INSTANCEOF);
 
-            if (!$annotation instanceof Anonymize) {
+            if (\count($attributes) === 0) {
                 continue;
             }
-
-            $attributeMetaData = new AttributeMetaData($annotation->faker, $annotation->args, $annotation->unique, $annotation->prefix, $annotation->value);
+            $attributesInstances = [];
+            foreach ($attributes as $attribute) {
+                $attributesInstances[] = $attribute->newInstance();
+            }
+            /** @var Anonymize $attribute */
+            $attribute = $attributesInstances[0];
+            $attributeMetaData = new AttributeMetaData($attribute->faker, $attribute->args, $attribute->unique, $attribute->prefix, $attribute->value);
 
             $attributeMetaDataCollection->add($property->name, $attributeMetaData);
         }
 
         return $attributeMetaDataCollection;
+    }
+
+    public static function getDefaultPriority(): int
+    {
+        return self::PRIORITY;
     }
 }

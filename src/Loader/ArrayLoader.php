@@ -11,6 +11,8 @@ use Synolia\SyliusGDPRPlugin\Validator\FakerOptionsValidator;
 
 final readonly class ArrayLoader implements LoaderInterface
 {
+    private const PRIORITY = -1024;
+
     public function __construct(private array $mappings = [])
     {
     }
@@ -71,5 +73,10 @@ final readonly class ArrayLoader implements LoaderInterface
         }
 
         return $attributeMetaDataCollection;
+    }
+
+    public static function getDefaultPriority(): int
+    {
+        return self::PRIORITY;
     }
 }

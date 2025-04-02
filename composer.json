@@ -14,8 +14,8 @@
         "php": "^8.2",
         "php-http/message-factory": "^1.1",
         "phpdocumentor/reflection-docblock": "^5.3",
-        "sylius/sylius": "^1.12",
-        "symfony/property-info": "^6.4"
+        "sylius/sylius": "^2.0",
+        "symfony/property-info": "^6.4|^7.0"
     },
     "require-dev": {
         "j13k/yaml-lint": "^1.1",
@@ -45,7 +45,8 @@
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "symfony/thanks": true,
             "phpro/grumphp": true,
-            "phpstan/extension-installer": true
+            "phpstan/extension-installer": true,
+            "php-http/discovery": true
         }
     },
     "autoload": {

@@ -7,7 +7,7 @@ CONSOLE=cd ${TEST_DIRECTORY} && php bin/console -e test
 COMPOSER=cd ${TEST_DIRECTORY} && composer
 YARN=cd ${TEST_DIRECTORY} && yarn
 
-SYLIUS_VERSION=1.14.0
+SYLIUS_VERSION=2.0.0
 SYMFONY_VERSION=6.4
 PHP_VERSION=8.2
 PLUGIN_NAME=synolia/sylius-gdpr-plugin
@@ -44,6 +44,10 @@ sylius-standard:
 update-dependencies:
 	${COMPOSER} config extra.symfony.require "~${SYMFONY_VERSION}"
 	${COMPOSER} require symfony/asset:~${SYMFONY_VERSION} --no-scripts --no-update
+ifeq ($(SYLIUS_VERSION)$(SYMFONY_VERSION), 2.0.06.4)
+	${COMPOSER} update --no-progress -n --no-scripts
+	test -f ${TEST_DIRECTORY}/config/packages/csrf.yaml && rm ${TEST_DIRECTORY}/config/packages/csrf.yaml || true
+endif
 	${COMPOSER} update --no-progress -n
 
 install-plugin:
