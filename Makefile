@@ -41,7 +41,8 @@ sylius-standard:
 	${COMPOSER} config allow-plugins true
 	# Sylius-Standard < 2.3 registers FOSRestBundle, which is no longer required by sylius/resource-bundle >= 1.14
 	if grep -q FOSRestBundle ${TEST_DIRECTORY}/config/bundles.php; then ${COMPOSER} require friendsofsymfony/rest-bundle --no-update; fi
-	${COMPOSER} require sylius/sylius:"~${SYLIUS_VERSION}"
+	# Retry cache:clear: the first one may fail with "DoctrineMetadataCacheWarmer must load metadata first" on an empty cache
+	${COMPOSER} require sylius/sylius:"~${SYLIUS_VERSION}" || ${CONSOLE} cache:clear
 
 update-dependencies:
 	${COMPOSER} config extra.symfony.require "~${SYMFONY_VERSION}"
