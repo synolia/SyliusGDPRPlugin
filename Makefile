@@ -59,6 +59,7 @@ install-plugin:
 	cp -r tests/data/* ${TEST_DIRECTORY}/
 
 install-sylius:
+	mkdir -p ${TEST_DIRECTORY}/var/log
 	${CONSOLE} sylius:install -n -s default
 	${YARN} install
 	${YARN} build
