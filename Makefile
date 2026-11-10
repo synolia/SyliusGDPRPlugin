@@ -39,6 +39,8 @@ sylius: sylius-standard update-dependencies install-plugin install-sylius
 sylius-standard:
 	${COMPOSER_ROOT} create-project sylius/sylius-standard ${TEST_DIRECTORY} "~${SYLIUS_VERSION}" --no-install --no-scripts
 	${COMPOSER} config allow-plugins true
+	# Sylius-Standard < 2.3 registers FOSRestBundle, which is no longer required by sylius/resource-bundle >= 1.14
+	if grep -q FOSRestBundle ${TEST_DIRECTORY}/config/bundles.php; then ${COMPOSER} require friendsofsymfony/rest-bundle --no-update; fi
 	${COMPOSER} require sylius/sylius:"~${SYLIUS_VERSION}"
 
 update-dependencies:
