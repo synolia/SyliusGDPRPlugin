@@ -20,7 +20,6 @@ jobs:
                     - 8.3
                     - 8.4
                 sylius:
-                    - 2.0.0
                     - 2.1.0
                     - 2.2.0
                     - 2.3.0
@@ -39,22 +38,19 @@ jobs:
                         php: 8.3
                         symfony: 8.1
                     -
-                        sylius: 2.0.0
-                        symfony: 8.1
-                    -
                         sylius: 2.1.0
                         symfony: 8.1
                     -
                         sylius: 2.2.0
                         symfony: 8.1
-                    # Sylius 2.3 requires PHP 8.3
+                    # Sylius-Standard 2.2+ requires PHP 8.3
+                    -
+                        php: 8.2
+                        sylius: 2.2.0
                     -
                         php: 8.2
                         sylius: 2.3.0
-                    # Sylius 2.0 and 2.1 are not tested on PHP 8.4
-                    -
-                        php: 8.4
-                        sylius: 2.0.0
+                    # Sylius 2.1 is not tested on PHP 8.4
                     -
                         php: 8.4
                         sylius: 2.1.0
