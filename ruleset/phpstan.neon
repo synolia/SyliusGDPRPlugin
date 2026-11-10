@@ -22,3 +22,17 @@ parameters:
         - "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
         - '#.*Laminas\\Stdlib\\PriorityQueue*.#'
         - '#Call to an undefined method Faker\\UniqueGenerator::format\(\).#'
+        # Symfony 6.4 / 7.4+ compatibility in Anonymizer (TypeInfo is not available on 6.4, legacy getTypes() removed in 8.0)
+        -
+            path: ../src/Provider/Anonymizer.php
+            identifiers:
+                - function.alreadyNarrowedType
+                - function.impossibleType
+                - class.notFound
+                - method.notFound
+                - method.deprecated
+                - instanceof.alwaysTrue
+                - instanceof.alwaysFalse
+                - classConstant.deprecatedClass
+                - return.type
+                - argument.type

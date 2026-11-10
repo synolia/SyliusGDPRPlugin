@@ -20,6 +20,16 @@ jobs:
                     - 8.3
                 symfony:
                     - '6.4.*'
+                    - '7.4.*'
+                    - '8.1.*'
+                exclude:
+                    # Symfony 8 requires PHP 8.4
+                    -
+                        php: 8.2
+                        symfony: '8.1.*'
+                    -
+                        php: 8.3
+                        symfony: '8.1.*'
         env:
             APP_ENV: test
         steps:

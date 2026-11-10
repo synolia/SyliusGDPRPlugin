@@ -14,7 +14,9 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type as TypeInfoType;
+use Symfony\Component\TypeInfo\Type\CompositeTypeInterface;
+use Symfony\Component\TypeInfo\Type\WrappingTypeInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Synolia\SyliusGDPRPlugin\Event\AfterAnonymize;
 use Synolia\SyliusGDPRPlugin\Event\BeforeAnonymize;
@@ -106,6 +108,42 @@ final readonly class Anonymizer implements AnonymizerInterface
         $this->eventDispatcher->dispatch(new AfterAnonymize($entity, ['entity' => $clonedEntity]));
     }
 
+    private function getBuiltinType(string $className, string $propertyName): string
+    {
+        $propertyExtractor = new PropertyInfoExtractor([], [new PhpDocExtractor(), new ReflectionExtractor()]);
+
+        // Symfony 6.4 does not have the TypeInfo based "getType()" method
+        if (!method_exists($propertyExtractor, 'getType')) {
+            /** @var array<int, \Symfony\Component\PropertyInfo\Type>|null $types */
+            $types = $propertyExtractor->getTypes($className, $propertyName);
+
+            return null !== $types && [] !== $types ? $types[0]->getBuiltinType() : 'string';
+        }
+
+        $type = $propertyExtractor->getType($className, $propertyName);
+
+        return $type instanceof TypeInfoType ? $this->resolveTypeIdentifier($type) : 'string';
+    }
+
+    private function resolveTypeIdentifier(TypeInfoType $type): string
+    {
+        if ($type instanceof WrappingTypeInterface) {
+            return $this->resolveTypeIdentifier($type->getWrappedType());
+        }
+
+        if ($type instanceof CompositeTypeInterface) {
+            foreach ($type->getTypes() as $subType) {
+                if (!$subType->isIdentifiedBy('null')) {
+                    return $this->resolveTypeIdentifier($subType);
+                }
+            }
+
+            return 'string';
+        }
+
+        return method_exists($type, 'getTypeIdentifier') ? $type->getTypeIdentifier()->value : 'string';
+    }
+
     private function anonymizeProcess(
         object $entity,
         bool $reset,
@@ -114,11 +152,7 @@ final readonly class Anonymizer implements AnonymizerInterface
         string $propertyName,
         AttributeMetaData $attributeMetaData,
     ): void {
-        $propertyExtractor = (new PropertyInfoExtractor([], [new PhpDocExtractor(), new ReflectionExtractor()]));
-
-        /** @var array<int, Type>|null $types */
-        $types = $propertyExtractor->getTypes($className, $propertyName);
-        $type = null !== $types ? $types[0]->getBuiltinType() : 'string';
+        $type = $this->getBuiltinType($className, $propertyName);
         $value = $attributeMetaData->getValue();
 
         if ($this->isValueProvided($value)) {
