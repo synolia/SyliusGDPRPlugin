@@ -18,13 +18,46 @@ jobs:
                 php:
                     - 8.2
                     - 8.3
+                    - 8.4
                 sylius:
-                    - 2.0.0
+                    - 2.1.0
+                    - 2.2.0
+                    - 2.3.0
                 symfony:
                     - 6.4
-                    - 7.2
+                    - 7.4
+                    - 8.1
                 node:
                     - 20.x
+                exclude:
+                    # Symfony 8 requires PHP 8.4 and Sylius 2.3
+                    -
+                        php: 8.2
+                        symfony: 8.1
+                    -
+                        php: 8.3
+                        symfony: 8.1
+                    -
+                        sylius: 2.1.0
+                        symfony: 8.1
+                    -
+                        sylius: 2.2.0
+                        symfony: 8.1
+                    # Sylius-Standard 2.2+ requires PHP 8.3
+                    -
+                        php: 8.2
+                        sylius: 2.2.0
+                    -
+                        php: 8.2
+                        sylius: 2.3.0
+                    # Sylius-Standard 2.3 requires Symfony 7.4+
+                    -
+                        sylius: 2.3.0
+                        symfony: 6.4
+                    # Sylius 2.1 is not tested on PHP 8.4
+                    -
+                        php: 8.4
+                        sylius: 2.1.0
         env:
             APP_ENV: test
             package-name: synolia/sylius-gdpr-plugin

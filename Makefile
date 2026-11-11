@@ -7,7 +7,7 @@ CONSOLE=cd ${TEST_DIRECTORY} && php bin/console -e test
 COMPOSER=cd ${TEST_DIRECTORY} && composer
 YARN=cd ${TEST_DIRECTORY} && yarn
 
-SYLIUS_VERSION=2.0.0
+SYLIUS_VERSION=2.1.0
 SYMFONY_VERSION=6.4
 PHP_VERSION=8.2
 PLUGIN_NAME=synolia/sylius-gdpr-plugin
@@ -16,7 +16,7 @@ PLUGIN_NAME=synolia/sylius-gdpr-plugin
 ### DEVELOPMENT
 ### ¯¯¯¯¯¯¯¯¯¯¯
 
-install: sylius ## Install Plugin on Sylius [SYLIUS_VERSION=1.12.0] [SYMFONY_VERSION=6.1] [PHP_VERSION=8.1]
+install: sylius ## Install Plugin on Sylius [SYLIUS_VERSION=2.1.0] [SYMFONY_VERSION=6.4] [PHP_VERSION=8.2]
 .PHONY: install
 
 reset: ## Remove dependencies
@@ -39,15 +39,14 @@ sylius: sylius-standard update-dependencies install-plugin install-sylius
 sylius-standard:
 	${COMPOSER_ROOT} create-project sylius/sylius-standard ${TEST_DIRECTORY} "~${SYLIUS_VERSION}" --no-install --no-scripts
 	${COMPOSER} config allow-plugins true
-	${COMPOSER} require sylius/sylius:"~${SYLIUS_VERSION}"
+	# Sylius-Standard < 2.3 registers FOSRestBundle, which is no longer required by sylius/resource-bundle >= 1.14
+	if grep -q FOSRestBundle ${TEST_DIRECTORY}/config/bundles.php; then ${COMPOSER} require friendsofsymfony/rest-bundle --no-update; fi
+	# Retry cache:clear: the first one may fail with "DoctrineMetadataCacheWarmer must load metadata first" on an empty cache
+	${COMPOSER} require sylius/sylius:"~${SYLIUS_VERSION}" || ${CONSOLE} cache:clear
 
 update-dependencies:
 	${COMPOSER} config extra.symfony.require "~${SYMFONY_VERSION}"
 	${COMPOSER} require symfony/asset:~${SYMFONY_VERSION} --no-scripts --no-update
-ifeq ($(SYLIUS_VERSION)$(SYMFONY_VERSION), 2.0.06.4)
-	${COMPOSER} update --no-progress -n --no-scripts
-	test -f ${TEST_DIRECTORY}/config/packages/csrf.yaml && rm ${TEST_DIRECTORY}/config/packages/csrf.yaml || true
-endif
 	${COMPOSER} update --no-progress -n
 
 install-plugin:
@@ -60,6 +59,7 @@ install-plugin:
 	cp -r tests/data/* ${TEST_DIRECTORY}/
 
 install-sylius:
+	mkdir -p ${TEST_DIRECTORY}/var/log
 	${CONSOLE} sylius:install -n -s default
 	${YARN} install
 	${YARN} build

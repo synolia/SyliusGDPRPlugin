@@ -31,10 +31,11 @@
 
 ## Requirements
 
-|        | Version |
-|:-------|:--------|
-| PHP    | ^8.2    |
-| Sylius | ^2.0    |
+|         | Version                   |
+|:--------|:--------------------------|
+| PHP     | ^8.2 (8.4+ for Symfony 8) |
+| Sylius  | ^2.1.17                   |
+| Symfony | ^6.4 \| ^7.4 \| ^8.0        |
 
 ## Installation
 
