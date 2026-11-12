@@ -28,7 +28,7 @@ jobs:
                     - 7.4
                     - 8.1
                 node:
-                    - 20.x
+                    - 22.x
                 exclude:
                     # Symfony 8 requires PHP 8.4 and Sylius 2.3
                     -
