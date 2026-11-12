@@ -1,75 +1,71 @@
 .DEFAULT_GOAL := help
 SHELL=/bin/bash
-COMPOSER_ROOT=composer
-TEST_DIRECTORY=tests/Application
-INSTALL_DIRECTORY=install/Application
-CONSOLE=cd ${TEST_DIRECTORY} && php bin/console -e test
-COMPOSER=cd ${TEST_DIRECTORY} && composer
-YARN=cd ${TEST_DIRECTORY} && yarn
+COMPOSER_BIN=composer
+TEST_APP_DIR=vendor/sylius/test-application
+APP_ENV ?= test
+CONSOLE=vendor/bin/console -e $(APP_ENV)
+# sylius/test-application frontend requires Yarn classic (1.x): Yarn Berry (PnP, strict peer dependencies) fails to build it
+YARN_BIN ?= $(shell yarn --version 2>/dev/null | grep -q '^1\.' && echo yarn || echo npx --yes yarn@1.22.22)
+YARN=$(YARN_BIN) --cwd $(TEST_APP_DIR)
 
-SYLIUS_VERSION=2.1.0
-SYMFONY_VERSION=6.4
-PHP_VERSION=8.2
-PLUGIN_NAME=synolia/sylius-gdpr-plugin
+# Leave empty to install the latest versions allowed by composer.json (local development).
+# Set them to restrict the versions (CI), e.g. `make install SYLIUS_VERSION=2.3.0 SYMFONY_VERSION=7.4`.
+SYLIUS_VERSION ?=
+SYMFONY_VERSION ?=
 
 ###
 ### DEVELOPMENT
 ### ¯¯¯¯¯¯¯¯¯¯¯
 
-install: sylius ## Install Plugin on Sylius [SYLIUS_VERSION=2.1.0] [SYMFONY_VERSION=6.4] [PHP_VERSION=8.2]
+install: dependencies frontend database ## Install Plugin with Sylius Test Application [SYLIUS_VERSION=2.3.0] [SYMFONY_VERSION=7.4]
+	$(CONSOLE) cache:clear
 .PHONY: install
 
-reset: ## Remove dependencies
-ifneq ("$(wildcard ${TEST_DIRECTORY}/bin/console)","")
-	${CONSOLE} doctrine:database:drop --force --if-exists || true
+reset: ## Remove dependencies and database
+ifneq ("$(wildcard vendor/bin/console)","")
+	$(CONSOLE) doctrine:database:drop --force --if-exists || true
 endif
-	rm -rf ${TEST_DIRECTORY}
+	rm -rf var/ vendor/ node_modules
 .PHONY: reset
 
-phpunit: phpunit-configure phpunit-run ## Run PHPUnit
+phpunit: ## Run PHPUnit
+	vendor/bin/phpunit
 .PHONY: phpunit
+
+serve: ## Start the Symfony local web server (Sylius Test Application) [APP_ENV=test]
+	APP_ENV=$(APP_ENV) symfony server:start -d
+.PHONY: serve
 
 ###
 ### OTHER
 ### ¯¯¯¯¯¯
 
-sylius: sylius-standard update-dependencies install-plugin install-sylius
-.PHONY: sylius
+dependencies:
+ifneq ($(SYLIUS_VERSION),)
+	$(COMPOSER_BIN) require --no-update --no-scripts sylius/sylius:"~$(SYLIUS_VERSION)"
+	$(COMPOSER_BIN) require --dev --no-update --no-scripts sylius/test-application:"~$(SYLIUS_VERSION)@alpha"
+endif
+ifneq ($(SYMFONY_VERSION),)
+	# extra.symfony.require is only applied by Symfony Flex when it is loaded before the dependency resolution
+	$(COMPOSER_BIN) global show symfony/flex > /dev/null 2>&1 || ($(COMPOSER_BIN) global config --no-plugins allow-plugins.symfony/flex true && $(COMPOSER_BIN) global require --no-progress --no-scripts --no-plugins symfony/flex)
+	$(COMPOSER_BIN) config extra.symfony.require "~$(SYMFONY_VERSION)"
+endif
+	$(COMPOSER_BIN) update --no-progress -n
+.PHONY: dependencies
 
-sylius-standard:
-	${COMPOSER_ROOT} create-project sylius/sylius-standard ${TEST_DIRECTORY} "~${SYLIUS_VERSION}" --no-install --no-scripts
-	${COMPOSER} config allow-plugins true
-	# Sylius-Standard < 2.3 registers FOSRestBundle, which is no longer required by sylius/resource-bundle >= 1.14
-	if grep -q FOSRestBundle ${TEST_DIRECTORY}/config/bundles.php; then ${COMPOSER} require friendsofsymfony/rest-bundle --no-update; fi
-	# Retry cache:clear: the first one may fail with "DoctrineMetadataCacheWarmer must load metadata first" on an empty cache
-	${COMPOSER} require sylius/sylius:"~${SYLIUS_VERSION}" || ${CONSOLE} cache:clear
+frontend:
+	php bin/create_node_symlink.php
+	$(YARN) install
+	$(YARN) build
+	$(CONSOLE) assets:install
+.PHONY: frontend
 
-update-dependencies:
-	${COMPOSER} config extra.symfony.require "~${SYMFONY_VERSION}"
-	${COMPOSER} require symfony/asset:~${SYMFONY_VERSION} --no-scripts --no-update
-	${COMPOSER} update --no-progress -n
-
-install-plugin:
-	${COMPOSER} config repositories.plugin '{"type": "path", "url": "../../"}'
-	${COMPOSER} config extra.symfony.allow-contrib true
-	${COMPOSER} config minimum-stability "dev"
-	${COMPOSER} config prefer-stable true
-	${COMPOSER} req ${PLUGIN_NAME}:* --prefer-source --no-scripts
-	cp -r ${INSTALL_DIRECTORY} tests
-	cp -r tests/data/* ${TEST_DIRECTORY}/
-
-install-sylius:
-	mkdir -p ${TEST_DIRECTORY}/var/log
-	${CONSOLE} sylius:install -n -s default
-	${YARN} install
-	${YARN} build
-	${CONSOLE} cache:clear
-
-phpunit-configure:
-	cp phpunit.xml.dist ${TEST_DIRECTORY}/phpunit.xml
-
-phpunit-run:
-	cd ${TEST_DIRECTORY} && ./vendor/bin/phpunit
+database:
+	$(CONSOLE) doctrine:database:drop --if-exists --force
+	$(CONSOLE) doctrine:database:create
+	$(CONSOLE) doctrine:migrations:migrate -n
+	$(CONSOLE) sylius:fixtures:load -n
+.PHONY: database
 
 grumphp: ## Run GrumPHP
 	vendor/bin/grumphp run
