@@ -45,6 +45,10 @@ ifneq ($(SYLIUS_VERSION),)
 	$(COMPOSER_BIN) require --no-update --no-scripts sylius/sylius:"~$(SYLIUS_VERSION)"
 	$(COMPOSER_BIN) require --dev --no-update --no-scripts sylius/test-application:"~$(SYLIUS_VERSION)@alpha"
 endif
+ifneq ($(filter 2.1%,$(SYLIUS_VERSION)),)
+	# Sylius 2.1 mapping (ShipmentUnit#shipment) is rejected by the doctrine/orm 3.7 schema validator
+	$(COMPOSER_BIN) require --dev --no-update --no-scripts doctrine/orm:"<3.7"
+endif
 ifneq ($(SYMFONY_VERSION),)
 	# extra.symfony.require is only applied by Symfony Flex when it is loaded before the dependency resolution
 	$(COMPOSER_BIN) global show symfony/flex > /dev/null 2>&1 || ($(COMPOSER_BIN) global config --no-plugins allow-plugins.symfony/flex true && $(COMPOSER_BIN) global require --no-progress --no-scripts --no-plugins symfony/flex)
