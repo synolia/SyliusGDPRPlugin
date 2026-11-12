@@ -28,7 +28,7 @@ jobs:
                     - 7.4
                     - 8.1
                 node:
-                    - 20.x
+                    - 22.x
                 exclude:
                     # Symfony 8 requires PHP 8.4 and Sylius 2.3
                     -
@@ -43,14 +43,14 @@ jobs:
                     -
                         sylius: 2.2.0
                         symfony: 8.1
-                    # Sylius-Standard 2.2+ requires PHP 8.3
+                    # Sylius 2.2+ (and sylius/test-application 2.2+) requires PHP 8.3
                     -
                         php: 8.2
                         sylius: 2.2.0
                     -
                         php: 8.2
                         sylius: 2.3.0
-                    # Sylius-Standard 2.3 requires Symfony 7.4+
+                    # Sylius 2.3 (and sylius/test-application 2.3) requires Symfony 7.4+
                     -
                         sylius: 2.3.0
                         symfony: 6.4
@@ -73,18 +73,18 @@ jobs:
                     coverage: none
             -
                 name: 'Setup Node'
-                uses: actions/setup-node@v3
+                uses: actions/setup-node@v7
                 with:
                     node-version: '${{ matrix.node }}'
             -
-                uses: actions/checkout@v4
+                uses: actions/checkout@v7
             -
                 name: 'Composer - Get Cache Directory'
                 id: composer-cache
                 run: 'echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT'
             -
                 name: 'Composer - Set cache'
-                uses: actions/cache@v4
+                uses: actions/cache@v6
                 id: cache-composer
                 with:
                     path: '${{ steps.composer-cache.outputs.dir }}'
@@ -103,18 +103,23 @@ jobs:
                 run: 'echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT'
             -
                 name: 'Yarn - Set Cache'
-                uses: actions/cache@v4
+                uses: actions/cache@v6
                 with:
                     path: '${{ steps.yarn-cache.outputs.dir }}'
                     key: 'node-${{ matrix.node }}-yarn-${{ hashFiles(''**/package.json **/yarn.lock'') }}'
                     restore-keys: "node-${{ matrix.node }}-yarn-\n"
             -
-                name: 'Install Sylius-Standard and Plugin'
-                run: 'make install -e SYLIUS_VERSION=${{ matrix.sylius }} SYMFONY_VERSION=${{ matrix.symfony }} PHP_VERSION=${{ matrix.php }}'
+                name: 'Composer - Install Symfony Flex globally'
+                run: 'composer global config --no-plugins allow-plugins.symfony/flex true && composer global require --no-progress --no-scripts --no-plugins symfony/flex'
+            -
+                name: 'Install plugin with Sylius Test Application'
+                run: 'make install -e SYLIUS_VERSION=${{ matrix.sylius }} SYMFONY_VERSION=${{ matrix.symfony }}'
             -
                 name: 'Doctrine Schema Validate - Run'
-                working-directory: ./tests/Application
-                run: 'php bin/console doctrine:schema:validate --skip-sync'
+                run: 'vendor/bin/console doctrine:schema:validate --skip-sync'
+            -
+                name: 'Lint container'
+                run: 'vendor/bin/console lint:container'
             -
                 name: 'Run PHPUnit'
                 run: 'make phpunit'

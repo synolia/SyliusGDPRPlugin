@@ -35,7 +35,7 @@ jobs:
             APP_ENV: test
         steps:
             -
-                uses: actions/checkout@v3
+                uses: actions/checkout@v7
             -
                 name: 'Setup PHP'
                 uses: shivammathur/setup-php@v2
@@ -49,7 +49,7 @@ jobs:
                 run: 'echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT'
             -
                 name: 'Composer - Set cache'
-                uses: actions/cache@v3
+                uses: actions/cache@v6
                 with:
                     path: '${{ steps.composer-cache.outputs.dir }}'
                     key: 'php-${{ matrix.php }}-symfony-${{ matrix.symfony }}-composer-${{ hashFiles(''**/composer.json'') }}'

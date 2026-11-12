@@ -12,6 +12,12 @@ class TypedFoo
 
     public int|string $union = 0;
 
+    public int|string|null $nullableUnion = null;
+
+    public \DateTimeInterface|string $objectOrString = '';
+
+    public float|int $number = 0;
+
     public \DateTime $date;
 
     public ?\DateTimeInterface $nullableDate = null;
