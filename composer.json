@@ -12,7 +12,6 @@
     "license": "EUPL-1.2",
     "require": {
         "php": "^8.2",
-        "php-http/message-factory": "^1.1",
         "phpdocumentor/reflection-docblock": "^5.3",
         "sylius/sylius": "^2.1.17",
         "symfony/property-info": "^6.4|^7.4|^8.0"
