@@ -34,11 +34,7 @@
         "sylius-labs/coding-standard": "^4.3",
         "sylius/test-application": "^2.1.0@alpha",
         "symfony/browser-kit": "^6.4|^7.4|^8.0",
-        "symfony/css-selector": "^6.4|^7.4|^8.0",
-        "symfony/debug-bundle": "^6.4|^7.4|^8.0",
-        "symfony/dotenv": "^6.4|^7.4|^8.0",
-        "symfony/intl": "^6.4|^7.4|^8.0",
-        "symfony/web-profiler-bundle": "^6.4|^7.4|^8.0"
+        "symfony/css-selector": "^6.4|^7.4|^8.0"
     },
     "config": {
         "sort-packages": true,
