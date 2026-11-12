@@ -36,3 +36,4 @@ parameters:
                 - classConstant.deprecatedClass
                 - return.type
                 - argument.type
+                - argument.templateType

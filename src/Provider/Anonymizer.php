@@ -175,12 +175,30 @@ final readonly class Anonymizer implements AnonymizerInterface
             /** @var array<int, \Symfony\Component\PropertyInfo\Type>|null $types */
             $types = $propertyExtractor->getTypes($className, $propertyName);
 
-            return null !== $types && [] !== $types ? $types[0]->getBuiltinType() : 'string';
+            return $this->resolveLegacyBuiltinType($types ?? []);
         }
 
         $type = $propertyExtractor->getType($className, $propertyName);
 
         return $type instanceof TypeInfoType ? $this->resolveTypeIdentifier($type) : 'string';
+    }
+
+    /**
+     * Mirrors the TypeInfo union ordering (sorted by string representation) so that
+     * union types resolve to the same builtin type on every Symfony version.
+     *
+     * @param array<int, \Symfony\Component\PropertyInfo\Type> $types
+     */
+    private function resolveLegacyBuiltinType(array $types): string
+    {
+        $builtinTypes = [];
+        foreach ($types as $type) {
+            $builtinTypes[$type->getClassName() ?? $type->getBuiltinType()] = $type->getBuiltinType();
+        }
+        unset($builtinTypes['null']);
+        ksort($builtinTypes, \SORT_STRING);
+
+        return array_values($builtinTypes)[0] ?? 'string';
     }
 
     private function resolveTypeIdentifier(TypeInfoType $type): string
