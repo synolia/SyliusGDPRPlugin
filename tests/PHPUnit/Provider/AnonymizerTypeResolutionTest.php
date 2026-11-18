@@ -29,8 +29,8 @@ final class AnonymizerTypeResolutionTest extends TestCase
     {
         yield 'untyped' => ['untyped', 'string'];
         yield 'nullable int' => ['nullableInt', 'int'];
-        yield 'union' => ['union', 'int'];
-        yield 'nullable union' => ['nullableUnion', 'int'];
+        yield 'union' => ['union', 'string'];
+        yield 'nullable union' => ['nullableUnion', 'string'];
         yield 'object or string union' => ['objectOrString', 'object'];
         yield 'numeric union' => ['number', 'float'];
         yield 'object' => ['date', 'object'];
