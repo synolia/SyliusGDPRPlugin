@@ -28,7 +28,6 @@
         "phpunit/phpunit": "^9.5",
         "povils/phpmnd": "^3.0",
         "rector/rector": "^2.0",
-        "seld/jsonlint": "^1.11",
         "squizlabs/php_codesniffer": "^3.11",
         "sylius-labs/coding-standard": "^4.3",
         "sylius/test-application": "^2.1.0@alpha",
@@ -39,7 +38,6 @@
         "sort-packages": true,
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
-            "symfony/thanks": true,
             "phpro/grumphp": true,
             "phpstan/extension-installer": true,
             "php-http/discovery": true,
