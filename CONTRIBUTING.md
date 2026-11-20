@@ -20,7 +20,7 @@ To test against specific Sylius and Symfony versions (as the CI does), run:
 $ make install -e SYLIUS_VERSION=XX SYMFONY_VERSION=YY
 ```
 
-e.g. `SYLIUS_VERSION=2.1.0 SYMFONY_VERSION=6.4`.
+e.g. `SYLIUS_VERSION=2.2.0 SYMFONY_VERSION=6.4`.
 
 It installs Composer dependencies and the frontend assets of the test application,
 then creates the database, runs the migrations and loads the fixtures (`test` environment by default).
