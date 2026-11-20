@@ -33,8 +33,8 @@
 
 |         | Version                   |
 |:--------|:--------------------------|
-| PHP     | ^8.2 (8.4+ for Symfony 8) |
-| Sylius  | ^2.1.17                   |
+| PHP     | ^8.3 (8.4+ for Symfony 8) |
+| Sylius  | ^2.2.13                   |
 | Symfony | ^6.4 \| ^7.4 \| ^8.0        |
 
 ## Installation
@@ -145,7 +145,7 @@ There's two steps to add your custom form into the page:
 The plugin is developed and tested with the [Sylius Test Application](https://github.com/Sylius/TestApplication):
 
 ```shell
-make install    # optionally: make install -e SYLIUS_VERSION=2.1.0 SYMFONY_VERSION=6.4
+make install    # optionally: make install -e SYLIUS_VERSION=2.2.0 SYMFONY_VERSION=6.4
 make phpunit
 make serve      # or: APP_ENV=test symfony server:start -d
 ```
