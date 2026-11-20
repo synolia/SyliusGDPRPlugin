@@ -28,6 +28,8 @@ use Synolia\SyliusGDPRPlugin\Validator\FakerOptionsValidator;
 
 final readonly class Anonymizer implements AnonymizerInterface
 {
+    private const UNION_TYPE_PRIORITY = ['object', 'array', 'string', 'float', 'int', 'bool'];
+
     private const TYPE_VALUES = [
         'bool',
         'string',
@@ -175,12 +177,34 @@ final readonly class Anonymizer implements AnonymizerInterface
             /** @var array<int, \Symfony\Component\PropertyInfo\Type>|null $types */
             $types = $propertyExtractor->getTypes($className, $propertyName);
 
-            return null !== $types && [] !== $types ? $types[0]->getBuiltinType() : 'string';
+            return $this->resolveUnionType(array_map(
+                static fn (\Symfony\Component\PropertyInfo\Type $type): string => $type->getBuiltinType(),
+                $types ?? [],
+            ));
         }
 
         $type = $propertyExtractor->getType($className, $propertyName);
 
         return $type instanceof TypeInfoType ? $this->resolveTypeIdentifier($type) : 'string';
+    }
+
+    /**
+     * Picks, among union members, the type that never alters the anonymized value
+     * (a string value would be cast to 0 for an int, for instance).
+     *
+     * @param array<int, string> $identifiers
+     */
+    private function resolveUnionType(array $identifiers): string
+    {
+        $identifiers = array_values(array_diff($identifiers, ['null']));
+
+        foreach (self::UNION_TYPE_PRIORITY as $candidate) {
+            if (in_array($candidate, $identifiers, true)) {
+                return $candidate;
+            }
+        }
+
+        return $identifiers[0] ?? 'string';
     }
 
     private function resolveTypeIdentifier(TypeInfoType $type): string
@@ -190,13 +214,10 @@ final readonly class Anonymizer implements AnonymizerInterface
         }
 
         if ($type instanceof CompositeTypeInterface) {
-            foreach ($type->getTypes() as $subType) {
-                if (!$subType->isIdentifiedBy('null')) {
-                    return $this->resolveTypeIdentifier($subType);
-                }
-            }
-
-            return 'string';
+            return $this->resolveUnionType(array_map(
+                fn (TypeInfoType $subType): string => $this->resolveTypeIdentifier($subType),
+                $type->getTypes(),
+            ));
         }
 
         return method_exists($type, 'getTypeIdentifier') ? $type->getTypeIdentifier()->value : 'string';
@@ -268,6 +289,8 @@ final readonly class Anonymizer implements AnonymizerInterface
                 $propertyName,
                 (float) $value,
             );
+
+            return;
         }
 
         if ('bool' === $type) {
@@ -276,6 +299,8 @@ final readonly class Anonymizer implements AnonymizerInterface
                 $propertyName,
                 (bool) $value,
             );
+
+            return;
         }
 
         $this->propertyAccess->setValue(

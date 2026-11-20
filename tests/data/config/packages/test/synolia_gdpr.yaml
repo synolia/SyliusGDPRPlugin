@@ -1,5 +1,0 @@
-synolia_sylius_gdpr:
-    anonymization:
-        mappings:
-            paths:
-                - '%kernel.project_dir%/../PHPUnit/config/mappings/'

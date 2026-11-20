@@ -25,7 +25,7 @@ class AnonymizeCustomersNotLoggedBeforeProcessor implements AdvancedActionsFormD
     /** @inheritdoc */
     public function process(string $formTypeClass, FormInterface $form): void
     {
-        /** @var string $shopUser */
+        /** @var class-string $shopUser */
         $shopUser = $this->parameterBag->get('sylius.model.shop_user.class');
         /** @var array $data */
         $data = $form->getData();

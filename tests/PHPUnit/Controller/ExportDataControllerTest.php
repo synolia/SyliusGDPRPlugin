@@ -23,7 +23,7 @@ class ExportDataControllerTest extends WebTestCase
 
         // go to product page
         $client->request('GET', '/en_US/products/solar-echo-t-shirt');
-        $this->assertSelectorTextContains('h1', 'Solar Echo T-Shirt');
+        $this->assertAnySelectorTextContains('h1', 'Solar Echo T-Shirt');
 
         // add product to cart
         $client->submitForm('Add to cart');

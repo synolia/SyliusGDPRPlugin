@@ -24,11 +24,12 @@ class AnonymizeCustomersWithoutAnyOrdersBeforeProcessor implements AdvancedActio
     ) {
     }
 
+    /** @inheritdoc */
     public function process(string $formTypeClass, FormInterface $form): void
     {
-        /** @var string $customer */
+        /** @var class-string $customer */
         $customer = $this->parameterBag->get('sylius.model.customer.class');
-        /** @var string $order */
+        /** @var class-string $order */
         $order = $this->parameterBag->get('sylius.model.order.class');
         /** @var array $data */
         $data = $form->getData();

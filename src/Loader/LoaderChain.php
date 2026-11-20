@@ -13,7 +13,7 @@ final class LoaderChain implements LoaderInterface
     private array $loaders = [];
 
     public function __construct(
-        #[AutowireIterator(LoaderInterface::class, defaultPriorityMethod: 'getDefaultPriority', exclude: [self::class])]
+        #[AutowireIterator(LoaderInterface::class, exclude: [self::class])]
         iterable $loaders,
     ) {
         foreach ($loaders as $loader) {
