@@ -1,2 +1,0 @@
-imports:
-    - { resource: "@SynoliaSyliusGDPRPlugin/Resources/config/app/config.yaml" }

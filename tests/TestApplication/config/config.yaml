@@ -1,0 +1,9 @@
+imports:
+    - { resource: "@SynoliaSyliusGDPRPlugin/Resources/config/app/config.yaml" }
+
+when@test:
+    synolia_sylius_gdpr:
+        anonymization:
+            mappings:
+                paths:
+                    - '%kernel.project_dir%/../../../tests/PHPUnit/config/mappings/'

@@ -3,8 +3,9 @@ node_modules
 .phpunit.result.cache
 composer.lock
 
-/tests/Application/
-/install/Application/*.local
+/var/
+/tests/TestApplication/.env.local
+/tests/TestApplication/.env.*.local
 
 # JetBrains IDE
 .idea/

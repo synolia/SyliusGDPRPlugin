@@ -1,4 +1,5 @@
 /.github export-ignore
+/assets export-ignore
 /ruleset export-ignore
 /tests export-ignore
 /etc export-ignore

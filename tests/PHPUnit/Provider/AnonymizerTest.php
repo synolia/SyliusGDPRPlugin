@@ -41,6 +41,8 @@ final class AnonymizerTest extends KernelTestCase
         $this->assertIsArray($foo->arrayValue);
         $this->assertCount(2, $foo->arrayValue);
         $this->assertSame(15_421_542, $foo->integer);
+        $this->assertSame(12.5, $foo->decimal);
+        $this->assertTrue($foo->flag);
     }
 
     public function testYamlConfig(): void
