@@ -1,33 +1,23 @@
-[![License](https://badgen.net/github/license/synolia/SyliusGDPRPlugin)](https://github.com/synolia/SyliusGDPRPlugin/blob/master/LICENSE)
-[![CI - Analysis](https://github.com/synolia/SyliusGDPRPlugin/actions/workflows/analysis.yaml/badge.svg?branch=master)](https://github.com/synolia/SyliusGDPRPlugin/actions/workflows/analysis.yaml)
-[![CI - Sylius](https://github.com/synolia/SyliusGDPRPlugin/actions/workflows/sylius.yaml/badge.svg?branch=master)](https://github.com/synolia/SyliusGDPRPlugin/actions/workflows/sylius.yaml)
+[![License](https://badgen.net/github/license/synolia/SyliusGDPRPlugin)](https://github.com/synolia/SyliusGDPRPlugin/blob/main/LICENSE)
+[![CI - Analysis](https://github.com/synolia/SyliusGDPRPlugin/actions/workflows/analysis.yaml/badge.svg?branch=main)](https://github.com/synolia/SyliusGDPRPlugin/actions/workflows/analysis.yaml)
+[![CI - Sylius](https://github.com/synolia/SyliusGDPRPlugin/actions/workflows/sylius.yaml/badge.svg?branch=main)](https://github.com/synolia/SyliusGDPRPlugin/actions/workflows/sylius.yaml)
 [![Version](https://badgen.net/github/tag/synolia/SyliusGDPRPlugin?label=Version)](https://packagist.org/packages/synolia/sylius-gdpr-plugin)
 [![Total Downloads](https://poser.pugx.org/synolia/sylius-gdpr-plugin/downloads)](https://packagist.org/packages/synolia/sylius-gdpr-plugin)
 
-<p align="center">
-    <a href="https://sylius.com" target="_blank">
-        <img src="https://demo.sylius.com/assets/shop/img/logo.png" />
-    </a>
-</p>
-<h1 align="center">Sylius GDPR Plugin</h1>
+# Sylius GDPR Plugin
 
-![Capture](/etc/capture.png "Capture")
+Help your Sylius store comply with the GDPR: anonymize customers and export their personal data from the admin panel or the command line.
+
+![GDPR section in the admin customer page](etc/capture.png)
 
 ## Features
 
-   - Anonymize customer with the GDPR section in the admin customer show.
-   - Export customer data with the GDPR section in the admin customer show.
-
-   [Click to see the anonymization configuration](ANONYMIZE_CONFIGURATION.md).
-   
-   [Click to see the export data configuration](EXPORT_CONFIGURATION.md).
-
-   - Anonymize any entity with command for example :
-
-   ```shell
-   php bin/console synolia:gdpr:anonymize --entity='Sylius\Component\Core\Model\Customer' --id=1 
-   ```
-   Use --help to get more informations
+- **Anonymize a customer** from the GDPR section of the admin customer page.
+- **Export customer data** as a JSON file from the same section.
+- **Bulk anonymization** from the *GDPR* admin page: customers who have not logged in since a given date, or customers without any order.
+- **Anonymize any entity** from the command line.
+- **Configurable** anonymization (YAML mappings or PHP attribute) and export (Symfony Serializer groups).
+- **Extensible**: events around anonymization and export, custom bulk actions.
 
 ## Requirements
 
@@ -35,110 +25,176 @@
 |:--------|:--------------------------|
 | PHP     | ^8.3 (8.4+ for Symfony 8) |
 | Sylius  | ^2.2.13                   |
-| Symfony | ^6.4 \| ^7.4 \| ^8.0        |
+| Symfony | ^6.4 \| ^7.4 \| ^8.0      |
 
 ## Installation
 
-1. Add the bundle and dependencies in your composer.json :
+1. Require the plugin:
 
     ```shell
-    composer require synolia/sylius-gdpr-plugin --no-scripts
+    composer require synolia/sylius-gdpr-plugin
     ```
 
-2. Create required config in `config/packages/gdpr.yaml` file:
+2. Register the bundle in `config/bundles.php` if Symfony Flex did not do it:
+
+    ```php
+    Synolia\SyliusGDPRPlugin\SynoliaSyliusGDPRPlugin::class => ['all' => true],
+    ```
+
+3. Import the configuration in `config/packages/synolia_sylius_gdpr.yaml`:
 
     ```yaml
     imports:
         - { resource: "@SynoliaSyliusGDPRPlugin/Resources/config/app/config.yaml" }
     ```
 
-3. Create routing in `config/routes/gdpr.yaml` file:
+4. Import the admin routes in `config/routes/synolia_sylius_gdpr.yaml`:
 
-     ```yaml
-     synolia_gdpr:
-         resource: "@SynoliaSyliusGDPRPlugin/Resources/config/routes.yaml"
-         prefix: '/%sylius_admin.path_name%'
-     ```
-
-4. Process translations
-
-    ```bash
-    php bin/console translation:extract en SynoliaSyliusGDPRPlugin --dump-messages
-    php bin/console translation:extract fr SynoliaSyliusGDPRPlugin --dump-messages
+    ```yaml
+    synolia_gdpr:
+        resource: "@SynoliaSyliusGDPRPlugin/Resources/config/routes.yaml"
+        prefix: '/%sylius_admin.path_name%'
     ```
 
-5. Clear cache
+5. Clear the cache:
 
     ```shell
     php bin/console cache:clear
     ```
 
-## Add anonymization configuration
+## Anonymization
 
- ```yaml
+### Default mappings
+
+The plugin ships with mappings for the Sylius `Customer`, `ShopUser`, `Address`, `Order` and `Payment` entities:
+see [`src/Resources/config/mappings`](src/Resources/config/mappings).
+
+### Custom mappings
+
+Add your own mapping directories, and optionally disable the default mappings:
+
+```yaml
 synolia_sylius_gdpr:
-    disable_default_mappings: false # False by default
+    disable_default_mappings: false # default: false
     anonymization:
         mappings:
             paths:
-                - # Your\Paths\To\Mappings\Directory
- ```
+                - '%kernel.project_dir%/config/gdpr/mappings'
+```
 
-   Example of configuration
- ```yaml
-Sylius\Component\Core\Model\Address: # Your class path
-   properties:
-      firstName:
-         faker: text # let's see => https://fakerphp.github.io/formatters/
-         args: [20] # The associated faker arguments
-         prefix: 'anonymized-'
-      lastName:
-         value: 'Fake lastName'
-         prefix: 'anonymized-'
- ```
+Each file maps the properties of a class:
 
-   `value` can be null, an array, an int, a string and an [expression language](https://symfony.com/doc/current/reference/formats/expression_language.html)
-
-Example of configuration with dynamic value
 ```yaml
 Sylius\Component\Core\Model\Customer:
-   properties:
-      firstName:
-          value: '@="some-arbitrary-text..." ~ object.getId() ~ "...more-arbitrary-text"'
+    properties:
+        firstName:
+            faker: firstName
+            prefix: 'anonymized-'
+        lastName:
+            value: 'Fake lastName'
+        phoneNumber: ~    # set to null
+        defaultAddress: ~ # related entity: anonymized with its own mapping
+        orders: ~         # collection: each item is anonymized with its own mapping
 ```
- 
-### Note:
-   > your expression language must starts with `@=` to be evaluated properly 
-   
-   > variable `object` is the current entity you are dealing with (e.g. in that case `Sylius\Component\Core\Model\Customer`)
 
-## Add form in advanced actions page
+You can also configure a property with the `#[Anonymize]` attribute, which accepts the same options:
 
-There's two steps to add your custom form into the page:
+```php
+use Synolia\SyliusGDPRPlugin\Attribute\Anonymize;
 
-   - Override the controller service by setting the link of your FormType in the $formsType variable
+class Customer extends BaseCustomer
+{
+    #[Anonymize(['faker' => 'email', 'unique' => true, 'prefix' => 'anonymized-'])]
+    protected $email;
+}
+```
 
- ```yaml
-    Synolia\SyliusGDPRPlugin\Controller\AdvancedActionsController:
-        arguments:
-            $formsType:
-                - 'Synolia\SyliusGDPRPlugin\Form\Type\Actions\AnonymizeCustomerNotLoggedSinceType'
-        tags: ['controller.service_arguments']
- ```
-   
-   > or use php attributes `#[AsController]` on your controller and `#[Autowire(AnonymizeCustomerNotLoggedSinceType::class)]` in your constructor for `$formsType` parameter
+| Option   | Description                                                                                              |
+|:---------|:---------------------------------------------------------------------------------------------------------|
+| `faker`  | [Faker formatter](https://fakerphp.org/formatters/) used to generate the value, e.g. `email`, `lastName` |
+| `args`   | Arguments passed to the Faker formatter, e.g. `[20]`                                                     |
+| `unique` | Generates a unique value (Faker `unique()` modifier)                                                     |
+| `prefix` | String prepended to the generated value                                                                  |
+| `value`  | Fixed value: `null`, a string, an int, an array or an expression                                         |
 
-   - Then create your form processor by implementing Synolia\SyliusGDPRPlugin\Processor\AnonymizerProcessor\AdvancedActionsFormDataProcessorInterface
+### Dynamic values
 
-[There](src/Processor/AdvancedActions/AnonymizeCustomersNotLoggedBeforeProcessor.php) a form processor example
+A `value` starting with `@=` is evaluated with the [Expression Language](https://symfony.com/doc/current/reference/formats/expression_language.html).
+The `object` variable is the entity being anonymized:
 
-### Events
+```yaml
+Sylius\Component\Core\Model\Customer:
+    properties:
+        email:
+            value: '@="anonymized-" ~ object.getId() ~ "@example.com"'
+```
 
-- Synolia\SyliusGDPRPlugin\Event\BeforeAnonymize
-- Synolia\SyliusGDPRPlugin\Event\AfterAnonymize
-- Synolia\SyliusGDPRPlugin\Event\BeforeCustomerAnonymize
-- Synolia\SyliusGDPRPlugin\Event\AfterCustomerAnonymize
-- Synolia\SyliusGDPRPlugin\Event\BeforeExportCustomerData
+### Command
+
+Anonymize any entity from the command line:
+
+```shell
+php bin/console synolia:gdpr:anonymize --entity='Sylius\Component\Core\Model\Customer' --id=1
+```
+
+| Option          | Description                                    |
+|:----------------|:-----------------------------------------------|
+| `--entity`/`-E` | Fully qualified class name of the entity       |
+| `--id`/`-i`     | Identifier of the entity. **Without it, every entity of the class is anonymized** |
+| `--force`       | Skips the confirmation question                |
+| `--reset`       | Resets the Faker unique generator              |
+| `--max-retries` | Maximum number of retries to get unique values |
+
+## Customer data export
+
+The export serializes the customer with the `synolia:gdpr:customer_data` serialization group
+(`Synolia\SyliusGDPRPlugin\Enum\GDPRSerializationKeyEnum::CUSTOMER_DATA`).
+See the default configuration in [`src/Resources/config/serialization`](src/Resources/config/serialization).
+
+To export more data, add this group to your own [serialization mapping](https://symfony.com/doc/current/serializer.html#using-serialization-groups-attributes),
+for example with an attribute:
+
+```php
+use Symfony\Component\Serializer\Attribute\Groups;
+use Synolia\SyliusGDPRPlugin\Enum\GDPRSerializationKeyEnum;
+
+class Customer extends BaseCustomer
+{
+    #[Groups([GDPRSerializationKeyEnum::CUSTOMER_DATA])]
+    protected ?string $loyaltyNumber = null;
+}
+```
+
+## Custom bulk actions
+
+The *GDPR* admin page lists bulk anonymization forms. To add yours:
+
+1. Create a form type, and pass it to the controller with the `$formsType` argument:
+
+    ```yaml
+    services:
+        Synolia\SyliusGDPRPlugin\Controller\AdvancedActionsController:
+            arguments:
+                $formsType:
+                    - App\Form\Type\AnonymizeCustomersFromCountryType
+            tags: ['controller.service_arguments']
+    ```
+
+2. Create a processor implementing `Synolia\SyliusGDPRPlugin\Processor\AdvancedActions\AdvancedActionsFormDataProcessorInterface`.
+   It is registered automatically thanks to autoconfiguration.
+   `getFormTypesClass()` returns the form types it handles, and `process()` receives the submitted form.
+
+See [`AnonymizeCustomersNotLoggedBeforeProcessor`](src/Processor/AdvancedActions/AnonymizeCustomersNotLoggedBeforeProcessor.php) for an example.
+
+## Events
+
+| Event                                              | Dispatched                                        |
+|:---------------------------------------------------|:--------------------------------------------------|
+| `Synolia\SyliusGDPRPlugin\Event\BeforeAnonymize`         | Before anonymizing any entity                     |
+| `Synolia\SyliusGDPRPlugin\Event\AfterAnonymize`          | After anonymizing any entity                      |
+| `Synolia\SyliusGDPRPlugin\Event\BeforeCustomerAnonymize` | Before anonymizing a customer from the admin page |
+| `Synolia\SyliusGDPRPlugin\Event\AfterCustomerAnonymize`  | After anonymizing a customer from the admin page  |
+| `Synolia\SyliusGDPRPlugin\Event\BeforeExportCustomerData` | Before exporting the customer data               |
 
 ## Development
 
@@ -156,7 +212,7 @@ See [How to contribute](CONTRIBUTING.md) for more details (database configuratio
 
 ## License
 
-This library is under the [EUPL-1.2 license](LICENSE).
+This plugin is released under the [EUPL-1.2 license](LICENSE).
 
 ## Credits
 
