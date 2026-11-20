@@ -289,6 +289,8 @@ final readonly class Anonymizer implements AnonymizerInterface
                 $propertyName,
                 (float) $value,
             );
+
+            return;
         }
 
         if ('bool' === $type) {
@@ -297,6 +299,8 @@ final readonly class Anonymizer implements AnonymizerInterface
                 $propertyName,
                 (bool) $value,
             );
+
+            return;
         }
 
         $this->propertyAccess->setValue(

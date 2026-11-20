@@ -32,5 +32,13 @@ class Foo
     #[Anonymize(['value' => '1542', 'prefix' => '1542'])]
     public int $integer;
 
+    /** @var float */
+    #[Anonymize(['value' => '12.5'])]
+    public $decimal;
+
+    /** @var bool */
+    #[Anonymize(['value' => '1'])]
+    public $flag;
+
     public $bar;
 }
