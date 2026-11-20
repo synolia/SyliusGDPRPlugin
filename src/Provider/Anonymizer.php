@@ -216,7 +216,7 @@ final readonly class Anonymizer implements AnonymizerInterface
         if ($type instanceof CompositeTypeInterface) {
             return $this->resolveUnionType(array_map(
                 fn (TypeInfoType $subType): string => $this->resolveTypeIdentifier($subType),
-                array_values($type->getTypes()),
+                $type->getTypes(),
             ));
         }
 
